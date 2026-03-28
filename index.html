@@ -143,6 +143,7 @@ let links = [
     {name: "tg88-tg88.online", url: "https://www.google.com/url?q=https://tg88-tg88.online"}
 ];
 
+<script>
 let grid = document.getElementById("grid");
 
 links.forEach(item => {
@@ -151,7 +152,7 @@ links.forEach(item => {
     div.innerText = item.name;
 
     div.onclick = () => {
-        window.open(item.url, "_blank");
+        window.location.href = item.url; // chuyển cùng tab
     };
 
     grid.appendChild(div);
