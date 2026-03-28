@@ -10,6 +10,7 @@ body {
     margin: 0;
     font-family: Arial;
     color: white;
+
     background: linear-gradient(270deg, red, blue, green, purple);
     background-size: 836% 836%;
     animation: rgbBG 20s ease infinite;
@@ -52,74 +53,77 @@ body {
     transform: scale(1.05);
     box-shadow: 0 0 20px #fff, 0 0 40px #0ff;
 }
-
-.login-btn {
-    display: block;
-    margin: 15px auto;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    background: white;
-    color: black;
-    font-weight: bold;
-    cursor: pointer;
-}
 </style>
 </head>
 
 <body>
 
 <div class="header">QK Developer</div>
-
-<!-- 🔐 NÚT LOGIN -->
-<button class="login-btn" onclick="login()">Login Google</button>
-
 <div class="grid" id="grid"></div>
 
-<!-- 🔥 FIREBASE + LOGIN -->
+<!-- 🔥 FIREBASE -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* CONFIG PROJECT MỚI */
+/* CONFIG CỦA BẠN */
 const firebaseConfig = {
-  apiKey: "AIzaSyDxCpnGUueZzL1p-xSDfsu1r30-A3EprEM",
-  authDomain: "device-streaming-c1a5f2b7.firebaseapp.com",
-  projectId: "device-streaming-c1a5f2b7",
-  storageBucket: "device-streaming-c1a5f2b7.firebasestorage.app",
-  messagingSenderId: "212103047619",
-  appId: "1:212103047619:web:a774f80512f1c0b0487576"
+  apiKey: "AIzaSyAIMAhPsAEE8jDGKMV5CU3Ox1oHjqE5Kns",
+  authDomain: "web-github-6e0b9.firebaseapp.com",
+  projectId: "web-github-6e0b9",
+  storageBucket: "web-github-6e0b9.firebasestorage.app",
+  messagingSenderId: "286369758278",
+  appId: "1:286369758278:web:71930f320180871a3dde47",
+  measurementId: "G-BHESM0V3Y3"
 };
 
 /* KHỞI TẠO */
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
-/* LOGIN GOOGLE */
-window.login = async function() {
-    const provider = new GoogleAuthProvider();
-
+/* LẤY IP */
+async function getIP() {
     try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-
-        alert("Xin chào: " + user.displayName);
-
-        await addDoc(collection(db, "users"), {
-            uid: user.uid,
-            name: user.displayName,
-            email: user.email,
-            time: new Date().toString()
-        });
-
-    } catch (error) {
-        console.log(error);
-        alert("Lỗi login!");
+        let res = await fetch("https://api.ipify.org?format=json");
+        let data = await res.json();
+        return data.ip;
+    } catch {
+        return "unknown";
     }
 }
+
+/* TẠO ID USER */
+function getUserID() {
+    let id = localStorage.getItem("user_id");
+    if (!id) {
+        id = "user_" + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem("user_id", id);
+    }
+    return id;
+}
+
+/* LOG USER */
+async function logUser() {
+    let ip = await getIP();
+    let userId = getUserID();
+
+    await addDoc(collection(db, "users"), {
+        userId: userId,
+        ip: ip,
+        userAgent: navigator.userAgent,
+        time: new Date().toString()
+    });
+
+    console.log("Đã log user");
+}
+
+logUser();
 </script>
+
+<!-- CODE WEB -->
+<script>
 let links = [
     {name: "mmoo-trangchu.online", url: "https://www.google.com/url?q=https://mmoo-trangchu.online"},
     {name: "nk88-trangchu.online", url: "https://www.google.com/url?q=https://nk88-trangchu.online"},
