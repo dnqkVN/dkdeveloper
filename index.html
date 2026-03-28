@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>qk developer</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    color: white;
+
+    /* RGB nền */
+    background: linear-gradient(270deg, red, blue, green, purple);
+    background-size: 800% 800%;
+    animation: rgbBG 1s ease infinite;
+}
+
+@keyframes rgbBG {
+    0% { background-position: 0% 36%; }
+    50% { background-position: 80% 36%; }
+    100% { background-position: 0% 36%; }
+}
+
+/* Header */
+.header {
+    text-align: center;
+    padding: 15px;
+    font-size: 22px;
+    font-weight: bold;
+    text-shadow: 0 0 10px #fff;
+}
+
+/* Grid */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding: 20px;
+}
+
+/* Box */
+.box {
+    background: rgba(0,0,0,0.4);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.4s;
+
+    /* LED viền */
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+/* Hover */
+.box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #fff, 0 0 40px #0ff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">QK Developer</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+let links = [
+    {name: "mmoo-trangchu.online", url: "https://www.google.com/url?q=https://mmoo-trangchu.online"},
+    {name: "68win10.store", url: "https://www.google.com/url?q=https://68win10.store"},
+    {name: "nk88-nk88.online", url: "https://www.google.com/url?q=https://nk88-nk88.online"},
+    {name: "comtech.za.com", url: "https://www.google.com/url?q=https://comtech.za.com"},
+    {name: "n188-n188.site", url: "https://www.google.com/url?q=https://n188-n188.site"},
+    {name: "hz88-vn01.site", url: "https://www.google.com/url?q=https://hz88-vn01.site"},
+    {name: "nohu-mobi.online", url: "https://www.google.com/url?q=https://nohu-mobi.online"},
+    {name: "nk88-nk88.online", url: "https://www.google.com/url?q=https://nk88-nk88.online"},
+    {name: "tg88-tg88.online", url: "https://www.google.com/url?q=https://tg88-tg88.online"}
+];
+
+let grid = document.getElementById("grid");
+
+links.forEach(item => {
+    let div = document.createElement("div");
+    div.className = "box";
+    div.innerText = item.name;
+
+    div.onclick = () => {
+        window.open(item.url, "_blank"); // mở tab mới
+    };
+
+    grid.appendChild(div);
+});
+</script>
+
+</body>
+</html>
