@@ -61,23 +61,29 @@ body {
 <div class="header">QK Developer</div>
 <div class="grid" id="grid"></div>
 
-<!-- 🔥 FIREBASE + LOG USER -->
+<!-- 🔥 FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
 import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* 👉 DÁN CONFIG FIREBASE CỦA BẠN VÀO ĐÂY */
+/* CONFIG CỦA BẠN */
 const firebaseConfig = {
-  apiKey: "YOUR_KEY",
-  authDomain: "xxx.firebaseapp.com",
-  projectId: "xxx",
+  apiKey: "AIzaSyAIMAhPsAEE8jDGKMV5CU3Ox1oHjqE5Kns",
+  authDomain: "web-github-6e0b9.firebaseapp.com",
+  projectId: "web-github-6e0b9",
+  storageBucket: "web-github-6e0b9.firebasestorage.app",
+  messagingSenderId: "286369758278",
+  appId: "1:286369758278:web:71930f320180871a3dde47",
+  measurementId: "G-BHESM0V3Y3"
 };
 
-/* Khởi tạo */
+/* KHỞI TẠO */
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
-/* Lấy IP */
+/* LẤY IP */
 async function getIP() {
     try {
         let res = await fetch("https://api.ipify.org?format=json");
@@ -88,7 +94,7 @@ async function getIP() {
     }
 }
 
-/* Tạo ID user */
+/* TẠO ID USER */
 function getUserID() {
     let id = localStorage.getItem("user_id");
     if (!id) {
@@ -98,7 +104,7 @@ function getUserID() {
     return id;
 }
 
-/* Gửi dữ liệu lên Firebase */
+/* LOG USER */
 async function logUser() {
     let ip = await getIP();
     let userId = getUserID();
@@ -116,7 +122,7 @@ async function logUser() {
 logUser();
 </script>
 
-<!-- CODE WEB CỦA BẠN -->
+<!-- CODE WEB -->
 <script>
 let links = [
     {name: "mmoo-trangchu.online", url: "https://www.google.com/url?q=https://mmoo-trangchu.online"},
