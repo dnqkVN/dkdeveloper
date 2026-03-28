@@ -151,7 +151,7 @@ links.forEach(item => {
     div.innerText = item.name;
 
     div.onclick = () => {
-        window.open(item.url, "_blank");
+        window.location.href = item.url;
     };
 
     grid.appendChild(div);
