@@ -78,11 +78,11 @@ body {
 
 <!-- 🔥 FIREBASE + LOGIN -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-/* CONFIG MỚI (bạn đưa) */
+/* CONFIG PROJECT MỚI */
 const firebaseConfig = {
   apiKey: "AIzaSyDxCpnGUueZzL1p-xSDfsu1r30-A3EprEM",
   authDomain: "device-streaming-c1a5f2b7.firebaseapp.com",
@@ -107,7 +107,6 @@ window.login = async function() {
 
         alert("Xin chào: " + user.displayName);
 
-        // Lưu user vào database
         await addDoc(collection(db, "users"), {
             uid: user.uid,
             name: user.displayName,
@@ -115,17 +114,12 @@ window.login = async function() {
             time: new Date().toString()
         });
 
-        console.log("Đã lưu user");
-
     } catch (error) {
         console.log(error);
         alert("Lỗi login!");
     }
 }
 </script>
-
-<!-- CODE WEB -->
-<script>
 let links = [
     {name: "mmoo-trangchu.online", url: "https://www.google.com/url?q=https://mmoo-trangchu.online"},
     {name: "nk88-trangchu.online", url: "https://www.google.com/url?q=https://nk88-trangchu.online"},
