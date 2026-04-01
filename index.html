@@ -19,7 +19,7 @@ body {
 @keyframes rgbBG {
     0% { background-position: 0% 36%; }
     36% { background-position: 80% 36%; }
-    136% { background-position: 0% 36%; }
+    100% { background-position: 0% 36%; }
 }
 
 .header {
@@ -53,76 +53,27 @@ body {
     transform: scale(1.05);
     box-shadow: 0 0 20px #fff, 0 0 40px #0ff;
 }
+
+#search {
+    width: 90%;
+    margin: 10px auto;
+    display: block;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    text-align: center;
+}
 </style>
 </head>
 
 <body>
 
 <div class="header">QK Developer</div>
+
+<input type="text" id="search" placeholder="🔍 Tìm nhanh...">
+
 <div class="grid" id="grid"></div>
 
-<!-- 🔥 FIREBASE -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
-import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* CONFIG CỦA BẠN */
-const firebaseConfig = {
-  apiKey: "AIzaSyAIMAhPsAEE8jDGKMV5CU3Ox1oHjqE5Kns",
-  authDomain: "web-github-6e0b9.firebaseapp.com",
-  projectId: "web-github-6e0b9",
-  storageBucket: "web-github-6e0b9.firebasestorage.app",
-  messagingSenderId: "286369758278",
-  appId: "1:286369758278:web:71930f320180871a3dde47",
-  measurementId: "G-BHESM0V3Y3"
-};
-
-/* KHỞI TẠO */
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const db = getFirestore(app);
-
-/* LẤY IP */
-async function getIP() {
-    try {
-        let res = await fetch("https://api.ipify.org?format=json");
-        let data = await res.json();
-        return data.ip;
-    } catch {
-        return "unknown";
-    }
-}
-
-/* TẠO ID USER */
-function getUserID() {
-    let id = localStorage.getItem("user_id");
-    if (!id) {
-        id = "user_" + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem("user_id", id);
-    }
-    return id;
-}
-
-/* LOG USER */
-async function logUser() {
-    let ip = await getIP();
-    let userId = getUserID();
-
-    await addDoc(collection(db, "users"), {
-        userId: userId,
-        ip: ip,
-        userAgent: navigator.userAgent,
-        time: new Date().toString()
-    });
-
-    console.log("Đã log user");
-}
-
-logUser();
-</script>
-
-<!-- CODE WEB -->
 <script>
 let links = [
     {name: "college-stories.ru.com", url: "https://www.google.com/url?q=https://college-stories.ru.com"},
@@ -166,6 +117,19 @@ links.forEach(item => {
     };
 
     grid.appendChild(div);
+});
+
+/* 🔍 SEARCH */
+let search = document.getElementById("search");
+
+search.addEventListener("input", () => {
+    let keyword = search.value.toLowerCase();
+    let boxes = document.querySelectorAll(".box");
+
+    boxes.forEach(box => {
+        let text = box.innerText.toLowerCase();
+        box.style.display = text.includes(keyword) ? "block" : (keyword ? "none" : "block");
+    });
 });
 </script>
 
