@@ -119,9 +119,24 @@ links.forEach(item => {
     grid.appendChild(div);
 });
 
-/* 🔍 SEARCH */
 let search = document.getElementById("search");
 
+/* 🔥 AUTO PASTE */
+search.addEventListener("click", async () => {
+    if (search.value.trim() !== "") return;
+
+    try {
+        let text = await navigator.clipboard.readText();
+        if (text) {
+            search.value = text.toLowerCase();
+            search.dispatchEvent(new Event("input"));
+        }
+    } catch {
+        console.log("Không đọc được clipboard");
+    }
+});
+
+/* 🔍 SEARCH */
 search.addEventListener("input", () => {
     let keyword = search.value.toLowerCase();
     let boxes = document.querySelectorAll(".box");
