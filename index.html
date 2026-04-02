@@ -5,15 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>quin developer</title>
 
-<!-- LINK CSS -->
 <link rel="stylesheet" href="main.css">
 
 <style>
-    body {
+body {
     margin: 0;
     font-family: Arial;
     color: white;
-
     background: linear-gradient(270deg, red, blue, green, purple);
     background-size: 836% 836%;
     animation: rgbBG 20s ease infinite;
@@ -46,9 +44,7 @@
     border-radius: 12px;
     text-align: center;
     cursor: pointer;
-    transition: 0.4s;
-    border: 2px solid transparent;
-    background-clip: padding-box;
+    transition: 0.3s;
     box-shadow: 0 0 10px rgba(255,255,255,0.3);
 }
 
@@ -71,10 +67,6 @@
 
 <body>
 
-<div class="bg-overlay"></div>
-
-<div class="d-flex flex-column justify-content-center w-100 h-100"></div>
-
 <div class="header">quin Developer</div>
 
 <input type="text" id="search" placeholder="🔍 Tìm nhanh...">
@@ -82,6 +74,13 @@
 <div class="grid" id="grid"></div>
 
 <script>
+// 🔥 Hàm search Google (QUAN TRỌNG)
+function searchGoogle(keyword) {
+    let url = "https://www.google.com/search?q=" + encodeURIComponent(keyword);
+    window.location.href = url;
+}
+
+// 🔥 Danh sách link
 let links = [
 "college-stories.ru.com",
 "mmoo-trangchu.online",
@@ -115,11 +114,9 @@ let links = [
 "rhucxo.za.com",
 "33win-vip1.online",
 "buukcb.za.com",
-"99win-site.online",
 "x88top1.online",
 "tg88-top1.online",
 "nohu-mobi.online",
-"nk88-nk88.online",
 "tg88-tg88.online",
 "c168-vipv.com",
 "agen77bet.it.com",
@@ -127,7 +124,8 @@ let links = [
 "68winvipro01.online",
 "twp.in.net"
 ];
-    
+
+// 🔥 Render box
 let grid = document.getElementById("grid");
 
 links.forEach(name => {
@@ -141,7 +139,8 @@ links.forEach(name => {
 
     grid.appendChild(div);
 });
-    
+
+// 🔍 Search filter
 let search = document.getElementById("search");
 
 search.addEventListener("input", () => {
@@ -150,7 +149,7 @@ search.addEventListener("input", () => {
 
     boxes.forEach(box => {
         let text = box.innerText.toLowerCase();
-        box.style.display = text.includes(keyword) ? "block" : (keyword ? "none" : "block");
+        box.style.display = text.includes(keyword) ? "block" : "none";
     });
 });
 </script>
