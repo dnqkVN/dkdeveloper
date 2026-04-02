@@ -73,7 +73,7 @@ body {
 
 <script>
 
-// 🔥 Danh sách link (HIỂN THỊ)
+// 🔥 Danh sách link
 let links = [
 "college-stories.ru.com",
 "mmoo-trangchu.online",
@@ -118,12 +118,12 @@ let links = [
 "twp.in.net"
 ];
 
-// 🔥 LIST domain dùng site:
+// 🔥 Domain dùng site:
 let useSiteList = [
 "comtech.za.com",
 "68winvipro01.online",
 "twp.in.net",
-"nk88-nk88.online"
+"nk88-nk88.online",
 "n188-n188.site",
 "when.it.com",
 "x88-ka.online",
@@ -135,13 +135,9 @@ let useSiteList = [
 function searchGoogle(domain) {
     domain = domain.trim();
 
-    let keyword;
-
-    if (useSiteList.indexOf(domain) !== -1) {
-        keyword = "site:" + domain + " " + domain; // 🔥 mạnh hơn
-    } else {
-        keyword = domain;
-    }
+    let keyword = useSiteList.includes(domain)
+        ? "site:" + domain + " " + domain
+        : domain;
 
     let url = "https://www.google.com/search?q=" + encodeURIComponent(keyword);
     window.location.href = url;
@@ -156,7 +152,7 @@ links.forEach(name => {
     div.innerText = name;
 
     div.onclick = () => {
-        searchGoogle(name);
+        searchGoogle(name.trim());
     };
 
     grid.appendChild(div);
@@ -166,12 +162,12 @@ links.forEach(name => {
 let search = document.getElementById("search");
 
 search.addEventListener("input", () => {
-    let keyword = search.value.toLowerCase();
+    let keyword = search.value.toLowerCase().trim();
     let boxes = document.querySelectorAll(".box");
 
     boxes.forEach(box => {
         let text = box.innerText.toLowerCase();
-        box.style.display = text.includes(keyword) ? "block" : "none";
+        box.style.display = text.includes(keyword) ? "" : "none";
     });
 });
 
