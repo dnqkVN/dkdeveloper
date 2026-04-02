@@ -1,0 +1,98 @@
+/* nền RGB mượt hơn */
+body {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    color: white;
+}
+
+/* tiêu đề glow */
+.header {
+    text-align: center;
+    padding: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 10px #fff, 0 0 20px #0ff;
+    letter-spacing: 2px;
+}
+
+/* ô tìm kiếm đẹp hơn */
+#search {
+    width: 90%;
+    margin: 10px auto;
+    display: block;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    text-align: center;
+    background: rgba(0,0,0,0.6);
+    color: #0ff;
+    outline: none;
+    box-shadow: 0 0 10px #0ff;
+}
+
+/* grid */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding: 20px;
+}
+
+/* box nâng cấp */
+.box {
+    position: relative;
+    background: rgba(0,0,0,0.5);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.4s;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* viền RGB chạy */
+.box::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 15px;
+    background: linear-gradient(270deg, red, blue, cyan, purple, red);
+    background-size: 600% 600%;
+    animation: rgbBorder 6s linear infinite;
+    z-index: -1;
+}
+
+/* nền trong */
+.box::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 13px;
+    z-index: -1;
+}
+
+/* hover cực ngầu */
+.box:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
+}
+
+/* animation viền */
+@keyframes rgbBorder {
+    0% {background-position: 0%}
+    100% {background-position: 300%}
+}
+
+/* hiệu ứng click */
+.box:active {
+    transform: scale(0.95);
+}
+
+/* text trong box */
+.box {
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
