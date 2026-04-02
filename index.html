@@ -130,18 +130,18 @@ let links = [
     
 let grid = document.getElementById("grid");
 
-links.forEach(item => {
+links.forEach(name => {
     let div = document.createElement("div");
     div.className = "box";
-    div.innerText = item.name;
+    div.innerText = name;
 
     div.onclick = () => {
-        window.location.href = item.url;
+        searchGoogle(name);
     };
 
     grid.appendChild(div);
 });
-
+    
 let search = document.getElementById("search");
 
 search.addEventListener("input", () => {
