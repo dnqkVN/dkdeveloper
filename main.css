@@ -1,98 +1,105 @@
-/* nền RGB mượt hơn */
-body {
+/* Reset định dạng cơ bản */
+* {
+    box-sizing: border-box;
     margin: 0;
-    font-family: 'Courier New', monospace;
-    color: white;
+    padding: 0;
 }
 
-/* tiêu đề glow */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0d0d12; /* Đổi sang nền tối để viền RGB phát sáng mạnh nhất */
+    color: white;
+    min-height: 100vh;
+    padding-bottom: 50px;
+}
+
+/* Tiêu đề */
 .header {
     text-align: center;
-    padding: 15px;
-    font-size: 24px;
-    font-weight: bold;
-    text-shadow: 0 0 10px #fff, 0 0 20px #0ff;
+    padding: 30px 15px 20px;
+    font-size: 32px;
+    font-weight: 900;
+    text-transform: uppercase;
+    /* Hiệu ứng chữ màu gradient */
+    background: linear-gradient(90deg, #00f2fe, #4facfe, #00f2fe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
     letter-spacing: 2px;
 }
 
-/* ô tìm kiếm đẹp hơn */
+/* Thanh tìm kiếm */
 #search {
     width: 90%;
-    margin: 10px auto;
+    max-width: 500px;
+    margin: 0 auto 30px auto;
     display: block;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
+    padding: 15px 20px;
+    border-radius: 30px;
+    border: 2px solid #333;
+    background: #1a1a24;
+    color: #fff;
+    font-size: 16px;
     text-align: center;
-    background: rgba(0,0,0,0.6);
-    color: #0ff;
     outline: none;
-    box-shadow: 0 0 10px #0ff;
+    transition: 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
 
-/* grid */
+/* Hiệu ứng khi nhấp vào thanh tìm kiếm */
+#search:focus {
+    border-color: #00f2fe;
+    box-shadow: 0 0 15px #00f2fe;
+    background: #222230;
+}
+
+#search::placeholder {
+    color: #888;
+}
+
+/* Bố cục Lưới (Tự co giãn thông minh) */
 .grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    padding: 20px;
+    /* Tự chia cột: nếu màn hình nhỏ thì 2-3 cột, PC thì nhiều cột hơn */
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* box nâng cấp */
+/* --- ĐÂY LÀ PHẦN BOX CÓ VIỀN RGB --- */
 .box {
     position: relative;
-    background: rgba(0,0,0,0.5);
-    padding: 20px;
-    border-radius: 15px;
+    padding: 20px 10px;
+    border-radius: 12px;
     text-align: center;
     cursor: pointer;
-    transition: 0.4s;
-    overflow: hidden;
-    z-index: 1;
-}
-
-/* viền RGB chạy */
-.box::before {
-    content: "";
-    position: absolute;
-    inset: -2px;
-    border-radius: 15px;
-    background: linear-gradient(270deg, red, blue, cyan, purple, red);
-    background-size: 600% 600%;
-    animation: rgbBorder 6s linear infinite;
-    z-index: -1;
-}
-
-/* nền trong */
-.box::after {
-    content: "";
-    position: absolute;
-    inset: 2px;
-    background: rgba(0,0,0,0.7);
-    border-radius: 13px;
-    z-index: -1;
-}
-
-/* hover cực ngầu */
-.box:hover {
-    transform: scale(1.08);
-    box-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
-}
-
-/* animation viền */
-@keyframes rgbBorder {
-    0% {background-position: 0%}
-    100% {background-position: 300%}
-}
-
-/* hiệu ứng click */
-.box:active {
-    transform: scale(0.95);
-}
-
-/* text trong box */
-.box {
     font-weight: bold;
-    font-size: 14px;
-    letter-spacing: 1px;
+    font-size: 15px;
+    word-wrap: break-word; /* Chống tràn chữ nếu tên link quá dài */
+
+    /* Tạo viền Gradient RGB giữ được góc bo tròn */
+    border: 3px solid transparent;
+    background:
+        linear-gradient(#15151e, #15151e) padding-box, /* Màu nền xám đen bên trong thẻ */
+        linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8) border-box; /* Viền RGB */
+
+    /* Áp dụng Animation đổi màu viền liên tục */
+    animation: rgbGlow 3s linear infinite;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Hiệu ứng xoay dải màu (Đổi màu RGB) */
+@keyframes rgbGlow {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+/* Hiệu ứng khi di chuột (Hover) hoặc chạm vào Box */
+.box:hover {
+    transform: scale(1.08) translateY(-5px); /* Phóng to và nảy lên nhẹ */
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+    z-index: 10;
 }
