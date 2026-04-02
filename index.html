@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>quin developer</title>
 
-<link rel="stylesheet" href="main.css">
-
 <style>
 body {
     margin: 0;
@@ -74,19 +72,14 @@ body {
 <div class="grid" id="grid"></div>
 
 <script>
-// 🔥 Hàm search Google (QUAN TRỌNG)
-function searchGoogle(keyword) {
-    let url = "https://www.google.com/search?q=" + encodeURIComponent(keyword);
-    window.location.href = url;
-}
 
-// 🔥 Danh sách link
+// 🔥 Danh sách link (HIỂN THỊ)
 let links = [
 "college-stories.ru.com",
 "mmoo-trangchu.online",
 "nk88-trangchu.online",
 "88xx-top1.online",
-"site:nk88-nk88.online",
+"nk88-nk88.online",
 "u888mobi-vn4.site",
 "comtech.za.com",
 "n188-n188.site",
@@ -125,6 +118,34 @@ let links = [
 "twp.in.net"
 ];
 
+// 🔥 LIST domain dùng site:
+let useSiteList = [
+"comtech.za.com",
+"68winvipro01.online",
+"twp.in.net",
+"n188-n188.site",
+"when.it.com",
+"x88-ka.online",
+"galane.za.com",
+"33win-vip1.online"
+];
+
+// 🔥 Hàm search
+function searchGoogle(domain) {
+    domain = domain.trim();
+
+    let keyword;
+
+    if (useSiteList.indexOf(domain) !== -1) {
+        keyword = "site:" + domain + " " + domain; // 🔥 mạnh hơn
+    } else {
+        keyword = domain;
+    }
+
+    let url = "https://www.google.com/search?q=" + encodeURIComponent(keyword);
+    window.location.href = url;
+}
+
 // 🔥 Render box
 let grid = document.getElementById("grid");
 
@@ -152,6 +173,7 @@ search.addEventListener("input", () => {
         box.style.display = text.includes(keyword) ? "block" : "none";
     });
 });
+
 </script>
 
 </body>
