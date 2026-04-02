@@ -30,22 +30,6 @@ body {
     text-shadow: 0 0 10px #fff;
 }
 
-/* 🔥 BOX ONLINE */
-.online-box {
-    text-align: center;
-    margin: 10px;
-    padding: 10px;
-    background: rgba(0,0,0,0.4);
-    border-radius: 10px;
-    box-shadow: 0 0 10px #0ff;
-}
-
-#list {
-    max-height: 120px;
-    overflow-y: auto;
-    font-size: 13px;
-}
-
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -86,72 +70,9 @@ body {
 
 <div class="header">quin Developer</div>
 
-<!-- 🔥 REALTIME ONLINE -->
-<div class="online-box">
-    👀 Online: <span id="count">0</span>
-    <ul id="list"></ul>
-</div>
-
 <input type="text" id="search" placeholder="🔍 Tìm nhanh...">
 
 <div class="grid" id="grid"></div>
-
-<!-- 🔥 FIREBASE REALTIME -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBNVdrsnFL9x9N8_6wl4y7XSai7cdS8ngk",
-  authDomain: "github-95507.firebaseapp.com",
-  databaseURL: "https://github-95507-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "github-95507",
-  storageBucket: "github-95507.firebasestorage.app",
-  messagingSenderId: "548222121",
-  appId: "1:548222121:web:4a25df7eee88da1b7e25b8"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-async function getIP() {
-  const res = await fetch("https://api.ipify.org?format=json");
-  const data = await res.json();
-  return data.ip;
-}
-
-(async () => {
-  const ip = await getIP();
-
-  const userId = Math.random().toString(36).substring(2);
-  const userRef = ref(db, "online/" + userId);
-
-  set(userRef, { ip: ip, time: Date.now() });
-
-  onDisconnect(userRef).remove();
-
-  const onlineRef = ref(db, "online");
-
-  onValue(onlineRef, (snapshot) => {
-    const data = snapshot.val();
-    const list = document.getElementById("list");
-    list.innerHTML = "";
-
-    if (data) {
-      const users = Object.values(data);
-      document.getElementById("count").innerText = users.length;
-
-      users.forEach(u => {
-        const li = document.createElement("li");
-        li.innerText = "IP: " + u.ip;
-        list.appendChild(li);
-      });
-    } else {
-      document.getElementById("count").innerText = 0;
-    }
-  });
-})();
-</script>
 
 <script>
 let links = [
