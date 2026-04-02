@@ -6,7 +6,6 @@
 <title>tooltraffic</title>
 
 <link rel="stylesheet" href="main.css">
-
 <style>
 html, body {
     margin: 0;
@@ -60,12 +59,19 @@ body {
     text-align: center;
 }
 
-/* GRID auto responsive */
+/* ✅ GRID chỉnh lại */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: 1fr; /* mobile 1 cột */
     gap: 12px;
     padding: 15px;
+}
+
+/* 📺 PC: 2 cột */
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }
 
 /* BOX */
@@ -81,12 +87,7 @@ body {
     transition: 0.2s;
     font-size: 13px;
     word-break: break-all;
-}
 
-/* hover nhẹ */
-.box:hover {
-    transform: scale(1.03);
-    background: rgba(255,255,255,0.15);
 }
 </style>
 </head>
