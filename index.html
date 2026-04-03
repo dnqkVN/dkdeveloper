@@ -75,6 +75,21 @@ body {
     font-size: 13px;
     word-break: break-all;
 }
+
+/* 🔥 CHAT STYLE */
+#chatBox {
+    margin: 20px;
+    padding: 15px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+}
+
+#messages {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+    font-size: 13px;
+}
 </style>
 </head>
 
@@ -85,10 +100,19 @@ body {
 
 <input type="text" id="search" placeholder="🔍 Tìm nhanh...">
 <div class="grid" id="grid"></div>
+
+<!-- 🔥 CHAT -->
+<div id="chatBox">
+    <h3>💬 Chat tổng</h3>
+    <input id="name" placeholder="Tên..." style="width:30%">
+    <input id="msg" placeholder="Nhập tin..." style="width:50%">
+    <button onclick="sendMsg()">Gửi</button>
+    <div id="messages"></div>
+</div>
+
 </div>
 
 <script>
-
 // DATA
 let links = [
 "college-stories.ru.com","mmoo-trangchu.online","nk88-trangchu.online","88xx-top1.online",
@@ -140,13 +164,12 @@ search.addEventListener("input", () => {
         box.style.display = text.includes(keyword) ? "" : "none";
     });
 });
-
 </script>
 
-<!-- 🔥 FIREBASE + LƯU IP -->
+<!-- 🔥 FIREBASE FULL -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCoGH-211UP_6o5eqoL4bq6DI4VbzXTKJ0",
@@ -164,23 +187,44 @@ const db = getDatabase(app);
 // detect device
 let ua = navigator.userAgent;
 let device = "PC";
-
 if (/android/i.test(ua)) device = "Android";
 else if (/iPhone|iPad/i.test(ua)) device = "iOS";
 
-// lấy IP + gửi lên firebase
+// lưu IP
 fetch("https://api.ipify.org?format=json")
 .then(res => res.json())
 .then(data => {
-
-    let info = {
+    push(ref(db, "logs"), {
         ip: data.ip,
         device: device,
         ua: ua,
         time: new Date().toLocaleString()
-    };
+    });
+});
 
-    push(ref(db, "logs"), info);
+// 🔥 CHAT
+window.sendMsg = function() {
+    let name = document.getElementById("name").value || "Ẩn danh";
+    let msg = document.getElementById("msg").value;
+
+    if (!msg) return;
+
+    push(ref(db, "chat"), {
+        name: name,
+        msg: msg,
+        time: new Date().toLocaleTimeString()
+    });
+
+    document.getElementById("msg").value = "";
+};
+
+onChildAdded(ref(db, "chat"), (data) => {
+    let m = data.val();
+
+    let div = document.createElement("div");
+    div.innerHTML = `<b>${m.name}</b>: ${m.msg} (${m.time})`;
+
+    document.getElementById("messages").appendChild(div);
 });
 </script>
 
