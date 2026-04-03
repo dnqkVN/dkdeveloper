@@ -5,17 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>tooltraffic</title>
 
+<link rel="stylesheet" href="main.css">
 <style>
-body {
+html, body {
     margin: 0;
+    padding: 0;
+    height: 100%;
     font-family: Arial;
     color: white;
+}
+
+body {
+    min-height: 100vh;
     background: linear-gradient(180deg, #6fbaff, #b388ff);
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
 }
 
 .container {
+    width: 100%;
     max-width: 900px;
-    margin: auto;
 }
 
 .header {
@@ -23,61 +33,143 @@ body {
     padding: 20px;
     font-size: 22px;
     font-weight: bold;
+    background: rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
     text-shadow: 0 0 10px #fff;
 }
 
-/* 🔥 ONLINE BOX */
-#onlineBox {
-    margin: 15px;
-    padding: 15px;
-    background: rgba(0,0,0,0.3);
+#search {
+    width: 85%;
+    margin: 15px auto;
+    display: block;
+    padding: 10px;
     border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.12);
+    color: white;
+    text-align: center;
 }
 
-#onlineList div {
-    padding: 8px;
-    margin: 5px 0;
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 15px;
+}
+
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.box {
     background: rgba(255,255,255,0.08);
-    border-radius: 8px;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: 0.2s;
     font-size: 13px;
-    display: flex;
-    justify-content: space-between;
+    word-break: break-all;
 }
 
-/* 🔥 hiệu ứng online */
-.dot {
-    height: 8px;
-    width: 8px;
-    background: lime;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 6px;
-    box-shadow: 0 0 6px lime;
+/* 🔥 CHAT STYLE */
+#chatBox {
+    margin: 20px;
+    padding: 15px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
 }
 
+#messages {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+    font-size: 13px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
+<div class="header">QUIN DEVELOPER</div>
 
-<div class="header">🔥 QUIN REALTIME SYSTEM</div>
+<input type="text" id="search" placeholder="🔍 Tìm nhanh...">
+<div class="grid" id="grid"></div>
 
-<!-- 🔥 ONLINE -->
-<div id="onlineBox">
-<h3>🟢 Người đang online</h3>
-<div id="onlineList"></div>
-<p>👥 Tổng online: <b id="total">0</b></p>
+<!-- 🔥 CHAT -->
+<div id="chatBox">
+    <h3>💬 Chat tổng</h3>
+    <input id="name" placeholder="Tên..." style="width:30%">
+    <input id="msg" placeholder="Nhập tin..." style="width:50%">
+    <button onclick="sendMsg()">Gửi</button>
+    <div id="messages"></div>
 </div>
 
 </div>
 
+<script>
+// DATA
+let links = [
+"college-stories.ru.com","mmoo-trangchu.online","nk88-trangchu.online","88xx-top1.online",
+"nk88-nk88.online","comtech.za.com","n188-n188.site","tg88-vip1.online","hz88-site.online",
+"c168uu.com","68win10.store","x88-ka.online","ae888t1.com","tt88vip1.online",
+"americalibdotp.sa.com","galane.za.com","xn88-top1.online","hz88-vn01.site",
+"99win-site.online","xn--lck0a5auxk.jp.net","joqzju.ru.com","open88vip1.online",
+"555wingame.online","rjgruf.za.com","68win100.online","9xflixxx.it.com",
+"qglqws.sa.com","vip66-vip1.online","rhucxo.za.com","33win-vip1.online",
+"buukcb.za.com","x88top1.online","tg88-top1.online","nohu-mobi.online",
+"tg88-tg88.online","c168-vipv.com","agen77bet.it.com","when.it.com",
+"68winvipro01.online","twp.in.net"
+];
+
+let useSiteList = [
+"comtech.za.com","68winvipro01.online","twp.in.net","nk88-nk88.online",
+"n188-n188.site","when.it.com","x88-ka.online","galane.za.com","33win-vip1.online"
+];
+
+function searchGoogle(domain) {
+    domain = domain.trim();
+
+    let keyword = useSiteList.includes(domain)
+        ? "site:" + domain + " " + domain
+        : domain;
+
+    let url = "https://www.google.com/search?q=" + encodeURIComponent(keyword);
+    window.location.href = url;
+}
+
+let grid = document.getElementById("grid");
+
+links.forEach(name => {
+    let div = document.createElement("div");
+    div.className = "box";
+    div.innerText = name;
+    div.onclick = () => searchGoogle(name);
+    grid.appendChild(div);
+});
+
+let search = document.getElementById("search");
+
+search.addEventListener("input", () => {
+    let keyword = search.value.toLowerCase().trim();
+    let boxes = document.querySelectorAll(".box");
+
+    boxes.forEach(box => {
+        let text = box.innerText.toLowerCase();
+        box.style.display = text.includes(keyword) ? "" : "none";
+    });
+});
+</script>
+
+<!-- 🔥 FIREBASE FULL -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, onDisconnect } 
-from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCoGH-211UP_6o5eqoL4bq6DI4VbzXTKJ0",
@@ -85,68 +177,54 @@ const firebaseConfig = {
   projectId: "check-user-1",
   storageBucket: "check-user-1.firebasestorage.app",
   messagingSenderId: "1009556670498",
-  appId: "1:1009556670498:web:4df83dfa4b2314c21d227b"
+  appId: "1:1009556670498:web:4df83dfa4b2314c21d227b",
+  measurementId: "G-5EEYKNYP3D"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// 🔥 MAP IP -> TÊN
-const userMap = {
-  "14.233.249.163": "admin",
-  "27.67.24.105": "đỗ nguyên",
-  "171.225.203.81": "đào tường",
-  "115.76.50.219": "phát"
-};
-
 // detect device
 let ua = navigator.userAgent;
-let device = /android/i.test(ua) ? "Android" : "PC";
+let device = "PC";
+if (/android/i.test(ua)) device = "Android";
+else if (/iPhone|iPad/i.test(ua)) device = "iOS";
 
-// 🔥 LẤY IP
+// lưu IP
 fetch("https://api.ipify.org?format=json")
 .then(res => res.json())
 .then(data => {
-
-    const ip = data.ip;
-    const name = userMap[ip] || "khách";
-
-    const userRef = ref(db, "online/" + ip);
-
-    // ✅ set online
-    set(userRef, {
-        name: name,
-        ip: ip,
+    push(ref(db, "logs"), {
+        ip: data.ip,
         device: device,
+        ua: ua,
+        time: new Date().toLocaleString()
+    });
+});
+
+// 🔥 CHAT
+window.sendMsg = function() {
+    let name = document.getElementById("name").value || "Ẩn danh";
+    let msg = document.getElementById("msg").value;
+
+    if (!msg) return;
+
+    push(ref(db, "chat"), {
+        name: name,
+        msg: msg,
         time: new Date().toLocaleTimeString()
     });
 
-    // ✅ tự xoá khi thoát web
-    onDisconnect(userRef).remove();
-});
+    document.getElementById("msg").value = "";
+};
 
-// 🔥 HIỂN THỊ REALTIME
-const onlineList = document.getElementById("onlineList");
-const total = document.getElementById("total");
+onChildAdded(ref(db, "chat"), (data) => {
+    let m = data.val();
 
-onValue(ref(db, "online"), (snapshot) => {
-    onlineList.innerHTML = "";
-    let count = 0;
+    let div = document.createElement("div");
+    div.innerHTML = `<b>${m.name}</b>: ${m.msg} (${m.time})`;
 
-    snapshot.forEach(child => {
-        let u = child.val();
-        count++;
-
-        let div = document.createElement("div");
-        div.innerHTML = `
-            <span><span class="dot"></span>${u.name}</span>
-            <span>${u.device} | ${u.time}</span>
-        `;
-
-        onlineList.appendChild(div);
-    });
-
-    total.innerText = count;
+    document.getElementById("messages").appendChild(div);
 });
 </script>
 
