@@ -76,7 +76,7 @@ body {
     word-break: break-all;
 }
 
-/* 🔥 CHAT STYLE */
+/* CHAT */
 #chatBox {
     margin: 20px;
     padding: 15px;
@@ -101,7 +101,7 @@ body {
 <input type="text" id="search" placeholder="🔍 Tìm nhanh...">
 <div class="grid" id="grid"></div>
 
-<!-- 🔥 CHAT -->
+<!-- CHAT -->
 <div id="chatBox">
     <h3>💬 Chat tổng</h3>
     <input id="name" placeholder="Tên..." style="width:30%">
@@ -153,23 +153,19 @@ links.forEach(name => {
     grid.appendChild(div);
 });
 
-let search = document.getElementById("search");
-
-search.addEventListener("input", () => {
-    let keyword = search.value.toLowerCase().trim();
-    let boxes = document.querySelectorAll(".box");
-
-    boxes.forEach(box => {
-        let text = box.innerText.toLowerCase();
-        box.style.display = text.includes(keyword) ? "" : "none";
+document.getElementById("search").addEventListener("input", (e) => {
+    let keyword = e.target.value.toLowerCase();
+    document.querySelectorAll(".box").forEach(box => {
+        box.style.display = box.innerText.toLowerCase().includes(keyword) ? "" : "none";
     });
 });
 </script>
 
-<!-- 🔥 FIREBASE FULL -->
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+import { getDatabase, ref, set, push, onChildAdded } 
+from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCoGH-211UP_6o5eqoL4bq6DI4VbzXTKJ0",
@@ -177,32 +173,44 @@ const firebaseConfig = {
   projectId: "check-user-1",
   storageBucket: "check-user-1.firebasestorage.app",
   messagingSenderId: "1009556670498",
-  appId: "1:1009556670498:web:4df83dfa4b2314c21d227b",
-  measurementId: "G-5EEYKNYP3D"
+  appId: "1:1009556670498:web:4df83dfa4b2314c21d227b"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// MAP IP -> TÊN
+const userMap = {
+  "14.233.249.163": "admin",
+  "27.67.24.105": "đỗ nguyên",
+  "171.225.203.81": "đào tường",
+  "115.76.50.219": "phát"
+};
+
 // detect device
 let ua = navigator.userAgent;
-let device = "PC";
-if (/android/i.test(ua)) device = "Android";
-else if (/iPhone|iPad/i.test(ua)) device = "iOS";
+let device = /android/i.test(ua) ? "Android" : "PC";
 
-// lưu IP
+// 🔥 LOG KHÔNG SPAM
 fetch("https://api.ipify.org?format=json")
 .then(res => res.json())
 .then(data => {
-    push(ref(db, "logs"), {
-        ip: data.ip,
+
+    const ip = data.ip;
+    const name = userMap[ip] || "khách";
+
+    const logRef = ref(db, "logs/" + ip);
+
+    set(logRef, {
+        name: name,
+        ip: ip,
         device: device,
         ua: ua,
         time: new Date().toLocaleString()
     });
 });
 
-// 🔥 CHAT
+// CHAT
 window.sendMsg = function() {
     let name = document.getElementById("name").value || "Ẩn danh";
     let msg = document.getElementById("msg").value;
