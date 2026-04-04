@@ -76,7 +76,11 @@ body {
     word-break: break-all;
 }
 
-/* 🔥 CHAT STYLE */
+.box:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* CHAT */
 #chatBox {
     margin: 20px;
     padding: 15px;
@@ -101,7 +105,7 @@ body {
 <input type="text" id="search" placeholder="🔍 Tìm nhanh...">
 <div class="grid" id="grid"></div>
 
-<!-- 🔥 CHAT -->
+<!-- CHAT -->
 <div id="chatBox">
     <h3>💬 Chat tổng</h3>
     <input id="name" placeholder="Tên..." style="width:30%">
@@ -135,15 +139,11 @@ let links = [
 "hz88-vn01.site",
 "99win-site.online",
 "xn--lck0a5auxk.jp.net",
-"joqzju.ru.com",
 "open88vip1.online",
 "555wingame.online",
-"rjgruf.za.com",
 "68win100.online",
-"9xflixxx.it.com",
 "qglqws.sa.com",
 "vip66-vip1.online",
-"rhucxo.za.com",
 "33win-vip1.online",
 "buukcb.za.com",
 "x88top1.online",
@@ -152,36 +152,58 @@ let links = [
 "tg88-tg88.online",
 "c168-vipv.com",
 "agen77bet.it.com",
-"when.it.com",
 "68winvipro01.online",
 "twp.in.net"
-]
-let useSiteList = [
-"comtech.za.com","68winvipro01.online","twp.in.net","nk88-nk88.online",
-"n188-n188.site","when.it.com","x88-ka.online","galane.za.com","33win-vip1.online"
 ];
 
+// 🔥 MAP DOMAIN CŨ → DOMAIN MỚI
+let domainMap = {
+    "college-stories.ru.com": "novaart.it.com"
+    // thêm tại đây nếu có đổi domain
+};
+
+let useSiteList = [
+"tt88vip1.online",
+"68win10.store",
+"tg88-vip1.online",
+"mmoo-trangchu.online",
+"comtech.za.com",
+"68winvipro01.online",
+"twp.in.net",
+"nk88-nk88.online",
+"n188-n188.site",
+"x88-ka.online",
+"galane.za.com",
+"33win-vip1.online"
+];
+
+// 🔥 SEARCH (đã hỗ trợ domain mới)
 function searchGoogle(domain) {
     domain = domain.trim();
 
+    // lấy domain mới nếu có
+    let realDomain = domainMap[domain] || domain;
+
     let keyword = useSiteList.includes(domain)
-        ? "site:" + domain + " " + domain
-        : domain;
+        ? "site:" + realDomain + " " + realDomain
+        : realDomain;
 
     let url = "https://www.google.com/search?q=" + encodeURIComponent(keyword);
     window.location.href = url;
 }
 
+// render list
 let grid = document.getElementById("grid");
 
 links.forEach(name => {
     let div = document.createElement("div");
     div.className = "box";
-    div.innerText = name;
-    div.onclick = () => searchGoogle(name);
+    div.innerText = name; // hiển thị domain cũ
+    div.onclick = () => searchGoogle(name); // search domain mới
     grid.appendChild(div);
 });
 
+// search filter
 let search = document.getElementById("search");
 
 search.addEventListener("input", () => {
@@ -195,7 +217,7 @@ search.addEventListener("input", () => {
 });
 </script>
 
-<!-- 🔥 FIREBASE FULL -->
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
@@ -231,7 +253,7 @@ fetch("https://api.ipify.org?format=json")
     });
 });
 
-// 🔥 CHAT
+// CHAT
 window.sendMsg = function() {
     let name = document.getElementById("name").value || "Ẩn danh";
     let msg = document.getElementById("msg").value;
