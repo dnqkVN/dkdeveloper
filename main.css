@@ -132,14 +132,6 @@ body {
     font-size: 15px;
     transition: 0.3s;
 }
-
-#search:focus {
-    width: 90%;
-    background: rgba(255,255,255,0.25);
-    box-shadow: 0 0 15px rgba(255,255,255,0.6);
-    transform: scale(1.05);
-}
-
 /* GRID */
 .grid {
     display: grid;
