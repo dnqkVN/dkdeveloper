@@ -23,7 +23,6 @@ body {
     justify-content: center;
 }
 
-/* LOGIN (đã nâng cấp) */
 #loginUI {
     background: linear-gradient(135deg, #6fbaff, #b388ff);
 }
@@ -37,7 +36,6 @@ body {
     box-shadow: 0 0 25px rgba(255,255,255,0.2);
 }
 
-/* nút Google */
 .login-google {
     display: flex;
     align-items: center;
@@ -63,7 +61,6 @@ body {
     box-shadow: 0 0 12px rgba(255,255,255,0.8);
 }
 
-/* MAIN */
 .container {
     width: 100%;
     max-width: 900px;
@@ -118,10 +115,6 @@ body {
     word-break: break-all;
 }
 
-/* ❌ xoá hover */
-/* .box:hover { ... } */
-
-/* ✅ hiệu ứng bấm */
 .box:active {
     transform: scale(0.95);
     background: rgba(255,255,255,0.35);
@@ -146,12 +139,9 @@ body {
 
 <body>
 
-<!-- LOGIN -->
 <div id="loginUI">
     <div class="login-box">
         <h2>Login</h2>
-
-        <!-- giữ logic cũ nhưng đổi UI -->
         <div class="login-google" onclick="loginGoogle()">
             <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png">
             <span>Đăng nhập bằng Google</span>
@@ -159,7 +149,6 @@ body {
     </div>
 </div>
 
-<!-- MAIN -->
 <div class="container" id="mainUI">
 <div class="header">QUIN DEVELOPER</div>
 
@@ -212,30 +201,24 @@ let links = [
 "https://www.google.com/url?q=https://burirdred.za.com",
 "https://www.google.com/url?q=https://agen77bet.it.com",
 "https://www.google.com/url?q=https://68winvipro01.online",
-"https://www.google.com/url?q=https://twp.in.net"];
-
-let domainMap = {
-    "riegrowtaimo.za.com": "riegrowtaimo.za.com"
-};
-
-let useSiteList = ["tt88vip1.online","68win10.store","tg88-vip1.online","mmoo-trangchu.online","comtech.za.com","68winvipro01.online","twp.in.net","nk88-nk88.online","n188-n188.site","x88-ka.online","galane.za.com","33win-vip1.online","pchh.sa.com"];
-
-function searchGoogle(domain) {
-    let realDomain = domainMap[domain] || domain;
-    let keyword = useSiteList.includes(domain)
-        ? "site:" + realDomain + " " + realDomain
-        : realDomain;
-
-    window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(keyword);
-}
+"https://www.google.com/url?q=https://twp.in.net"
+];
 
 let grid = document.getElementById("grid");
 
-links.forEach(name => {
+links.forEach(link => {
     let div = document.createElement("div");
     div.className = "box";
-    div.innerText = name;
-    div.onclick = () => searchGoogle(name);
+
+    let realLink = link.replace("https://www.google.com/url?q=", "");
+    let domain = realLink.replace("https://", "");
+
+    div.innerText = domain;
+
+    div.onclick = () => {
+        window.open(realLink, "_blank");
+    };
+
     grid.appendChild(div);
 });
 
@@ -255,7 +238,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPe
 from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCoGH-211UP_6o5eqoL4bq6DI4VbzXTKJ0",
+  apiKey: "AIzaSy...",
   authDomain: "check-user-1.firebaseapp.com",
   projectId: "check-user-1",
 };
