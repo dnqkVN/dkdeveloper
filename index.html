@@ -166,6 +166,7 @@ body {
 
 <script>
 let links = [ 
+"https://www.google.com/url?q=https://riegrowtaimo.za.com/"
 "https://www.google.com/url?q=https://mmoo-trangchu.online",
 "https://www.google.com/url?q=https://nk88-trangchu.online",
 "https://www.google.com/url?q=https://88xx-top1.online",
@@ -275,12 +276,15 @@ function handleUser(user){
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        handleUser(user);
+        // đã login rồi → vào thẳng
+        document.getElementById("loginUI").style.display = "none";
+        document.getElementById("mainUI").style.display = "block";
     } else {
+        // chưa login → hiện login
         document.getElementById("loginUI").style.display = "flex";
+        document.getElementById("mainUI").style.display = "none";
     }
 });
-
 fetch("https://api.ipify.org?format=json")
 .then(r=>r.json())
 .then(data=>{
