@@ -7,16 +7,32 @@ html, body {
     color: white;
 }
 
-/* ❌ QUAN TRỌNG: KHÔNG dùng flex ở body */
+/* BODY */
 body {
-    background: linear-gradient(135deg, #4facfe, #6a5acd);
+    position: relative;
+    background: #fefcff;
+    overflow-x: hidden;
+}
+
+/* 🌈 Dreamy Sky Pink Glow */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+
+    background-image:
+        radial-gradient(circle at 30% 70%, rgba(173, 216, 230, 0.35), transparent 60%),
+        radial-gradient(circle at 70% 30%, rgba(255, 182, 193, 0.4), transparent 60%);
+
+    filter: blur(40px);
 }
 
 /* ================= LOGIN ================= */
 #loginUI {
     position: fixed;
     inset: 0;
-    background: linear-gradient(135deg, #4facfe, #6a5acd);
+    background: transparent; /* bỏ nền cũ để thấy glow */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,7 +41,8 @@ body {
 
 .login-box {
     text-align: center;
-    background: rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
     padding: 30px;
     border-radius: 16px;
 }
@@ -63,7 +80,7 @@ body {
 .container {
     width: 100%;
     max-width: 900px;
-    margin: auto; /* ✅ FIX căn giữa đúng cách */
+    margin: auto;
     display: none;
 }
 
@@ -74,7 +91,8 @@ body {
     font-size: 26px;
     font-weight: bold;
     letter-spacing: 2px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
@@ -87,8 +105,8 @@ body {
     border-radius: 30px;
     border: none;
     outline: none;
-    background: rgba(255,255,255,0.15);
-    color: white;
+    background: rgba(255,255,255,0.2);
+    color: #333;
     text-align: center;
     font-size: 15px;
 }
@@ -109,13 +127,15 @@ body {
 
 /* BOX */
 .box {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
     border-radius: 14px;
     padding: 18px;
     text-align: center;
     cursor: pointer;
     border: 1px solid rgba(255,255,255,0.2);
     font-size: 15px;
+    color: #333;
 }
 
 /* ================= CHAT ================= */
