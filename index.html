@@ -210,13 +210,14 @@ links.forEach(link => {
     let div = document.createElement("div");
     div.className = "box";
 
+    // lấy domain để hiển thị
     let realLink = link.replace("https://www.google.com/url?q=", "");
     let domain = realLink.replace("https://", "");
 
     div.innerText = domain;
 
     div.onclick = () => {
-        window.location.href = realLink; // mở trực tiếp (fix mobile)
+        window.location.href = link;
     };
 
     grid.appendChild(div);
