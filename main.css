@@ -1,3 +1,4 @@
+/* RESET */
 html, body {
     margin: 0;
     padding: 0;
@@ -14,12 +15,12 @@ body {
     justify-content: center;
 }
 
-/* LOGIN */
+/* ================= LOGIN ================= */
 #loginUI {
     position: fixed;
     inset: 0;
-    background: linear-gradient(135deg, #4facfe, #a18cd1);
-    display: none;
+    background: radial-gradient(circle at top, #4facfe, #6a5acd, #000);
+    display: flex;
     justify-content: center;
     align-items: center;
     z-index: 999;
@@ -27,27 +28,77 @@ body {
 
 .login-box {
     text-align: center;
-    background: rgba(255,255,255,0.1);
-    padding: 35px;
-    border-radius: 18px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 0 25px rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.08);
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    box-shadow: 
+        0 0 30px rgba(255,255,255,0.15),
+        inset 0 0 15px rgba(255,255,255,0.1);
+    animation: loginFade 0.6s ease;
 }
 
+.login-box h2 {
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+}
+
+/* nút login thường */
 .login-box button {
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 12px 25px;
+    border-radius: 12px;
     border: none;
-    background: white;
+    background: linear-gradient(135deg, #ffffff, #dfe9f3);
     color: #333;
     cursor: pointer;
-    transition: 0.3s;
-}
-.login-box button:hover {
-    transform: scale(1.05);
+    font-weight: bold;
+    transition: 0.2s;
 }
 
-/* MAIN */
+.login-box button:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 15px white;
+}
+
+/* ===== GOOGLE LOGIN ===== */
+.login-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 12px;
+    background: white;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.login-google img {
+    width: 22px;
+    height: 22px;
+}
+
+.login-google:active {
+    transform: scale(0.96);
+    box-shadow: 0 0 12px rgba(255,255,255,0.8);
+}
+
+/* animation login */
+@keyframes loginFade {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ================= MAIN ================= */
 .container {
     width: 100%;
     max-width: 900px;
@@ -82,7 +133,6 @@ body {
     transition: 0.3s;
 }
 
-/* 🔥 animation focus */
 #search:focus {
     width: 90%;
     background: rgba(255,255,255,0.25);
@@ -104,7 +154,7 @@ body {
     }
 }
 
-/* BOX LINK */
+/* BOX */
 .box {
     background: rgba(255,255,255,0.1);
     border-radius: 14px;
@@ -112,19 +162,19 @@ body {
     text-align: center;
     cursor: pointer;
     border: 1px solid rgba(255,255,255,0.2);
-    transition: 0.25s;
+    transition: 0.15s;
     font-size: 15px;
     backdrop-filter: blur(10px);
 }
 
-/* hover effect */
-.box:hover {
-    transform: translateY(-5px) scale(1.02);
-    background: rgba(255,255,255,0.25);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+/* CLICK EFFECT (không còn hover) */
+.box:active {
+    transform: scale(0.95);
+    background: rgba(255,255,255,0.35);
+    box-shadow: 0 0 20px rgba(255,255,255,0.8);
 }
 
-/* CHAT */
+/* ================= CHAT ================= */
 #chatBox {
     margin: 20px;
     padding: 15px;
@@ -133,7 +183,6 @@ body {
     backdrop-filter: blur(10px);
 }
 
-/* input chat */
 #chatBox input {
     padding: 8px;
     border-radius: 10px;
@@ -142,7 +191,6 @@ body {
     margin: 5px;
 }
 
-/* button chat */
 #chatBox button {
     padding: 8px 14px;
     border-radius: 10px;
@@ -153,12 +201,12 @@ body {
     transition: 0.3s;
 }
 
-#chatBox button:hover {
+#chatBox button:active {
     background: #00c6ff;
-    transform: scale(1.05);
+    transform: scale(0.95);
 }
 
-/* message list */
+/* MESSAGES */
 #messages {
     max-height: 220px;
     overflow-y: auto;
@@ -166,7 +214,6 @@ body {
     font-size: 13px;
 }
 
-/* từng tin nhắn */
 #messages div {
     background: rgba(255,255,255,0.1);
     margin-bottom: 6px;
@@ -185,4 +232,4 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
-                     }
+    }
