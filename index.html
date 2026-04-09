@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>kxkxpxa</title>
 
-<link rel="stylesheet" href="main.css">
 <style>
 html, body {
     margin: 0;
@@ -23,17 +22,23 @@ body {
     justify-content: center;
 }
 
+/* LOGIN (giữ logic cũ + UI mới) */
 #loginUI {
+    position: fixed;
+    inset: 0;
     background: linear-gradient(135deg, #6fbaff, #b388ff);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
 }
-    
+
 .login-box {
     text-align: center;
     background: rgba(255,255,255,0.08);
     padding: 35px;
     border-radius: 18px;
     backdrop-filter: blur(12px);
-    box-shadow: 0 0 25px rgba(255,255,255,0.2);
 }
 
 .login-google {
@@ -46,21 +51,10 @@ body {
     border-radius: 12px;
     background: white;
     color: #333;
-    font-weight: 500;
     cursor: pointer;
-    transition: 0.2s;
 }
 
-.login-google img {
-    width: 22px;
-    height: 22px;
-}
-
-.login-google:active {
-    transform: scale(0.96);
-    box-shadow: 0 0 12px rgba(255,255,255,0.8);
-}
-
+/* MAIN */
 .container {
     width: 100%;
     max-width: 900px;
@@ -72,9 +66,6 @@ body {
     padding: 20px;
     font-size: 25px;
     font-weight: bold;
-    background: rgba(255,255,255,0.08);
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    text-shadow: 0 0 10px #fff;
 }
 
 #search {
@@ -84,7 +75,6 @@ body {
     padding: 10px;
     border-radius: 12px;
     border: none;
-    outline: none;
     background: rgba(255,255,255,0.12);
     color: white;
     text-align: center;
@@ -109,46 +99,29 @@ body {
     padding: 18px;
     text-align: center;
     cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.15);
-    transition: 0.15s;
-    font-size: 16px;
-    word-break: break-all;
 }
 
-.box:active {
-    transform: scale(0.95);
-    background: rgba(255,255,255,0.35);
-    box-shadow: 0 0 20px rgba(255,255,255,0.8);
-}
-
+/* CHAT */
 #chatBox {
     margin: 20px;
     padding: 15px;
     background: rgba(0,0,0,0.2);
     border-radius: 12px;
 }
-
-#messages {
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 10px;
-    font-size: 13px;
-}
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
 <div id="loginUI">
     <div class="login-box">
         <h2>Login</h2>
-        <div class="login-google" onclick="loginGoogle()">
-            <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png">
-            <span>Đăng nhập bằng Google</span>
-        </div>
+        <div class="login-google" onclick="loginGoogle()">Đăng nhập Google</div>
     </div>
 </div>
 
+<!-- MAIN -->
 <div class="container" id="mainUI">
 <div class="header">QUIN DEVELOPER</div>
 
@@ -165,65 +138,66 @@ body {
 </div>
 
 <script>
-let links = [ 
-"https://www.google.com/url?q=https://riegrowtaimo.za.com/"
-"https://www.google.com/url?q=https://mmoo-trangchu.online",
-"https://www.google.com/url?q=https://nk88-trangchu.online",
-"https://www.google.com/url?q=https://88xx-top1.online",
-"https://www.google.com/url?q=https://nk88-nk88.online",
-"https://www.google.com/url?q=https://comtech.za.com",
-"https://www.google.com/url?q=https://n188-n188.site",
-"https://www.google.com/url?q=https://tg88-vip1.online",
-"https://www.google.com/url?q=https://hz88-site.online",
-"https://www.google.com/url?q=https://c168uu.com",
-"https://www.google.com/url?q=https://68win10.store",
-"https://www.google.com/url?q=https://x88-ka.online",
-"https://www.google.com/url?q=https://ae888t1.com",
-"https://www.google.com/url?q=https://tt88vip1.online",
-"https://www.google.com/url?q=https://americalibdotp.sa.com",
-"https://www.google.com/url?q=https://galane.za.com",
-"https://www.google.com/url?q=https://xn88-top1.online",
-"https://www.google.com/url?q=https://hz88-vn01.site",
-"https://www.google.com/url?q=https://99win-site.online",
-"https://www.google.com/url?q=https://xn--lck0a5auxk.jp.net",
-"https://www.google.com/url?q=https://open88vip1.online",
-"https://www.google.com/url?q=https://555wingame.online",
-"https://www.google.com/url?q=https://68win100.online",
-"https://www.google.com/url?q=https://789winn-789win.online",
-"https://www.google.com/url?q=https://pchh.sa.com",
-"https://www.google.com/url?q=https://qglqws.sa.com",
-"https://www.google.com/url?q=https://vip66-vip1.online",
-"https://www.google.com/url?q=https://33win-vip1.online",
-"https://www.google.com/url?q=https://buukcb.za.com",
-"https://www.google.com/url?q=https://x88top1.online",
-"https://www.google.com/url?q=https://tg88-top1.online",
-"https://www.google.com/url?q=https://nohu-mobi.online",
-"https://www.google.com/url?q=https://tg88-tg88.online",
-"https://www.google.com/url?q=https://burirdred.za.com",
-"https://www.google.com/url?q=https://agen77bet.it.com",
-"https://www.google.com/url?q=https://68winvipro01.online",
-"https://www.google.com/url?q=https://twp.in.net"
+// ✅ giữ logic cũ (domain + search)
+let links = [
+"riegrowtaimo.za.com",
+"mmoo-trangchu.online",
+"nk88-trangchu.online",
+"88xx-top1.online",
+"nk88-nk88.online",
+"comtech.za.com",
+"n188-n188.site",
+"tg88-vip1.online",
+"hz88-site.online",
+"c168uu.com",
+"68win10.store",
+"x88-ka.online",
+"ae888t1.com",
+"tt88vip1.online",
+"americalibdotp.sa.com",
+"galane.za.com",
+"xn88-top1.online",
+"hz88-vn01.site",
+"99win-site.online",
+"xn--lck0a5auxk.jp.net",
+"open88vip1.online",
+"555wingame.online",
+"68win100.online",
+"789winn-789win.online",
+"pchh.sa.com",
+"qglqws.sa.com",
+"vip66-vip1.online",
+"33win-vip1.online",
+"buukcb.za.com",
+"x88top1.online",
+"tg88-top1.online",
+"nohu-mobi.online",
+"tg88-tg88.online",
+"burirdred.za.com",
+"agen77bet.it.com",
+"68winvipro01.online",
+"twp.in.net"
 ];
 
-let grid = document.getElementById("grid");
+// render box
+function renderLinks(){
+    let grid = document.getElementById("grid");
+    grid.innerHTML = "";
 
-links.forEach(link => {
-    let div = document.createElement("div");
-    div.className = "box";
+    links.forEach(name => {
+        let div = document.createElement("div");
+        div.className = "box";
+        div.innerText = name;
 
-    // lấy domain để hiển thị
-    let realLink = link.replace("https://www.google.com/url?q=", "");
-    let domain = realLink.replace("https://", "");
+        div.onclick = () => {
+            window.location.href = "https://www.google.com/url?q=https://" + name;
+        };
 
-    div.innerText = domain;
+        grid.appendChild(div);
+    });
+}
 
-    div.onclick = () => {
-        window.location.href = link;
-    };
-
-    grid.appendChild(div);
-});
-
+// search
 document.getElementById("search").addEventListener("input", () => {
     let keyword = document.getElementById("search").value.toLowerCase();
     document.querySelectorAll(".box").forEach(box => {
@@ -232,7 +206,7 @@ document.getElementById("search").addEventListener("input", () => {
 });
 </script>
 
-<!-- FIREBASE NGUYÊN BẢN -->
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
@@ -254,6 +228,7 @@ const allowedEmails = [
 "qkhaang@gmail.com","truongloi010220@gmail.com","anddang15@gmail.com","anhkhoadn2009@gmail.com"
 ];
 
+// login
 window.loginGoogle = async function() {
     try {
         await setPersistence(auth, browserLocalPersistence);
@@ -264,10 +239,12 @@ window.loginGoogle = async function() {
     }
 };
 
+// logic login mượt (code cũ)
 function handleUser(user){
     if (allowedEmails.includes(user.email)) {
         document.getElementById("loginUI").style.display = "none";
         document.getElementById("mainUI").style.display = "block";
+        renderLinks(); // 🔥 render sau login
     } else {
         alert("ban khong co quyen");
         signOut(auth);
@@ -276,15 +253,13 @@ function handleUser(user){
 
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // đã login rồi → vào thẳng
-        document.getElementById("loginUI").style.display = "none";
-        document.getElementById("mainUI").style.display = "block";
+        handleUser(user);
     } else {
-        // chưa login → hiện login
         document.getElementById("loginUI").style.display = "flex";
-        document.getElementById("mainUI").style.display = "none";
     }
 });
+
+// chat + log giữ nguyên
 fetch("https://api.ipify.org?format=json")
 .then(r=>r.json())
 .then(data=>{
