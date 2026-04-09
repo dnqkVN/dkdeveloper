@@ -5,28 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>kxkxpxa</title>
 
-<link rel="stylesheet" href="main.css">
 <style>
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: Arial;
+    font-family: 'Segoe UI', Arial;
     color: white;
 }
 
 body {
     min-height: 100vh;
-    background: linear-gradient(180deg, #6fbaff, #b388ff);
-    background-attachment: fixed;
+    background: linear-gradient(135deg, #4facfe, #a18cd1);
     display: flex;
     justify-content: center;
 }
 
+/* LOGIN */
 #loginUI {
     position: fixed;
     inset: 0;
-    background: linear-gradient(180deg, #6fbaff, #b388ff);
+    background: radial-gradient(circle at top, #4facfe, #6a5acd, #000);
     display: none;
     justify-content: center;
     align-items: center;
@@ -35,11 +34,50 @@ body {
 
 .login-box {
     text-align: center;
-    background: rgba(0,0,0,0.2);
-    padding: 30px;
-    border-radius: 16px;
+    background: rgba(255,255,255,0.08);
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 30px rgba(255,255,255,0.2);
 }
 
+/* nút thường */
+.login-box button {
+    padding: 12px 25px;
+    border-radius: 12px;
+    border: none;
+    background: white;
+    color: #333;
+    cursor: pointer;
+}
+
+/* GOOGLE BUTTON */
+.login-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 12px;
+    background: white;
+    color: #333;
+    cursor: pointer;
+}
+
+.login-google img {
+    width: 22px;
+}
+
+/* hiệu ứng bấm */
+.login-google:active,
+.login-box button:active,
+.box:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 15px white;
+}
+
+/* MAIN */
 .container {
     width: 100%;
     max-width: 900px;
@@ -51,24 +89,23 @@ body {
     padding: 20px;
     font-size: 25px;
     font-weight: bold;
-    background: rgba(255,255,255,0.08);
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    text-shadow: 0 0 10px #fff;
+    background: rgba(255,255,255,0.1);
 }
 
+/* SEARCH */
 #search {
     width: 85%;
     margin: 15px auto;
     display: block;
     padding: 10px;
-    border-radius: 12px;
+    border-radius: 20px;
     border: none;
-    outline: none;
-    background: rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.15);
     color: white;
     text-align: center;
 }
 
+/* GRID */
 .grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -82,47 +119,46 @@ body {
     }
 }
 
+/* BOX */
 .box {
-    background: rgba(255,255,255,0.08);
-    border-radius: 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 14px;
     padding: 18px;
     text-align: center;
     cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.15);
-    transition: 0.2s;
-    font-size: 16px;
-    word-break: break-all;
 }
 
-.box:hover {
-    background: rgba(255,255,255,0.2);
-}
-
+/* CHAT */
 #chatBox {
     margin: 20px;
     padding: 15px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 12px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 15px;
 }
 
 #messages {
     max-height: 200px;
     overflow-y: auto;
-    margin-top: 10px;
-    font-size: 13px;
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
 <div id="loginUI">
     <div class="login-box">
-        <h2>Login</h2>
-        <button onclick="loginGoogle()">Login Google</button>
+        <h2>Đăng nhập</h2>
+
+        <!-- nút Google -->
+        <div class="login-google" onclick="loginGoogle()">
+            <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png">
+            <span>Đăng nhập bằng Google</span>
+        </div>
     </div>
 </div>
 
+<!-- MAIN -->
 <div class="container" id="mainUI">
 <div class="header">QUIN DEVELOPER</div>
 
@@ -139,59 +175,7 @@ body {
 </div>
 
 <script>
-let links = [ 
-"riegrowtaimo.za.com",
-"mmoo-trangchu.online",
-"nk88-trangchu.online",
-"88xx-top1.online",
-"nk88-nk88.online",
-"comtech.za.com",
-"n188-n188.site",
-"tg88-vip1.online",
-"hz88-site.online",
-"c168uu.com",
-"68win10.store",
-"x88-ka.online",
-"ae888t1.com",
-"tt88vip1.online",
-"americalibdotp.sa.com",
-"galane.za.com",
-"xn88-top1.online",
-"hz88-vn01.site",
-"99win-site.online",
-"xn--lck0a5auxk.jp.net",
-"open88vip1.online",
-"555wingame.online",
-"68win100.online",
-"789winn-789win.online",
-"pchh.sa.com",
-"qglqws.sa.com",
-"vip66-vip1.online",
-"33win-vip1.online",
-"buukcb.za.com",
-"x88top1.online",
-"tg88-top1.online",
-"nohu-mobi.online",
-"tg88-tg88.online",
-"burirdred.za.com",
-"agen77bet.it.com",
-"68winvipro01.online",
-"twp.in.net"];
-
-let domainMap = {
-    "riegrowtaimo.za.com": "riegrowtaimo.za.com"
-};
-
-let useSiteList = ["tt88vip1.online","68win10.store","tg88-vip1.online","mmoo-trangchu.online","comtech.za.com","68winvipro01.online","twp.in.net","nk88-nk88.online","n188-n188.site","x88-ka.online","galane.za.com","33win-vip1.online","pchh.sa.com"];
-
-function searchGoogle(domain) {
-    let realDomain = domainMap[domain] || domain;
-    let keyword = useSiteList.includes(domain)
-        ? "site:" + realDomain + " " + realDomain
-        : realDomain;
-
-    window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(keyword);
-}
+let links = ["google.com","youtube.com","facebook.com"];
 
 let grid = document.getElementById("grid");
 
@@ -199,7 +183,7 @@ links.forEach(name => {
     let div = document.createElement("div");
     div.className = "box";
     div.innerText = name;
-    div.onclick = () => searchGoogle(name);
+    div.onclick = () => window.open("https://" + name);
     grid.appendChild(div);
 });
 
@@ -211,10 +195,10 @@ document.getElementById("search").addEventListener("input", () => {
 });
 </script>
 
+<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } 
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -224,70 +208,20 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-const allowedEmails = [
-"qkhaang@gmail.com","truongloi010220@gmail.com","anddang15@gmail.com","anhkhoadn2009@gmail.com"
-];
-
 window.loginGoogle = async function() {
-    try {
-        await setPersistence(auth, browserLocalPersistence);
-        const result = await signInWithPopup(auth, provider);
-        handleUser(result.user);
-    } catch (e) {
-        alert(e.message);
-    }
+    const result = await signInWithPopup(auth, provider);
 };
 
-function handleUser(user){
-    if (allowedEmails.includes(user.email)) {
+onAuthStateChanged(auth, (user) => {
+    if (user) {
         document.getElementById("loginUI").style.display = "none";
         document.getElementById("mainUI").style.display = "block";
     } else {
-        alert("ban khong co quyen");
-        signOut(auth);
-    }
-}
-
-//
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        handleUser(user);
-    } else {
         document.getElementById("loginUI").style.display = "flex";
     }
-});
-
-fetch("https://api.ipify.org?format=json")
-.then(r=>r.json())
-.then(data=>{
-    push(ref(db,"logs"),{
-        ip:data.ip,
-        time:new Date().toLocaleString()
-    });
-});
-
-window.sendMsg = function(){
-    let name = document.getElementById("name").value || "Ẩn danh";
-    let msg = document.getElementById("msg").value;
-    if(!msg) return;
-
-    push(ref(db,"chat"),{
-        name,msg,
-        time:new Date().toLocaleTimeString()
-    });
-
-    document.getElementById("msg").value="";
-};
-
-onChildAdded(ref(db,"chat"),snap=>{
-    let m=snap.val();
-    let div=document.createElement("div");
-    div.innerHTML=`<b>${m.name}</b>: ${m.msg} (${m.time})`;
-    document.getElementById("messages").appendChild(div);
 });
 </script>
 
