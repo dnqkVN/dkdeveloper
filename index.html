@@ -223,7 +223,7 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 const allowedEmails = [
-"qkhaang@gmail.com","truongloi010220@gmail.com","anddang15@gmail.com","anhkhoadn2009@gmail.com"
+"qkhang@gmail.com","truongloi010220@gmail.com","anddang15@gmail.com","anhkhoadn2009@gmail.com"
 ];
 
 // login
@@ -272,11 +272,12 @@ window.sendMsg = function(){
     let msg = document.getElementById("msg").value;
     if(!msg) return;
 
-    push(ref(db,"chat"),{
-        name,msg,
-        time:new Date().toLocaleTimeString()
-    });
-
+push(ref(db,"chat"),{
+    name,
+    msg,
+    time:new Date().toLocaleTimeString(),
+    timestamp: Date.now()
+});
     document.getElementById("msg").value="";
 };
 
