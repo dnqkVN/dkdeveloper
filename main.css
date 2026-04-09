@@ -7,6 +7,11 @@ html, body {
     color: white;
 }
 
+/* ❌ QUAN TRỌNG: KHÔNG dùng flex ở body */
+body {
+    background: linear-gradient(135deg, #4facfe, #6a5acd);
+}
+
 /* ================= LOGIN ================= */
 #loginUI {
     position: fixed;
@@ -58,6 +63,7 @@ html, body {
 .container {
     width: 100%;
     max-width: 900px;
+    margin: auto; /* ✅ FIX căn giữa đúng cách */
     display: none;
 }
 
