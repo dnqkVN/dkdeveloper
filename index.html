@@ -127,7 +127,7 @@ body {
 <div class="grid" id="grid"></div>
 
 <div id="chatBox">
-    <h3>💬 Chat tổng</h3>
+    <h3>💬 Chat tổng <span id="countdown"></span></h3>
     <input id="name" placeholder="Tên..." style="width:30%">
     <input id="msg" placeholder="Nhập tin..." style="width:50%">
     <button onclick="sendMsg()">Gửi</button>
@@ -300,6 +300,44 @@ function cleanOldMessages() {
         });
     });
 }
+
+    // ================= ĐỒNG HỒ ĐẾM NGƯỢC =================
+function updateCountdown() {
+    const now = Date.now();
+    const countdownEl = document.getElementById("countdown");
+
+    get(ref(db, "chat")).then(snapshot => {
+        let latestTime = 0;
+
+        snapshot.forEach(child => {
+            let data = child.val();
+            if (data.timestamp && data.timestamp > latestTime) {
+                latestTime = data.timestamp;
+            }
+        });
+
+        if (latestTime === 0) {
+            countdownEl.innerText = "(chưa có tin)";
+            return;
+        }
+
+        let timeLeft = (latestTime + (25 * 60 * 60 * 1000)) - now;
+
+        if (timeLeft <= 0) {
+            countdownEl.innerText = "(đang xoá...)";
+            return;
+        }
+
+        let h = Math.floor(timeLeft / (1000 * 60 * 60));
+        let m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        let s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        countdownEl.innerText = `(${h}h ${m}m ${s}s)`;
+    });
+}
+
+// 🔥 cập nhật mỗi giây
+setInterval(updateCountdown, 1000);
 
 // 🔥 tự chạy nền mỗi 10 phút
 setInterval(cleanOldMessages, 10 * 60 * 1000);
