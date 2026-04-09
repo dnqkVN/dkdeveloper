@@ -198,14 +198,6 @@ body {
     font-size: 13px;
 }
 
-#messages div {
-    background: rgba(255,255,255,0.1);
-    margin-bottom: 6px;
-    padding: 6px 10px;
-    border-radius: 10px;
-    animation: fadeIn 0.3s ease;
-}
-
 /* animation tin nhắn */
 @keyframes fadeIn {
     from {
