@@ -321,7 +321,7 @@ function updateCountdown() {
             return;
         }
 
-        let timeLeft = (latestTime + (25 * 60 * 60 * 1000)) - now;
+        let timeLeft = (latestTime + (2 * 60 * 60 * 60)) - now;
 
         if (timeLeft <= 0) {
             countdownEl.innerText = "(đang xoá...)";
