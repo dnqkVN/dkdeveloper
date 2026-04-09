@@ -7,14 +7,6 @@ html, body {
     color: white;
 }
 
-body {
-    min-height: 100vh;
-    background: linear-gradient(135deg, #4facfe, #a18cd1);
-    background-attachment: fixed;
-    display: flex;
-    justify-content: center;
-}
-
 /* ================= LOGIN ================= */
 #loginUI {
     position: fixed;
