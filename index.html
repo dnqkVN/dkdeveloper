@@ -216,7 +216,7 @@ links.forEach(link => {
     div.innerText = domain;
 
     div.onclick = () => {
-        window.open(realLink, "_blank");
+        window.location.href = realLink; // mở trực tiếp (fix mobile)
     };
 
     grid.appendChild(div);
@@ -230,7 +230,7 @@ document.getElementById("search").addEventListener("input", () => {
 });
 </script>
 
-<!-- FIREBASE GIỮ NGUYÊN -->
+<!-- FIREBASE NGUYÊN BẢN -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
@@ -238,7 +238,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPe
 from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSy...",
+  apiKey: "AIzaSyCoGH-211UP_6o5eqoL4bq6DI4VbzXTKJ0",
   authDomain: "check-user-1.firebaseapp.com",
   projectId: "check-user-1",
 };
