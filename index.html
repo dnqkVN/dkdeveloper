@@ -225,7 +225,7 @@ const userNames = {
     "qkhaang@gmail.com": "qk",
     "truongloi010220@gmail.com": "phát béo",
     "anddang15@gmail.com": "an",
-    "truonghuuphat9991@gmail.com",: "thp"
+    "truonghuuphat9991@gmail.com": "thp",
     "anhkhoadn2009@gmail.com": "khoa"
 };
 const allowedEmails = [
@@ -252,7 +252,7 @@ function handleUser(user){
     if (allowedEmails.includes(user.email)) {
 
         currentUserEmail = user.email; // ✅ LƯU EMAIL
-        document.getElementById("name").value = user.email; // ✅ HIỆN LÊN
+        document.getElementById("name").value = userNames[user.email] || user.email; // ✅ HIỆN LÊN
 
         document.getElementById("loginUI").style.display = "none";
         document.getElementById("mainUI").style.display = "block";
