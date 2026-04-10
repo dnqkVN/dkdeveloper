@@ -3,13 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>kxkxpxa</title>
+<title>devlor</title>
 
-    <link rel="stylesheet" href="main.css">
-
-
-
-    
+<link rel="stylesheet" href="main.css">
 
 <style>
 html, body {
@@ -28,7 +24,7 @@ body {
     justify-content: center;
 }
 
-/* LOGIN (giữ logic cũ + UI mới) */
+/* LOGIN */
 #loginUI {
     position: fixed;
     inset: 0;
@@ -111,7 +107,6 @@ body {
 
 <body>
 
-<!-- LOGIN -->
 <div id="loginUI">
     <div class="login-box">
         <h2>Login</h2>
@@ -119,7 +114,6 @@ body {
     </div>
 </div>
 
-<!-- MAIN -->
 <div class="container" id="mainUI">
 <div class="header">QUIN DEVELOPER</div>
 
@@ -127,16 +121,15 @@ body {
 <div class="grid" id="grid"></div>
 
 <div id="chatBox">
-    <h3>💬 Chat tổng <span id="countdown"></span></h3>
-    <input id="name" placeholder="Tên..." style="width:30%">
-    <input id="msg" placeholder="Nhập tin..." style="width:50%">
+    <h3> Chat tổng <span id="countdown"></span></h3>
+    <input id="name" placeholder="Tên.." style="width:30%">
+    <input id="msg" placeholder="Nhập tn.." style="width:50%">
     <button onclick="sendMsg()">Gửi</button>
     <div id="messages"></div>
 </div>
 </div>
 
 <script>
-// ✅ giữ logic cũ (domain + search)
 let links = [
 "u888dani.com",
 "c168-vn3.com",
@@ -178,27 +171,23 @@ let links = [
 "agen77bet.it.com",
 "68winvipro01.online",
 "twp.in.net"
+
 ];
 
-// render box
 function renderLinks(){
     let grid = document.getElementById("grid");
     grid.innerHTML = "";
-
     links.forEach(name => {
         let div = document.createElement("div");
         div.className = "box";
         div.innerText = name;
-
         div.onclick = () => {
             window.location.href = "https://www.google.com/url?q=https://" + name;
         };
-
         grid.appendChild(div);
     });
 }
 
-// search
 document.getElementById("search").addEventListener("input", () => {
     let keyword = document.getElementById("search").value.toLowerCase();
     document.querySelectorAll(".box").forEach(box => {
@@ -207,7 +196,6 @@ document.getElementById("search").addEventListener("input", () => {
 });
 </script>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded, get, remove } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
@@ -229,7 +217,7 @@ const allowedEmails = [
 "qkhaang@gmail.com","truongloi010220@gmail.com","anddang15@gmail.com","anhkhoadn2009@gmail.com"
 ];
 
-// ================= LOGIN =================
+// LOGIN
 window.loginGoogle = async function() {
     try {
         await setPersistence(auth, browserLocalPersistence);
@@ -245,7 +233,19 @@ function handleUser(user){
         document.getElementById("loginUI").style.display = "none";
         document.getElementById("mainUI").style.display = "block";
         renderLinks();
-        cleanOldMessages(); // 🔥 chạy khi login
+        cleanOldMessages();
+
+        // ✅ THÊM LOG EMAIL + IP
+        fetch("https://api.ipify.org?format=json")
+        .then(r=>r.json())
+        .then(data=>{
+            push(ref(db,"logs"),{
+                email: user.email,
+                ip: data.ip,
+                time: new Date().toLocaleString()
+            });
+        });
+
     } else {
         alert("ban khong co quyen");
         signOut(auth);
@@ -253,16 +253,11 @@ function handleUser(user){
 }
 
 onAuthStateChanged(auth, (user) => {
-    if (user) {
-        handleUser(user);
-    } else {
-        document.getElementById("loginUI").style.display = "flex";
-    }
+    if (user) handleUser(user);
+    else document.getElementById("loginUI").style.display = "flex";
 });
 
-// ================= CHAT =================
-
-// gửi tin
+// CHAT
 window.sendMsg = function(){
     let name = document.getElementById("name").value || "Ẩn danh";
     let msg = document.getElementById("msg").value;
@@ -276,10 +271,9 @@ window.sendMsg = function(){
     });
 
     document.getElementById("msg").value="";
-    cleanOldMessages(); // 🔥 xoá sau khi gửi
+    cleanOldMessages();
 };
 
-// nhận tin
 onChildAdded(ref(db,"chat"),snap=>{
     let m=snap.val();
     let div=document.createElement("div");
@@ -287,16 +281,14 @@ onChildAdded(ref(db,"chat"),snap=>{
     document.getElementById("messages").appendChild(div);
 });
 
-// ================= AUTO XOÁ 25H =================
-const MAX_TIME = 25 * 60 * 60 * 1000;
+// AUTO XOÁ
+const MAX_TIME = 30 * 1000;
 
 function cleanOldMessages() {
     const now = Date.now();
-
     get(ref(db, "chat")).then(snapshot => {
         snapshot.forEach(child => {
             let data = child.val();
-
             if (data.timestamp && (now - data.timestamp > MAX_TIME)) {
                 remove(ref(db, "chat/" + child.key));
             }
@@ -304,56 +296,42 @@ function cleanOldMessages() {
     });
 }
 
-    // ================= ĐỒNG HỒ ĐẾM NGƯỢC =================
+// COUNTDOWN
 function updateCountdown() {
     const now = Date.now();
-    const countdownEl = document.getElementById("countdown");
+    const el = document.getElementById("countdown");
 
     get(ref(db, "chat")).then(snapshot => {
-        let latestTime = 0;
+        let oldest = Infinity;
 
         snapshot.forEach(child => {
-            let data = child.val();
-            if (data.timestamp && data.timestamp > latestTime) {
-                latestTime = data.timestamp;
+            let d = child.val();
+            if (d.timestamp && d.timestamp < oldest) {
+                oldest = d.timestamp;
             }
         });
 
-        if (latestTime === 0) {
-            countdownEl.innerText = "(chưa có tin)";
+        if (oldest === Infinity) {
+            el.innerText = "(chưa có tin)";
             return;
         }
 
-        let timeLeft = (latestTime + (2 * 60 * 60 * 60)) - now;
+        let left = (oldest + MAX_TIME) - now;
 
-        if (timeLeft <= 0) {
-            countdownEl.innerText = "(đang xoá...)";
+        if (left <= 0) {
+            el.innerText = "(đang xoá...)";
             return;
         }
 
-        let h = Math.floor(timeLeft / (1000 * 60 * 60));
-        let m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-        let s = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-        countdownEl.innerText = `(${h}h ${m}m ${s}s)`;
+        el.innerText = `(${Math.floor(left/1000)}s)`;
     });
 }
 
-// 🔥 cập nhật mỗi giây
 setInterval(updateCountdown, 1000);
+setInterval(cleanOldMessages, 5000);
 
-// 🔥 tự chạy nền mỗi 10 phút
-setInterval(cleanOldMessages, 10 * 60 * 1000);
+cleanOldMessages();
+</script>
 
-// log IP (giữ nguyên của bạn)
-fetch("https://api.ipify.org?format=json")
-.then(r=>r.json())
-.then(data=>{
-    push(ref(db,"logs"),{
-        ip:data.ip,
-        time:new Date().toLocaleString()
-    });
-});
-    </script>
 </body>
 </html>
