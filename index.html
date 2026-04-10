@@ -122,7 +122,7 @@ body {
 
 <div id="chatBox">
     <h3> Chat tổng <span id="countdown"></span></h3>
-    <input id="name" placeholder="Tên.." style="width:30%">
+    <input id="name" placeholder="Tên.." readonly style="width:30%">
     <input id="msg" placeholder="Nhập tn.." style="width:50%">
     <button onclick="sendMsg()">Gửi</button>
     <div id="messages"></div>
@@ -192,6 +192,18 @@ document.getElementById("search").addEventListener("input", () => {
 </script>
 
 <script type="module">
+  function maskEmail(email) {
+    let [name, domain] = email.split("@");
+
+    if (name.length <= 3) {
+        name = name[0] + "***";
+    } else {
+        name = name.slice(0, 3) + "***";
+    }
+
+    return name + "@" + domain;
+}
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded, get, remove } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } 
@@ -208,9 +220,22 @@ const db = getDatabase(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+let currentUserEmail = ""; // ✅ THÊM
+const userNames = {
+    "qkhaang@gmail.com": "qk",
+    "truongloi010220@gmail.com": "phát béo",
+    "anddang15@gmail.com": "an",
+    "truonghuuphat9991@gmail.com",: "thp"
+    "anhkhoadn2009@gmail.com": "khoa"
+};
 const allowedEmails = [
-"qkhaang@gmail.com","truongloi010220@gmail.com","anddang15@gmail.com","anhkhoadn2009@gmail.com"
+    "qkhaang@gmail.com",
+    "truongloi010220@gmail.com",
+    "truonghuuphat9991@gmail.com",
+    "anddang15@gmail.com",
+    "anhkhoadn2009@gmail.com"
 ];
+
 
 // LOGIN
 window.loginGoogle = async function() {
@@ -225,12 +250,15 @@ window.loginGoogle = async function() {
 
 function handleUser(user){
     if (allowedEmails.includes(user.email)) {
+
+        currentUserEmail = user.email; // ✅ LƯU EMAIL
+        document.getElementById("name").value = user.email; // ✅ HIỆN LÊN
+
         document.getElementById("loginUI").style.display = "none";
         document.getElementById("mainUI").style.display = "block";
         renderLinks();
         cleanOldMessages();
 
-        // ✅ THÊM LOG EMAIL + IP
         fetch("https://api.ipify.org?format=json")
         .then(r=>r.json())
         .then(data=>{
@@ -254,13 +282,14 @@ onAuthStateChanged(auth, (user) => {
 
 // CHAT
 window.sendMsg = function(){
-    let name = document.getElementById("name").value || "Ẩn danh";
     let msg = document.getElementById("msg").value;
+
     if(!msg) return;
+    if(!currentUserEmail) return alert("Chưa đăng nhập");
 
     push(ref(db,"chat"),{
-        name,
-        msg,
+        name: currentUserEmail, // ✅ EMAIL
+        msg: msg,
         time:new Date().toLocaleTimeString(),
         timestamp: Date.now()
     });
@@ -272,12 +301,13 @@ window.sendMsg = function(){
 onChildAdded(ref(db,"chat"),snap=>{
     let m=snap.val();
     let div=document.createElement("div");
-    div.innerHTML=`<b>${m.name}</b>: ${m.msg} (${m.time})`;
+    let displayName = userNames[m.name] || maskEmail(m.name);
+div.innerHTML=`<b>${displayName}</b>: ${m.msg} (${m.time})`;
     document.getElementById("messages").appendChild(div);
 });
 
 // AUTO XOÁ
-const MAX_TIME = 24 * 60 * 60 * 1000; // 24 giờ
+const MAX_TIME = 24 * 60 * 60 * 1000;
 
 function cleanOldMessages() {
     const now = Date.now();
@@ -318,7 +348,7 @@ function updateCountdown() {
             return;
         }
 
-        el.innerText = `(${Math.floor(left/1000)}s)`;
+        let seconds = Math.floor(left / 1000);  let h = Math.floor(seconds / 3600); let m = Math.floor((seconds % 3600) / 60); let s = seconds % 60;  el.innerText = `(${h}h ${m}m ${s}s)`;
     });
 }
 
