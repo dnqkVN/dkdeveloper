@@ -381,7 +381,7 @@ window.loginGoogle = async function() {
 };
 
 window.logoutGoogle = function() {
-    let confirmAction = confirm("Bạn có chắc muốn log k?");
+    let confirmAction = confirm("Bạn có chắc muốn logout k?");
     if (confirmAction) {
         signOut(auth).then(() => {
             window.location.reload(); 
