@@ -368,11 +368,16 @@ window.sendMsg = function(){
 onChildAdded(ref(db,"chat"),snap=>{
     let m = snap.val();
     let div = document.createElement("div");
-    div.innerHTML = `<b style="color: #ffeb3b;">${userNames[m.name] || m.name}</b>: ${m.msg}`;
-    let container = document.getElementById("messages");
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
+    let displayName = userNames[m.name] || maskEmail(m.name);
+    
+    // Đã chuyển tên về màu trắng mặc định
+    div.innerHTML = `<b>${displayName}</b>: ${m.msg} <span style="font-size:11px; opacity:0.6;">(${m.time})</span>`;
+    
+    let msgContainer = document.getElementById("messages");
+    msgContainer.appendChild(div);
+    msgContainer.scrollTop = msgContainer.scrollHeight;
 });
+
 </script>
 
 </body>
