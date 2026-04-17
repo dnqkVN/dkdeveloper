@@ -307,7 +307,16 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
 let currentUserEmail = ""; 
-const userNames = { "qkhaang@gmail.com": "qk", "khangdoannq@gmail.com": "kdoan", "truongloi010220@gmail.com": "phát béo", "anddang15@gmail.com": "an", "truonghuuphat9991@gmail.com": "lọ dùm trai 6 múi", "anhkhoadn2009@gmail.com": "khoa", "tmai28298@gmail.com": "tmai", "12345vanthach@gmail.com": "nam" };
+const userNames = {
+    "qkhaang@gmail.com": "qk",
+    "khangdoannq@gmail.com": "kdoan",
+    "truongloi010220@gmail.com": "phát béo",
+    "anddang15@gmail.com": "an",
+    "truonghuuphat9991@gmail.com": "lọ dùm trai 6 múi",
+    "anhkhoadn2009@gmail.com": "khoa",
+    "tmai28298@gmail.com": "tmai",
+    "12345vanthach@gmail.com": "nam"
+};
 const allowedEmails = Object.keys(userNames);
 
 // ĐIỀU KHIỂN MODAL ĐĂNG XUẤT
