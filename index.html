@@ -252,7 +252,6 @@ onAuthStateChanged(auth, u => {
                 if(scoreTimer) clearTimeout(scoreTimer);
                 scoreTimer = setTimeout(() => {
                     update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { points: increment(0.5), name: name });
-                    alert("Chúc mừng! Bạn đã nhận được 0.5 điểm sau 80 giây.");
                     scoreTimer = null; 
                 }, 80000); 
             };
