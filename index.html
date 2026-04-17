@@ -17,7 +17,7 @@
     --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-/* FIX CHỐNG NHÁY: Ẩn body ngay từ đầu */
+/* FIX CHỐNG NHÁY */
 body { 
     display: none; 
     margin: 0; min-height: 100vh; font-family: 'Segoe UI', sans-serif; 
@@ -49,6 +49,7 @@ body {
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sub); cursor: pointer; transition: 0.3s; }
 .nav-item.active { color: var(--primary-color); transform: translateY(-3px); }
 .nav-text { font-size: 9px; font-weight: 800; text-transform: uppercase; }
+.nav-icon-img { width: 22px; height: 22px; object-fit: contain; }
 
 /* SEARCH & GRID */
 #search { 
@@ -63,19 +64,11 @@ body {
 }
 .box:hover { background: rgba(255,255,255,0.25); transform: scale(1.02); }
 
-/* CHAT CẢI TIẾN */
+/* CHAT */
 .chat-container { background: var(--glass-bg); border-radius: 25px; border: 1px solid var(--glass-border); padding: 15px; height: 60vh; display: flex; flex-direction: column; }
 #messages { flex: 1; overflow-y: auto; padding-right: 5px; }
 .msg-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); max-width: 90%; }
-/* Tên người dùng màu trắng cho dễ nhìn trên nền tối */
-.msg-user { 
-    color: #ffffff !important; 
-    font-weight: 800; 
-    font-size: 12px; 
-    margin-bottom: 2px; 
-    display: block; 
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
-}
+.msg-user { color: #ffffff !important; font-weight: 800; font-size: 12px; margin-bottom: 2px; display: block; text-shadow: 1px 1px 2px rgba(0,0,0,0.6); }
 .msg-text { font-size: 13px; color: white; }
 .msg-time { font-size: 9px; opacity: 0.5; margin-top: 4px; text-align: right; }
 .chat-input-row { display: flex; gap: 8px; margin-top: 10px; }
@@ -89,31 +82,15 @@ body {
 .role-admin { background: white; color: #6a5acd; border: 1px solid white; }
 .role-user { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--glass-border); }
 
-/* NÚT ĐĂNG XUẤT MỚI TRONG TRANG PROFILE (HIỆU ỨNG KÍNH MỜ) */
+/* NÚT ĐĂNG XUẤT */
 .profile-logout-btn {
-    margin-top: 20px;
-    width: 100%;
-    padding: 16px;
-    border-radius: 25px; 
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    color: #ff4d4d;
-    font-weight: 800;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: 0.3s;
-    box-shadow: var(--shadow-soft);
+    margin-top: 20px; width: 100%; padding: 16px; border-radius: 25px; 
+    background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); border: 1px solid var(--glass-border);
+    color: #ff4d4d; font-weight: 800; font-size: 16px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; box-shadow: var(--shadow-soft);
 }
-.profile-logout-btn:hover {
-    background: rgba(0, 0, 0, 0.5);
-    transform: translateY(-2px);
-    border-color: rgba(255, 77, 77, 0.5);
-}
+.profile-logout-btn:hover { background: rgba(0, 0, 0, 0.5); transform: translateY(-2px); border-color: rgba(255, 77, 77, 0.5); }
+.logout-icon-img { width: 22px; height: 22px; object-fit: contain; }
 
 .admin-card { background: var(--glass-bg); border-radius: 20px; padding: 15px; border: 1px solid var(--glass-border); }
 .admin-table { width: 100%; border-collapse: collapse; color: white; }
@@ -138,7 +115,6 @@ body {
 </div>
 
 <div class="container" id="mainUI">
-
     <div id="page-home" class="page-section active-page">
         <div class="header-box">quin developer</div>
         <input type="text" id="search" placeholder="🔍 Tìm nhanh..">
@@ -176,14 +152,15 @@ body {
         </div>
         
         <div class="profile-logout-btn" onclick="openLogoutModal()">
-            <span style="font-size: 20px;">🚪</span> Đăng xuất
+            <img src="logout.png" class="logout-icon-img" alt="logout"> Đăng xuất
         </div>
     </div>
 </div>
 
 <div class="nav-bar" id="navBar">
     <div class="nav-item active" onclick="switchTab('home', this)">
-        <span class="nav-icon">🏠</span><span class="nav-text">Home</span>
+        <img src="home.png" class="nav-icon-img" alt="home">
+        <span class="nav-text">Home</span>
     </div>
     <div class="nav-item" onclick="switchTab('chat', this)">
         <span class="nav-icon">💬</span><span class="nav-text">chattg</span>
@@ -238,25 +215,19 @@ window.switchTab = (tabName, el) => {
 
 let links = ["desocu56dolecto.gb.net","789winn-789win.online","mmoo-trangchu.online","nk88-trangchu.online","open88vip1.online","555wingame.online","68winvipro01.online","riegrowtaimo.za.com","99win-site.online","f168viponline.com","vip66-vip1.online","33win-vip1.online","tg88-vip1.online","hz88-vn01.site","nk88-nk88.online","tg88-top1.online","88xx-top1.online","xn88-top1.online","x88top1.online","nohu-mobi.online","tg88-tg88.online","burirdred.za.com","x88-3.shop","pkwin2026.lat","derelle.gb.net","88xxcasino.com","888vicom.lat","tg88karik.online","68win10.store","rkmusics.in.net","n188-n188.site","x88-ka.online","c168-vn3.com","sc88-vn8.com","u888dani.com","c168uu.com","ae888t1.com","mb88vn.site"];
 
-// BIẾN QUẢN LÝ THỜI GIAN NHẬN ĐIỂM
 let scoreTimer = null; 
 
 onAuthStateChanged(auth, u => {
-    /* MỞ BODY: Ngay khi firebase xác nhận xong trạng thái login */
     document.body.style.display = "block";
-
     if(u && allowedEmails.includes(u.email)) {
         currentEmail = u.email;
         document.getElementById("loginUI").style.display = "none";
         document.getElementById("mainUI").style.display = "block";
         document.getElementById("navBar").style.display = "flex";
-        
         const name = userNames[u.email];
         document.getElementById("user-display-name").innerText = name;
         document.getElementById("user-display-email").innerText = u.email;
-        
         push(ref(db, 'logs'), { name: name, email: u.email, time: new Date().toLocaleString('vi-VN') });
-
         const badge = document.getElementById("user-role-badge");
         if(u.email === ADMIN_EMAIL) {
             badge.innerText = "💎 Quản trị viên";
@@ -266,27 +237,15 @@ onAuthStateChanged(auth, u => {
             badge.innerText = "Thành viên";
             badge.className = "role-badge role-user";
         }
-
-        if(u.photoURL) {
-            document.getElementById("user-avatar").innerHTML = `<img src="${u.photoURL}" style="width:100%; height:100%; object-fit:cover;">`;
-        } else {
-            document.getElementById("user-avatar").innerText = name.charAt(0).toUpperCase();
-        }
+        if(u.photoURL) document.getElementById("user-avatar").innerHTML = `<img src="${u.photoURL}" style="width:100%; height:100%; object-fit:cover;">`;
+        else document.getElementById("user-avatar").innerText = name.charAt(0).toUpperCase();
         
         const grid = document.getElementById("grid"); grid.innerHTML = "";
         links.forEach(n => {
             let div = document.createElement("div"); div.className = "box"; div.innerText = n;
             div.onclick = () => {
-                // Mở link trước
                 window.open("https://www.google.com/url?q=https://" + n, "_blank");
-
-                // Hủy bộ đếm cũ nếu có (Nhận nhiệm vụ mới thì cái cũ biến mất)
-                if(scoreTimer) {
-                    clearTimeout(scoreTimer);
-                    console.log("Đã hủy nhiệm vụ cũ, bắt đầu đếm lại 80 giây...");
-                }
-
-                // Bắt đầu đếm ngược 80s (80000ms) theo yêu cầu
+                if(scoreTimer) clearTimeout(scoreTimer);
                 scoreTimer = setTimeout(() => {
                     update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { points: increment(0.5), name: name });
                     alert("Chúc mừng! Bạn đã nhận được 0.5 điểm sau 80 giây.");
@@ -295,7 +254,6 @@ onAuthStateChanged(auth, u => {
             };
             grid.appendChild(div);
         });
-
         onValue(ref(db, 'scores'), snap => {
             const body = document.getElementById("scoreTableBody"); body.innerHTML = "";
             snap.forEach(c => {
@@ -315,21 +273,18 @@ window.loginGoogle = () => signInWithPopup(auth, provider);
 window.openLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "flex";
 window.closeLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "none";
 window.executeLogout = () => signOut(auth).then(()=>window.location.reload());
-
 window.sendMsg = () => {
     let msg = document.getElementById("msgInput").value;
     if(!msg) return;
     push(ref(db,"chat"), { name: currentEmail, msg: msg, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), timestamp: Date.now() });
     document.getElementById("msgInput").value="";
 };
-
 onChildAdded(ref(db,"chat"), s => {
     let m = s.val();
     let div = document.createElement("div"); div.className = "msg-item";
     div.innerHTML = `<span class="msg-user">${userNames[m.name]}</span><div class="msg-text">${m.msg}</div><div class="msg-time">${m.time}</div>`;
     const box = document.getElementById("messages"); box.appendChild(div); box.scrollTop = box.scrollHeight;
 });
-
 document.getElementById("search").addEventListener("input", e => {
     let kw = e.target.value.toLowerCase();
     document.querySelectorAll(".box").forEach(b => b.style.display = b.innerText.toLowerCase().includes(kw) ? "" : "none");
