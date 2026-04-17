@@ -28,54 +28,65 @@ html, body {
     background: white; color: #333; font-weight: bold; cursor: pointer;
 }
 
-/* LOGOUT BUTTON */
+/* LOGOUT BUTTON - ĐÃ CÂN CHỈNH TỶ LỆ ĐẸP */
 .logout-btn {
     position: fixed; top: 20px; left: 0;
     background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.3); border-left: none;
     border-radius: 0 25px 25px 0; display: flex; align-items: center;
-    cursor: pointer; overflow: hidden; width: 48px; height: 48px;
+    overflow: hidden; 
+    width: 48px; /* Độ rộng icon cánh cửa */
+    height: 48px; /* Chiều cao nút */
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 1000;
+    pointer-events: none;
 }
-.logout-btn:hover { width: 145px; }
-.logout-btn .icon { min-width: 48px; text-align: center; font-size: 22px; }
-.logout-btn .text { font-size: 15px; font-weight: bold; opacity: 0; transform: translateX(-15px); transition: 0.3s; }
-.logout-btn:hover .text { opacity: 1; transform: translateX(0); }
+
+/* Khi chạm vào: Trượt ra độ dài vừa phải để chữ đẹp hơn */
+.logout-btn:hover, .logout-btn:active { 
+    width: 155px; 
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+}
+
+.logout-btn .icon { 
+    min-width: 48px; height: 100%; display: flex; 
+    justify-content: center; align-items: center; 
+    font-size: 22px; cursor: pointer; pointer-events: auto;
+}
+
+.logout-btn .text { 
+    font-size: 15px; font-weight: bold; color: white; white-space: nowrap; 
+    opacity: 0; transform: translateX(-15px); transition: 0.3s; 
+    padding-left: 5px; cursor: pointer; pointer-events: auto;
+    height: 100%; display: flex; align-items: center;
+}
+
+.logout-btn:hover .text, .logout-btn:active .text { 
+    opacity: 1; transform: translateX(0); 
+}
 
 /* MAIN UI */
 .container { width: 100%; max-width: 900px; margin: 0 auto; padding-top: 20px; }
 .header { text-align: center; padding: 20px; font-size: 26px; font-weight: bold; background: rgba(255,255,255,0.1); border-radius: 15px; margin: 0 15px; }
 #search { width: 80%; margin: 20px auto; display: block; padding: 12px; border-radius: 30px; border: none; background: rgba(255,255,255,0.15); color: white; text-align: center; }
 
-/* HIỂN THỊ LINK XUỐNG DÒNG (DANH SÁCH) */
-.grid { display: flex; flex-direction: column; gap: 10px; padding: 15px; }.box {
-    background: rgba(255,255,255,0.1);
-    border-radius: 14px;
-    padding: 18px;
-    text-align: center; /* Đưa chữ ra chính giữa ô */
-    cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.2);
-    transition: background 0.3s, transform 0.2s;
-    width: 100%; /* Đảm bảo ô dài hết chiều ngang */
-    box-sizing: border-box;
+/* DANH SÁCH LINK */
+.grid { display: flex; flex-direction: column; gap: 10px; padding: 15px; }
+.box {
+    background: rgba(255,255,255,0.1); border-radius: 14px; padding: 18px;
+    text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.2);
+    transition: background 0.3s, transform 0.2s; width: 100%; box-sizing: border-box;
 }
-
-.box:hover { 
-    background: rgba(255,255,255,0.2); 
-    transform: translateY(-2px); /* Hiệu ứng nhích lên khi chạm vào */
-}
-
-.box:hover { background: rgba(255,255,255,0.2); transform: translateX(5px); }
+.box:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
 
 /* CHAT */
 #chatBox { margin: 20px 15px; padding: 15px; background: rgba(0,0,0,0.25); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
 #chatBox input { padding: 10px; border-radius: 10px; border: none; background: rgba(255,255,255,0.9); }
 #chatBox button { padding: 10px 18px; border-radius: 10px; border: none; background: #4facfe; color: white; font-weight: bold; cursor: pointer; }
 #messages { max-height: 250px; overflow-y: auto; margin-top: 15px; font-size: 14px; }
-#messages div { margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
 
 /* MODAL LOGOUT */
-#logoutConfirmUI { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 10001; }
+#logoutConfirmUI { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 10001; }
 .confirm-card { background: #2a344a; padding: 30px; border-radius: 28px; text-align: center; width: 90%; max-width: 320px; }
 .confirm-btns { display: flex; gap: 12px; margin-top: 25px; }
 .confirm-btns button { flex: 1; padding: 14px; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; }
@@ -97,13 +108,15 @@ html, body {
 </div>
 
 <div class="container" id="mainUI">
-    <div class="logout-btn" onclick="openLogoutModal()">
+    <div class="logout-btn">
         <div class="icon">🚪</div>
-        <div class="text">Đăng xuất</div>
+        <div class="text" onclick="openLogoutModal()">Đăng xuất</div>
     </div>
+    
     <div class="header">QUIN DEVELOPER</div>
     <input type="text" id="search" placeholder="🔍 Tìm nhanh..">
     <div class="grid" id="grid"></div>
+    
     <div id="chatBox">
         <h3>💬 Chat tổng <span id="countdown" style="font-size: 13px; font-weight: normal; opacity: 0.8;"></span></h3>
         <input id="name" placeholder="Tên.." readonly style="width:25%">
@@ -116,8 +129,8 @@ html, body {
 <div id="logoutConfirmUI">
     <div class="confirm-card">
         <div style="font-size: 45px;">👋</div>
-        <h3>Xác nhận</h3>
-        <p>Bạn có chắc chắn muốn đăng xuất không?</p>
+        <h3 style="color: white;">Xác nhận</h3>
+        <p style="color: white; opacity: 0.8;">Bạn có chắc chắn muốn đăng xuất không?</p>
         <div class="confirm-btns">
             <button class="btn-no" onclick="closeLogoutModal()">Hủy</button>
             <button class="btn-yes" onclick="executeLogout()">Đăng xuất</button>
@@ -127,7 +140,47 @@ html, body {
 
 <script>
 // DỮ LIỆU LINKS
-let links = ["desocu56dolecto.gb.net","789winn-789win.online","mmoo-trangchu.online","nk88-trangchu.online","open88vip1.online","555wingame.online","68winvipro01.online","riegrowtaimo.za.com","99win-site.online","f168viponline.com","vip66-vip1.online","33win-vip1.online","tg88-vip1.online","hz88-vn01.site","nk88-nk88.online","tg88-top1.online","88xx-top1.online","xn88-top1.online","x88top1.online","nohu-mobi.online","tg88-tg88.online","burirdred.za.com","x88-3.shop","pkwin2026.lat","derelle.gb.net","88xxcasino.com","888vicom.lat","tg88karik.online","68win10.store","rkmusics.in.net","n188-n188.site","x88-ka.online","c168-vn3.com","sc88-vn8.com","u888dani.com","c168uu.com","ae888t1.com","mb88vn.site"];
+let links = [
+  "desocu56dolecto.gb.net",
+  "789winn-789win.online",
+  "mmoo-trangchu.online",
+  "nk88-trangchu.online",
+  "open88vip1.online",
+  "555wingame.online",
+  "68winvipro01.online",
+  "riegrowtaimo.za.com",
+  "99win-site.online",
+  "f168viponline.com",
+  "vip66-vip1.online",
+  "33win-vip1.online",
+  "tg88-vip1.online",
+  "hz88-vn01.site",
+  "nk88-nk88.online",
+  "tg88-top1.online",
+  "88xx-top1.online",
+  "xn88-top1.online",
+  "x88top1.online",
+  "nohu-mobi.online",
+  "tg88-tg88.online",
+  "burirdred.za.com",
+  "x88-3.shop",
+  "pkwin2026.lat",
+  "derelle.gb.net",
+  "88xxcasino.com",
+  "888vicom.lat",
+  "tg88karik.online",
+  "68win10.store",
+  "rkmusics.in.net",
+  "n188-n188.site",
+  "x88-ka.online",
+  "c168-vn3.com",
+  "sc88-vn8.com",
+  "u888dani.com",
+  "c168uu.com",
+  "ae888t1.com",
+  "mb88vn.site"
+  ];
+
 function renderLinks(){
     let grid = document.getElementById("grid"); 
     grid.innerHTML = "";
@@ -139,6 +192,7 @@ function renderLinks(){
         grid.appendChild(div);
     });
 }
+
 document.getElementById("search").addEventListener("input", () => {
     let kw = document.getElementById("search").value.toLowerCase();
     document.querySelectorAll(".box").forEach(b => b.style.display = b.innerText.toLowerCase().includes(kw) ? "" : "none");
@@ -172,7 +226,7 @@ const userNames = {
 const allowedEmails = Object.keys(userNames);
 const MAX_TIME = 24 * 60 * 60 * 1000;
 
-// LOGOUT MODAL LOGIC
+// LOGOUT MODAL
 window.openLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "flex";
 window.closeLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "none";
 window.executeLogout = () => { 
@@ -195,10 +249,6 @@ function handleUser(user){
         document.getElementById("loginUI").style.display = "none"; 
         document.getElementById("mainUI").style.display = "block";
         renderLinks();
-        // LOG IP
-        fetch("https://api.ipify.org?format=json").then(r=>r.json()).then(d=>{ 
-            push(ref(db,"logs"),{email:user.email, ip:d.ip, time:new Date().toLocaleString()}); 
-        });
     } else { 
         alert("Không có quyền!"); 
         signOut(auth); 
@@ -224,6 +274,50 @@ window.sendMsg = () => {
         timestamp: Date.now()
     });
     document.getElementById("msg").value="";
+};
+
+onChildAdded(ref(db,"chat"),s=>{
+    let m = s.val(); 
+    let div = document.createElement("div");
+    div.innerHTML = `<b>${userNames[m.name]||maskEmail(m.name)}</b>: ${m.msg} <br><span style="font-size:11px;opacity:0.5;">${m.time}</span>`;
+    document.getElementById("messages").appendChild(div); 
+    document.getElementById("messages").scrollTop = 99999;
+});
+
+function cleanOldMessages() {
+    const now = Date.now();
+    get(ref(db, "chat")).then(snap => {
+        snap.forEach(c => { 
+            if(c.val().timestamp && (now - c.val().timestamp > MAX_TIME)) {
+                remove(ref(db, "chat/"+c.key)); 
+            }
+        });
+    });
+}
+
+function updateCountdown() {
+    get(ref(db, "chat")).then(snap => {
+        let oldest = Infinity; 
+        snap.forEach(c => { if(c.val().timestamp < oldest) oldest = c.val().timestamp; });
+        const el = document.getElementById("countdown");
+        if(oldest === Infinity) { el.innerText = "(Tự xóa sau 24h)"; return; }
+        let left = (oldest + MAX_TIME) - Date.now();
+        if(left <= 0) { el.innerText = "(Đang dọn dẹp...)"; return; }
+        let s = Math.floor(left/1000); 
+        let h = Math.floor(s/3600); 
+        let m = Math.floor((s%3600)/60);
+        el.innerText = `(Xóa sau: ${h}h ${m}p ${s%60}s)`;
+    });
+}
+
+setInterval(updateCountdown, 1000); 
+setInterval(cleanOldMessages, 15000);
+cleanOldMessages();
+</script>
+
+</body>
+</html>
+ent.getElementById("msg").value="";
 };
 
 onChildAdded(ref(db,"chat"),s=>{
