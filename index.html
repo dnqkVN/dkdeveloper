@@ -6,185 +6,81 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>tunn</title>
-<meta name="description" content="vuot uptolink">
-
 <link rel="icon" href="web.png" type="image/png">
 
 <style>
-/* RESET & CƠ BẢN (GIỮ NGUYÊN PHONG CÁCH BẠN THÍCH) */
+/* GIỮ NGUYÊN PHONG CÁCH GIAO DIỆN */
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    color: white;
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Segoe UI', Arial, sans-serif; color: white;
     background: linear-gradient(135deg, #4facfe, #6a5acd);
     background-attachment: fixed;
 }
 
-/* Ẩn mặc định để chống lag khi kiểm tra đăng nhập */
-#loginUI, #mainUI, #logoutConfirmUI {
-    display: none;
-}
+#loginUI, #mainUI, #logoutConfirmUI { display: none; }
 
-/* ================= LOGIN ================= */
-#loginUI {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(135deg, #4facfe, #6a5acd);
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-}
-
-.login-box {
-    text-align: center;
-    background: rgba(255,255,255,0.08);
-    padding: 35px;
-    border-radius: 18px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-}
-
+/* LOGIN */
+#loginUI { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 999; }
+.login-box { text-align: center; background: rgba(255,255,255,0.08); padding: 35px; border-radius: 18px; backdrop-filter: blur(12px); }
 .login-google {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px;
-    padding: 12px 25px;
-    border-radius: 12px;
-    background: white;
-    color: #333;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 15px; padding: 12px 25px; border-radius: 12px;
+    background: white; color: #333; font-weight: bold; cursor: pointer;
 }
 
-.login-google:hover { transform: scale(1.05); }
-
-/* ================= NÚT ĐĂNG XUẤT (TRƯỢT) ================= */
+/* LOGOUT BUTTON */
 .logout-btn {
-    position: fixed;
-    top: 20px;
-    left: 0;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-left: none;
-    border-radius: 0 25px 25px 0;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    overflow: hidden;
-    width: 48px; 
-    height: 48px;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    z-index: 1000;
+    position: fixed; top: 20px; left: 0;
+    background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3); border-left: none;
+    border-radius: 0 25px 25px 0; display: flex; align-items: center;
+    cursor: pointer; overflow: hidden; width: 48px; height: 48px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); z-index: 1000;
 }
-
-.logout-btn:hover {
-    width: 145px;
-    background: rgba(255, 255, 255, 0.25);
-    box-shadow: 4px 0 15px rgba(79, 172, 254, 0.5);
-}
-
-.logout-btn .icon { font-size: 22px; min-width: 48px; text-align: center; display: flex; justify-content: center; align-items: center; }
-.logout-btn .text { font-size: 15px; font-weight: bold; color: white; white-space: nowrap; opacity: 0; transform: translateX(-15px); transition: all 0.3s ease; }
+.logout-btn:hover { width: 145px; }
+.logout-btn .icon { min-width: 48px; text-align: center; font-size: 22px; }
+.logout-btn .text { font-size: 15px; font-weight: bold; opacity: 0; transform: translateX(-15px); transition: 0.3s; }
 .logout-btn:hover .text { opacity: 1; transform: translateX(0); }
 
-/* ================= MAIN CONTAINER ================= */
-.container {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    padding-top: 20px;
-}
+/* MAIN UI */
+.container { width: 100%; max-width: 900px; margin: 0 auto; padding-top: 20px; }
+.header { text-align: center; padding: 20px; font-size: 26px; font-weight: bold; background: rgba(255,255,255,0.1); border-radius: 15px; margin: 0 15px; }
+#search { width: 80%; margin: 20px auto; display: block; padding: 12px; border-radius: 30px; border: none; background: rgba(255,255,255,0.15); color: white; text-align: center; }
 
-.header {
-    text-align: center;
-    padding: 20px;
-    font-size: 26px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    background: rgba(255,255,255,0.1);
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    border-radius: 15px;
-    margin: 0 15px;
-}
-
-#search {
-    width: 80%;
-    margin: 20px auto;
-    display: block;
-    padding: 12px;
-    border-radius: 30px;
-    border: none;
-    outline: none;
-    background: rgba(255,255,255,0.15);
-    color: white;
-    text-align: center;
-    font-size: 15px;
-}
-
-.grid { display: grid; grid-template-columns: 1fr; gap: 12px; padding: 15px; }
-@media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
-
-.box {
+/* HIỂN THỊ LINK XUỐNG DÒNG (DANH SÁCH) */
+.grid { display: flex; flex-direction: column; gap: 10px; padding: 15px; }.box {
     background: rgba(255,255,255,0.1);
     border-radius: 14px;
     padding: 18px;
-    text-align: center;
+    text-align: center; /* Đưa chữ ra chính giữa ô */
     cursor: pointer;
     border: 1px solid rgba(255,255,255,0.2);
     transition: background 0.3s, transform 0.2s;
+    width: 100%; /* Đảm bảo ô dài hết chiều ngang */
+    box-sizing: border-box;
 }
 
-.box:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
-
-/* ================= CHAT ================= */
-#chatBox {
-    margin: 20px 15px;
-    padding: 15px;
-    background: rgba(0,0,0,0.25);
-    border-radius: 15px;
-    border: 1px solid rgba(255,255,255,0.1);
+.box:hover { 
+    background: rgba(255,255,255,0.2); 
+    transform: translateY(-2px); /* Hiệu ứng nhích lên khi chạm vào */
 }
 
+.box:hover { background: rgba(255,255,255,0.2); transform: translateX(5px); }
+
+/* CHAT */
+#chatBox { margin: 20px 15px; padding: 15px; background: rgba(0,0,0,0.25); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
 #chatBox input { padding: 10px; border-radius: 10px; border: none; background: rgba(255,255,255,0.9); }
-#chatBox button { padding: 10px 18px; border-radius: 10px; border: none; background: #4facfe; font-weight: bold; color: white; cursor: pointer; }
-#messages { max-height: 220px; overflow-y: auto; margin-top: 15px; font-size: 14px; }
+#chatBox button { padding: 10px 18px; border-radius: 10px; border: none; background: #4facfe; color: white; font-weight: bold; cursor: pointer; }
+#messages { max-height: 250px; overflow-y: auto; margin-top: 15px; font-size: 14px; }
+#messages div { margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
 
-/* ================= MODAL XÁC NHẬN (NỘI BỘ) ================= */
-#logoutConfirmUI {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.65);
-    backdrop-filter: blur(8px);
-    justify-content: center;
-    align-items: center;
-    z-index: 10001;
-}
-
-.confirm-card {
-    background: #2a344a; /* Màu tối chuyên nghiệp như ảnh bạn gửi */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 30px;
-    border-radius: 28px;
-    text-align: center;
-    max-width: 320px;
-    width: 90%;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    animation: popUp 0.3s ease-out;
-}
-
+/* MODAL LOGOUT */
+#logoutConfirmUI { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 10001; }
+.confirm-card { background: #2a344a; padding: 30px; border-radius: 28px; text-align: center; width: 90%; max-width: 320px; }
 .confirm-btns { display: flex; gap: 12px; margin-top: 25px; }
-.confirm-btns button { flex: 1; padding: 14px; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+.confirm-btns button { flex: 1; padding: 14px; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; }
 .btn-no { background: #4a5568; color: white; }
 .btn-yes { background: #ff4d4d; color: white; }
-.btn-yes:hover { background: #ff3333; }
-
-@keyframes popUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 </style>
 </head>
 
@@ -194,7 +90,7 @@ html, body {
     <div class="login-box">
         <h2>Đăng Nhập Hệ Thống</h2>
         <div class="login-google" onclick="loginGoogle()">
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" style="margin-right: 10px;">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20">
             Đăng nhập Google
         </div>
     </div>
@@ -205,14 +101,11 @@ html, body {
         <div class="icon">🚪</div>
         <div class="text">Đăng xuất</div>
     </div>
-
     <div class="header">QUIN DEVELOPER</div>
-
     <input type="text" id="search" placeholder="🔍 Tìm nhanh..">
     <div class="grid" id="grid"></div>
-
     <div id="chatBox">
-        <h3>💬 Chat tổng <span id="countdown" style="font-size: 14px; font-weight: normal; opacity: 0.8;"></span></h3>
+        <h3>💬 Chat tổng <span id="countdown" style="font-size: 13px; font-weight: normal; opacity: 0.8;"></span></h3>
         <input id="name" placeholder="Tên.." readonly style="width:25%">
         <input id="msg" placeholder="Nhập tin nhắn.." style="width:45%">
         <button onclick="sendMsg()">Gửi</button>
@@ -222,9 +115,9 @@ html, body {
 
 <div id="logoutConfirmUI">
     <div class="confirm-card">
-        <div style="font-size: 45px; margin-bottom: 15px;">👋</div>
-        <h3 style="margin: 0; font-size: 22px;">Xác nhận</h3>
-        <p style="opacity: 0.8; font-size: 14px; margin-top: 10px;">Bạn có chắc chắn muốn đăng xuất không?</p>
+        <div style="font-size: 45px;">👋</div>
+        <h3>Xác nhận</h3>
+        <p>Bạn có chắc chắn muốn đăng xuất không?</p>
         <div class="confirm-btns">
             <button class="btn-no" onclick="closeLogoutModal()">Hủy</button>
             <button class="btn-yes" onclick="executeLogout()">Đăng xuất</button>
@@ -233,65 +126,22 @@ html, body {
 </div>
 
 <script>
-// DỮ LIỆU LINKS (GIỮ NGUYÊN)
-let links = [
-"desocu56dolecto.gb.net",
-"789winn-789win.online",
-"mmoo-trangchu.online",
-"nk88-trangchu.online",
-"open88vip1.online",
-"555wingame.online",
-"68winvipro01.online",
-"riegrowtaimo.za.com",
-"99win-site.online",
-"f168viponline.com",
-"vip66-vip1.online",
-"33win-vip1.online",
-"tg88-vip1.online",
-"hz88-vn01.site",
-"nk88-nk88.online",
-"tg88-top1.online",
-"88xx-top1.online",
-"xn88-top1.online",
-"x88top1.online",
-"nohu-mobi.online",
-"tg88-tg88.online",
-"burirdred.za.com",
-"x88-3.shop",
-"pkwin2026.lat",
-"derelle.gb.net",
-"88xxcasino.com",
-"888vicom.lat",
-"tg88karik.online",
-"68win10.store",
-"rkmusics.in.net",
-"n188-n188.site",
-"x88-ka.online",
-"c168-vn3.com",
-"sc88-vn8.com",
-"u888dani.com",
-"c168uu.com",
-"ae888t1.com",
-"mb88vn.site"
-];
-
+// DỮ LIỆU LINKS
+let links = ["desocu56dolecto.gb.net","789winn-789win.online","mmoo-trangchu.online","nk88-trangchu.online","open88vip1.online","555wingame.online","68winvipro01.online","riegrowtaimo.za.com","99win-site.online","f168viponline.com","vip66-vip1.online","33win-vip1.online","tg88-vip1.online","hz88-vn01.site","nk88-nk88.online","tg88-top1.online","88xx-top1.online","xn88-top1.online","x88top1.online","nohu-mobi.online","tg88-tg88.online","burirdred.za.com","x88-3.shop","pkwin2026.lat","derelle.gb.net","88xxcasino.com","888vicom.lat","tg88karik.online","68win10.store","rkmusics.in.net","n188-n188.site","x88-ka.online","c168-vn3.com","sc88-vn8.com","u888dani.com","c168uu.com","ae888t1.com","mb88vn.site"];
 function renderLinks(){
-    let grid = document.getElementById("grid");
+    let grid = document.getElementById("grid"); 
     grid.innerHTML = "";
     links.forEach(name => {
-        let div = document.createElement("div");
-        div.className = "box";
+        let div = document.createElement("div"); 
+        div.className = "box"; 
         div.innerText = name;
         div.onclick = () => { window.location.href = "https://www.google.com/url?q=https://" + name; };
         grid.appendChild(div);
     });
 }
-
 document.getElementById("search").addEventListener("input", () => {
-    let keyword = document.getElementById("search").value.toLowerCase();
-    document.querySelectorAll(".box").forEach(box => {
-        box.style.display = box.innerText.toLowerCase().includes(keyword) ? "" : "none";
-    });
+    let kw = document.getElementById("search").value.toLowerCase();
+    document.querySelectorAll(".box").forEach(b => b.style.display = b.innerText.toLowerCase().includes(kw) ? "" : "none");
 });
 </script>
 
@@ -301,92 +151,119 @@ import { getDatabase, ref, push, onChildAdded, get, remove } from "https://www.g
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
 const firebaseConfig = { apiKey: "AIzaSyCoGH-211UP_6o5eqoL4bq6DI4VbzXTKJ0", authDomain: "check-user-1.firebaseapp.com", projectId: "check-user-1" };
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const auth = getAuth(app);
+const app = initializeApp(firebaseConfig); 
+const db = getDatabase(app); 
+const auth = getAuth(app); 
 const provider = new GoogleAuthProvider();
 
-let currentUserEmail = ""; 
+function maskEmail(e){let[n,d]=e.split("@");return(n.length<=3?n[0]+"***":n.slice(0,3)+"***")+"@"+d;}
+
+let currentUserEmail = "";
 const userNames = {
-    "qkhaang@gmail.com": "qk",
-    "khangdoannq@gmail.com": "kdoan",
-    "truongloi010220@gmail.com": "phát béo",
-    "anddang15@gmail.com": "an",
-    "truonghuuphat9991@gmail.com": "lọ dùm trai 6 múi",
-    "anhkhoadn2009@gmail.com": "khoa",
-    "tmai28298@gmail.com": "tmai",
-    "12345vanthach@gmail.com": "nam"
+    "qkhaang@gmail.com":"qk",
+    "khangdoannq@gmail.com":"kdoan",
+    "truongloi010220@gmail.com":"phát béo",
+    "anddang15@gmail.com":"an",
+    "truonghuuphat9991@gmail.com":"lọ dùm trai 6 múi",
+    "anhkhoadn2009@gmail.com":"khoa",
+    "tmai28298@gmail.com":"tmai",
+    "12345vanthach@gmail.com":"nam"
 };
 const allowedEmails = Object.keys(userNames);
+const MAX_TIME = 24 * 60 * 60 * 1000;
 
-// ĐIỀU KHIỂN MODAL ĐĂNG XUẤT
+// LOGOUT MODAL LOGIC
 window.openLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "flex";
 window.closeLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "none";
-
-window.executeLogout = function() {
-    // FIX LỖI KẸT: Ẩn bảng ngay lập tức trước khi reload
-    document.getElementById("logoutConfirmUI").style.display = "none";
-    
-    signOut(auth).then(() => {
-        window.location.reload(); 
-    }).catch((error) => {
-        alert("Lỗi đăng xuất: " + error.message);
-    });
+window.executeLogout = () => { 
+    document.getElementById("logoutConfirmUI").style.display = "none"; 
+    signOut(auth).then(()=>window.location.reload()); 
 };
 
-// ĐĂNG NHẬP
-window.loginGoogle = async function() {
-    try {
-        await setPersistence(auth, browserLocalPersistence);
-        const result = await signInWithPopup(auth, provider);
-        handleUser(result.user);
-    } catch (e) { alert("Lỗi: " + e.message); }
+// LOGIN GOOGLE
+window.loginGoogle = async () => { 
+    try { 
+        await setPersistence(auth, browserLocalPersistence); 
+        await signInWithPopup(auth, provider); 
+    } catch(e){ alert(e.message); } 
 };
 
 function handleUser(user){
-    if (allowedEmails.includes(user.email)) {
+    if(allowedEmails.includes(user.email)){
         currentUserEmail = user.email; 
-        document.getElementById("name").value = userNames[user.email] || user.email; 
-
-        document.getElementById("loginUI").style.display = "none";
+        document.getElementById("name").value = userNames[user.email];
+        document.getElementById("loginUI").style.display = "none"; 
         document.getElementById("mainUI").style.display = "block";
         renderLinks();
-    } else {
-        alert("Bạn không có quyền!");
-        signOut(auth);
+        // LOG IP
+        fetch("https://api.ipify.org?format=json").then(r=>r.json()).then(d=>{ 
+            push(ref(db,"logs"),{email:user.email, ip:d.ip, time:new Date().toLocaleString()}); 
+        });
+    } else { 
+        alert("Không có quyền!"); 
+        signOut(auth); 
     }
 }
 
-onAuthStateChanged(auth, (user) => {
-    if (user) { 
-        handleUser(user); 
-    } else {
+onAuthStateChanged(auth, u => {
+    if(u) handleUser(u);
+    else {
         document.getElementById("loginUI").style.display = "flex";
         document.getElementById("mainUI").style.display = "none";
     }
 });
 
-// CHAT (GIỮ NGUYÊN LOGIC CỦA BẠN)
-window.sendMsg = function(){
-    let msg = document.getElementById("msg").value;
+// CHAT LOGIC
+window.sendMsg = () => {
+    let msg = document.getElementById("msg").value; 
     if(!msg || !currentUserEmail) return;
-    push(ref(db,"chat"),{ name: currentUserEmail, msg: msg, time: new Date().toLocaleTimeString(), timestamp: Date.now() });
+    push(ref(db,"chat"),{
+        name: currentUserEmail, 
+        msg: msg, 
+        time: new Date().toLocaleTimeString(), 
+        timestamp: Date.now()
+    });
     document.getElementById("msg").value="";
 };
 
-onChildAdded(ref(db,"chat"),snap=>{
-    let m = snap.val();
+onChildAdded(ref(db,"chat"),s=>{
+    let m = s.val(); 
     let div = document.createElement("div");
-    let displayName = userNames[m.name] || maskEmail(m.name);
-    
-    // Đã chuyển tên về màu trắng mặc định
-    div.innerHTML = `<b>${displayName}</b>: ${m.msg} <span style="font-size:11px; opacity:0.6;">(${m.time})</span>`;
-    
-    let msgContainer = document.getElementById("messages");
-    msgContainer.appendChild(div);
-    msgContainer.scrollTop = msgContainer.scrollHeight;
+    div.innerHTML = `<b>${userNames[m.name]||maskEmail(m.name)}</b>: ${m.msg} <br><span style="font-size:11px;opacity:0.5;">${m.time}</span>`;
+    document.getElementById("messages").appendChild(div); 
+    document.getElementById("messages").scrollTop = 99999;
 });
 
+// AUTO CLEAN & COUNTDOWN (GIỮ NGUYÊN)
+function cleanOldMessages() {
+    const now = Date.now();
+    get(ref(db, "chat")).then(snap => {
+        snap.forEach(c => { 
+            if(c.val().timestamp && (now - c.val().timestamp > MAX_TIME)) {
+                remove(ref(db, "chat/"+c.key)); 
+            }
+        });
+    });
+}
+
+function updateCountdown() {
+    get(ref(db, "chat")).then(snap => {
+        let oldest = Infinity; 
+        snap.forEach(c => { if(c.val().timestamp < oldest) oldest = c.val().timestamp; });
+        const el = document.getElementById("countdown");
+        if(oldest === Infinity) { el.innerText = "(Tự xóa sau 24h)"; return; }
+        let left = (oldest + MAX_TIME) - Date.now();
+        if(left <= 0) { el.innerText = "(Đang dọn dẹp...)"; return; }
+        let s = Math.floor(left/1000); 
+        let h = Math.floor(s/3600); 
+        let m = Math.floor((s%3600)/60);
+        el.innerText = `(Xóa sau: ${h}h ${m}p ${s%60}s)`;
+    });
+}
+
+setInterval(updateCountdown, 1000); 
+setInterval(cleanOldMessages, 15000);
+cleanOldMessages();
 </script>
 
 </body>
