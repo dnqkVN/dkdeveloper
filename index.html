@@ -48,24 +48,23 @@ html, body {
 #search { width: 80%; margin: 20px auto; display: block; padding: 12px; border-radius: 30px; border: none; background: rgba(255,255,255,0.15); color: white; text-align: center; }
 
 /* HIỂN THỊ LINK XUỐNG DÒNG (DANH SÁCH) */
-.grid { display: flex; flex-direction: column; gap: 10px; padding: 15px; }.box {
+.grid { display: flex; flex-direction: column; gap: 10px; padding: 15px; }
+.box {
     background: rgba(255,255,255,0.1);
     border-radius: 14px;
     padding: 18px;
-    text-align: center; /* Đưa chữ ra chính giữa ô */
+    text-align: center;
     cursor: pointer;
     border: 1px solid rgba(255,255,255,0.2);
     transition: background 0.3s, transform 0.2s;
-    width: 100%; /* Đảm bảo ô dài hết chiều ngang */
+    width: 100%;
     box-sizing: border-box;
 }
 
 .box:hover { 
     background: rgba(255,255,255,0.2); 
-    transform: translateY(-2px); /* Hiệu ứng nhích lên khi chạm vào */
+    transform: translateY(-2px); 
 }
-
-.box:hover { background: rgba(255,255,255,0.2); transform: translateX(5px); }
 
 /* CHAT */
 #chatBox { margin: 20px 15px; padding: 15px; background: rgba(0,0,0,0.25); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
@@ -234,102 +233,7 @@ onChildAdded(ref(db,"chat"),s=>{
     document.getElementById("messages").scrollTop = 99999;
 });
 
-// AUTO CLEAN & COUNTDOWN (GIỮ NGUYÊN)
-function cleanOldMessages() {
-    const now = Date.now();
-    get(ref(db, "chat")).then(snap => {
-        snap.forEach(c => { 
-            if(c.val().timestamp && (now - c.val().timestamp > MAX_TIME)) {
-                remove(ref(db, "chat/"+c.key)); 
-            }
-        });
-    });
-}
-
-function updateCountdown() {
-    get(ref(db, "chat")).then(snap => {
-        let oldest = Infinity; 
-        snap.forEach(c => { if(c.val().timestamp < oldest) oldest = c.val().timestamp; });
-        const el = document.getElementById("countdown");
-        if(oldest === Infinity) { el.innerText = "(Tự xóa sau 24h)"; return; }
-        let left = (oldest + MAX_TIME) - Date.now();
-        if(left <= 0) { el.innerText = "(Đang dọn dẹp...)"; return; }
-        let s = Math.floor(left/1000); 
-        let h = Math.floor(s/3600); 
-        let m = Math.floor((s%3600)/60);
-        el.innerText = `(Xóa sau: ${h}h ${m}p ${s%60}s)`;
-    });
-}
-
-setInterval(updateCountdown, 1000); 
-setInterval(cleanOldMessages, 15000);
-cleanOldMessages();
-</script>
-
-</body>
-</html>  if(!msg || !currentUserEmail) return;
-    push(ref(db,"chat"),{
-        name: currentUserEmail, 
-        msg: msg, 
-        time: new Date().toLocaleTimeString(), 
-        timestamp: Date.now()
-    });
-    document.getElementById("msg").value="";
-};
-
-onChildAdded(ref(db,"chat"),s=>{
-    let m = s.val(); 
-    let div = document.createElement("div");
-    div.innerHTML = `<b>${userNames[m.name]||maskEmail(m.name)}</b>: ${m.msg} <br><span style="font-size:11px;opacity:0.5;">${m.time}</span>`;
-    document.getElementById("messages").appendChild(div); 
-    document.getElementById("messages").scrollTop = 99999;
-});
-
-function cleanOldMessages() {
-    const now = Date.now();
-    get(ref(db, "chat")).then(snap => {
-        snap.forEach(c => { 
-            if(c.val().timestamp && (now - c.val().timestamp > MAX_TIME)) {
-                remove(ref(db, "chat/"+c.key)); 
-            }
-        });
-    });
-}
-
-function updateCountdown() {
-    get(ref(db, "chat")).then(snap => {
-        let oldest = Infinity; 
-        snap.forEach(c => { if(c.val().timestamp < oldest) oldest = c.val().timestamp; });
-        const el = document.getElementById("countdown");
-        if(oldest === Infinity) { el.innerText = "(Tự xóa sau 24h)"; return; }
-        let left = (oldest + MAX_TIME) - Date.now();
-        if(left <= 0) { el.innerText = "(Đang dọn dẹp...)"; return; }
-        let s = Math.floor(left/1000); 
-        let h = Math.floor(s/3600); 
-        let m = Math.floor((s%3600)/60);
-        el.innerText = `(Xóa sau: ${h}h ${m}p ${s%60}s)`;
-    });
-}
-
-setInterval(updateCountdown, 1000); 
-setInterval(cleanOldMessages, 15000);
-cleanOldMessages();
-</script>
-
-</body>
-</html>
-ent.getElementById("msg").value="";
-};
-
-onChildAdded(ref(db,"chat"),s=>{
-    let m = s.val(); 
-    let div = document.createElement("div");
-    div.innerHTML = `<b>${userNames[m.name]||maskEmail(m.name)}</b>: ${m.msg} <br><span style="font-size:11px;opacity:0.5;">${m.time}</span>`;
-    document.getElementById("messages").appendChild(div); 
-    document.getElementById("messages").scrollTop = 99999;
-});
-
-// AUTO CLEAN & COUNTDOWN (GIỮ NGUYÊN)
+// AUTO CLEAN & COUNTDOWN
 function cleanOldMessages() {
     const now = Date.now();
     get(ref(db, "chat")).then(snap => {
