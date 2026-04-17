@@ -17,11 +17,14 @@
     --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* FIX CHỐNG NHÁY: Ẩn body ngay từ đầu */
 body { 
+    display: none; 
     margin: 0; min-height: 100vh; font-family: 'Segoe UI', sans-serif; 
     background: var(--bg-gradient); background-attachment: fixed; color: var(--text-main);
 }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 #loginUI, #mainUI, #logoutConfirmUI, .page-section { display: none; }
 .active-page { display: block !important; animation: fadeIn 0.3s ease; }
@@ -74,14 +77,14 @@ body {
 #messages { flex: 1; overflow-y: auto; padding-right: 5px; }
 .msg-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); max-width: 90%; }
 
-/* Tên người dùng màu trắng cho dễ nhìn trên nền tối */
+/* FIX Tên người dùng màu trắng + đổ bóng */
 .msg-user { 
     color: #ffffff !important; 
     font-weight: 800; 
     font-size: 12px; 
     margin-bottom: 2px; 
     display: block; 
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
 }
 
 .msg-text { font-size: 13px; color: white; }
@@ -222,6 +225,9 @@ window.switchTab = (tabName, el) => {
 let links = ["desocu56dolecto.gb.net","789winn-789win.online","mmoo-trangchu.online","nk88-trangchu.online","open88vip1.online","555wingame.online","68winvipro01.online","riegrowtaimo.za.com","99win-site.online","f168viponline.com","vip66-vip1.online","33win-vip1.online","tg88-vip1.online","hz88-vn01.site","nk88-nk88.online","tg88-top1.online","88xx-top1.online","xn88-top1.online","x88top1.online","nohu-mobi.online","tg88-tg88.online","burirdred.za.com","x88-3.shop","pkwin2026.lat","derelle.gb.net","88xxcasino.com","888vicom.lat","tg88karik.online","68win10.store","rkmusics.in.net","n188-n188.site","x88-ka.online","c168-vn3.com","sc88-vn8.com","u888dani.com","c168uu.com","ae888t1.com","mb88vn.site"];
 
 onAuthStateChanged(auth, u => {
+    /* MỞ BODY: Ngay khi firebase xác nhận xong trạng thái login */
+    document.body.style.display = "block";
+
     if(u && allowedEmails.includes(u.email)) {
         currentEmail = u.email;
         document.getElementById("loginUI").style.display = "none";
