@@ -34,15 +34,6 @@ body {
 #loginUI { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(15px); }
 .login-box { text-align: center; background: var(--glass-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--glass-border); width: 85%; max-width: 340px; box-shadow: var(--shadow-soft); }
 
-/* LOGOUT BUTTON */
-.logout-btn { 
-    position: fixed; top: 25px; left: 0; background: var(--glass-bg); border: 1px solid var(--glass-border); border-left: none; 
-    border-radius: 0 25px 25px 0; display: flex; align-items: center; cursor: pointer; width: 48px; height: 48px; transition: 0.4s; z-index: 1600; 
-}
-.logout-btn:hover { width: 145px; background: rgba(255,255,255,0.2); }
-.logout-btn .text { font-size: 14px; font-weight: 700; opacity: 0; transition: 0.3s; white-space: nowrap; margin-left: 10px; color: white; }
-.logout-btn:hover .text { opacity: 1; }
-
 .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 20px 15px 120px; }
 .header-box { 
     text-align: center; padding: 15px; font-size: 18px; font-weight: 800; background: var(--glass-bg); 
@@ -76,8 +67,7 @@ body {
 .chat-container { background: var(--glass-bg); border-radius: 25px; border: 1px solid var(--glass-border); padding: 15px; height: 60vh; display: flex; flex-direction: column; }
 #messages { flex: 1; overflow-y: auto; padding-right: 5px; }
 .msg-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); max-width: 90%; }
-
-/* FIX Tên người dùng màu trắng + đổ bóng */
+/* Tên người dùng màu trắng cho dễ nhìn trên nền tối */
 .msg-user { 
     color: #ffffff !important; 
     font-weight: 800; 
@@ -86,7 +76,6 @@ body {
     display: block; 
     text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
 }
-
 .msg-text { font-size: 13px; color: white; }
 .msg-time { font-size: 9px; opacity: 0.5; margin-top: 4px; text-align: right; }
 .chat-input-row { display: flex; gap: 8px; margin-top: 10px; }
@@ -97,9 +86,34 @@ body {
 .profile-card { background: var(--glass-bg); border-radius: 25px; padding: 30px 20px; text-align: center; border: 1px solid var(--glass-border); }
 .avatar-circle { width: 75px; height: 75px; background: var(--primary-color); border-radius: 50%; margin: 0 auto 15px; border: 3px solid white; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; overflow: hidden; }
 .role-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-top: 15px; text-transform: uppercase; }
-
 .role-admin { background: white; color: #6a5acd; border: 1px solid white; }
 .role-user { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--glass-border); }
+
+/* NÚT ĐĂNG XUẤT MỚI TRONG TRANG PROFILE (HIỆU ỨNG KÍNH MỜ) */
+.profile-logout-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 16px;
+    border-radius: 25px; 
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    color: #ff4d4d;
+    font-weight: 800;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.3s;
+    box-shadow: var(--shadow-soft);
+}
+.profile-logout-btn:hover {
+    background: rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+    border-color: rgba(255, 77, 77, 0.5);
+}
 
 .admin-card { background: var(--glass-bg); border-radius: 20px; padding: 15px; border: 1px solid var(--glass-border); }
 .admin-table { width: 100%; border-collapse: collapse; color: white; }
@@ -124,10 +138,6 @@ body {
 </div>
 
 <div class="container" id="mainUI">
-    <div class="logout-btn" onclick="openLogoutModal()">
-        <div style="min-width:48px; text-align:center; font-size:18px;">🚪</div>
-        <div class="text">Đăng xuất</div>
-    </div>
 
     <div id="page-home" class="page-section active-page">
         <div class="header-box">quin developer</div>
@@ -163,6 +173,10 @@ body {
             <h3 id="user-display-name" style="margin: 5px 0; color: white; font-size: 20px;">---</h3>
             <p id="user-display-email" style="color: var(--text-sub); margin: 0; font-size: 13px;">---</p>
             <div id="user-role-badge" class="role-badge">---</div>
+        </div>
+        
+        <div class="profile-logout-btn" onclick="openLogoutModal()">
+            <span style="font-size: 20px;">🚪</span> Đăng xuất
         </div>
     </div>
 </div>
@@ -224,6 +238,9 @@ window.switchTab = (tabName, el) => {
 
 let links = ["desocu56dolecto.gb.net","789winn-789win.online","mmoo-trangchu.online","nk88-trangchu.online","open88vip1.online","555wingame.online","68winvipro01.online","riegrowtaimo.za.com","99win-site.online","f168viponline.com","vip66-vip1.online","33win-vip1.online","tg88-vip1.online","hz88-vn01.site","nk88-nk88.online","tg88-top1.online","88xx-top1.online","xn88-top1.online","x88top1.online","nohu-mobi.online","tg88-tg88.online","burirdred.za.com","x88-3.shop","pkwin2026.lat","derelle.gb.net","88xxcasino.com","888vicom.lat","tg88karik.online","68win10.store","rkmusics.in.net","n188-n188.site","x88-ka.online","c168-vn3.com","sc88-vn8.com","u888dani.com","c168uu.com","ae888t1.com","mb88vn.site"];
 
+// BIẾN QUẢN LÝ THỜI GIAN NHẬN ĐIỂM
+let scoreTimer = null; 
+
 onAuthStateChanged(auth, u => {
     /* MỞ BODY: Ngay khi firebase xác nhận xong trạng thái login */
     document.body.style.display = "block";
@@ -260,8 +277,21 @@ onAuthStateChanged(auth, u => {
         links.forEach(n => {
             let div = document.createElement("div"); div.className = "box"; div.innerText = n;
             div.onclick = () => {
-                update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { points: increment(0.5), name: name });
-                window.location.href = "https://www.google.com/url?q=https://" + n;
+                // Mở link trước
+                window.open("https://www.google.com/url?q=https://" + n, "_blank");
+
+                // Hủy bộ đếm cũ nếu có (Nhận nhiệm vụ mới thì cái cũ biến mất)
+                if(scoreTimer) {
+                    clearTimeout(scoreTimer);
+                    console.log("Đã hủy nhiệm vụ cũ, bắt đầu đếm lại 80 giây...");
+                }
+
+                // Bắt đầu đếm ngược 80s (80000ms) theo yêu cầu
+                scoreTimer = setTimeout(() => {
+                    update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { points: increment(0.5), name: name });
+                    alert("Chúc mừng! Bạn đã nhận được 0.5 điểm sau 80 giây.");
+                    scoreTimer = null; 
+                }, 80000); 
             };
             grid.appendChild(div);
         });
