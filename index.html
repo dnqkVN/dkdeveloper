@@ -217,7 +217,47 @@ window.switchTab = (tabName, el) => {
     el.classList.add('active');
 };
 
-let links = ["desocupa546dolecto.gb.net","789winn-789win.online","mmoo-trangchu.online","nk88-trangchu.online","open88vip1.online","555wingame.online","68winvipro01.online","riegrowtaimo.za.com","99win-site.online","f168viponline.com","vip66-vip1.online","33win-vip1.online","tg88-vip1.online","j88-top1.online","hz88-vn01.site","nk88-nk88.online","tg88-top1.online","88xx-top1.online","xn88-top1.online","x88top1.online","nohu-mobi.online","tg88-tg88.online","burirdred.za.com","x88-3.shop","pkwin2026.lat","derelle.gb.net","88xxcasino.com","888vicom.lat","tg88karik.online","68win10.store","rkmusics.in.net","n188-n188.site","x88-ka.online","c168-vn3.com","sc88-vn8.com","u888dani.com","c168uu.com","ae888t1.com","mb88vn.site"];
+let links = [
+    "desocupa546dolecto.gb.net",
+    "789winn-789win.online",
+    "mmoo-trangchu.online",
+    "nk88-trangchu.online",
+    "open88vip1.online",
+    "555wingame.online",
+    "68winvipro01.online",
+    "riegrowtaimo.za.com",
+    "99win-site.online",
+    "f168viponline.com",
+    "vip66-vip1.online",
+    "33win-vip1.online",
+    "tg88-vip1.online",
+    "j88-top1.online",
+    "hz88-vn01.site",
+    "nk88-nk88.online",
+    "tg88-top1.online",
+    "88xx-top1.online",
+    "xn88-top1.online",
+    "x88top1.online",
+    "nohu-mobi.online",
+    "tg88-tg88.online",
+    "burirdred.za.com",
+    "x88-3.shop",
+    "pkwin2026.lat",
+    "derelle.gb.net",
+    "88xxcasino.com",
+    "888vicom.lat",
+    "tg88karik.online",
+    "68win10.store",
+    "rkmusics.in.net",
+    "n188-n188.site",
+    "x88-ka.online",
+    "c168-vn3.com",
+    "sc88-vn8.com",
+    "u888dani.com",
+    "c168uu.com",
+    "ae888t1.com",
+    "mb88vn.site"
+];
 
 let scoreTimer = null; 
 
@@ -234,7 +274,7 @@ onAuthStateChanged(auth, u => {
         push(ref(db, 'logs'), { name: name, email: u.email, time: new Date().toLocaleString('vi-VN') });
         const badge = document.getElementById("user-role-badge");
         if(u.email === ADMIN_EMAIL) {
-            badge.innerText = "💎 Quản trị viên";
+            badge.innerText = "Quản trị viên";
             badge.className = "role-badge role-admin";
             document.getElementById("nav-admin").style.display = "flex";
         } else {
