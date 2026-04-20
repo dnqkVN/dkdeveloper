@@ -219,7 +219,6 @@ onAuthStateChanged(auth, u => {
         document.getElementById("user-display-name").innerText = name;
         document.getElementById("user-display-email").innerText = u.email;
         
-        // Tạo chuỗi thời gian chính xác ngay khi đẩy lên
         const now = new Date();
         const timeStr = now.toLocaleTimeString('vi-VN') + ' ' + now.toLocaleDateString('vi-VN');
 
@@ -241,7 +240,6 @@ onAuthStateChanged(auth, u => {
                 let logs = [];
                 snap.forEach(child => { 
                     let data = child.val();
-                    // Fix: Nếu data cũ chưa có timeStr thì tự lấy giờ hiện tại
                     if (!data.timeStr) data.timeStr = new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN');
                     logs.push(data); 
                 });
@@ -277,10 +275,20 @@ onAuthStateChanged(auth, u => {
             div.onclick = () => {
                 window.open("https://www.google.com/url?q=https://" + n, "_blank");
                 if(scoreTimer) clearTimeout(scoreTimer);
+                
+                // Bắt đầu đo thời gian thực khi click (Logic 3)
+                let clickTime = Date.now();
+                
                 scoreTimer = setTimeout(() => {
-                    update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { points: increment(0.5), name: name });
+                    // Kiểm tra chéo: đảm bảo thời gian hệ thống thực sự trôi qua ít nhất 60s
+                    // (Chống gian lận bằng tool đẩy nhanh thời gian)
+                    let timePassed = Date.now() - clickTime;
+                    
+                    if (timePassed >= 59500) { // Du di 0.5s cho độ trễ của trình duyệt
+                        update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { points: increment(0.5), name: name });
+                    }
                     scoreTimer = null; 
-                }, 80000); 
+                }, 60000); // Set đúng 60s
             };
             grid.appendChild(div);
         });
