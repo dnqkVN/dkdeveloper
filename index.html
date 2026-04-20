@@ -206,8 +206,7 @@ window.switchTab = (tabName, el) => {
 
 let links = ["desocupa546dolecto.gb.net","789winn-789win.online","mmoo-trangchu.online","nk88-trangchu.online","open88vip1.online","555wingame.online","68winvipro01.online","riegrowtaimo.za.com","99win-site.online","f168viponline.com","vip66-vip1.online","33win-vip1.online","tg88-vip1.online","j88-top1.online","hz88-vn01.site","nk88-nk88.online","tg88-top1.online","88xx-top1.online","xn88-top1.online","x88top1.online","nohu-mobi.online","tg88-tg88.online","burirdred.za.com","x88-3.shop","pkwin2026.lat","derelle.gb.net","88xxcasino.com","888vicom.lat","tg88karik.online","68win10.store","rkmusics.in.net","n188-n188.site","x88-ka.online","c168-vn3.com","sc88-vn8.com","u888dani.com","c168uu.com","ae888t1.com","mb88vn.site"];
 
-// Object này dùng để lưu trữ trạng thái timer của từng box riêng biệt
-const activeTimers = {}; 
+let scoreTimer = null; 
 
 onAuthStateChanged(auth, u => {
     document.body.style.display = "block";
@@ -220,6 +219,7 @@ onAuthStateChanged(auth, u => {
         document.getElementById("user-display-name").innerText = name;
         document.getElementById("user-display-email").innerText = u.email;
         
+        // Tạo chuỗi thời gian chính xác ngay khi đẩy lên
         const now = new Date();
         const timeStr = now.toLocaleTimeString('vi-VN') + ' ' + now.toLocaleDateString('vi-VN');
 
@@ -241,6 +241,7 @@ onAuthStateChanged(auth, u => {
                 let logs = [];
                 snap.forEach(child => { 
                     let data = child.val();
+                    // Fix: Nếu data cũ chưa có timeStr thì tự lấy giờ hiện tại
                     if (!data.timeStr) data.timeStr = new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN');
                     logs.push(data); 
                 });
@@ -273,41 +274,13 @@ onAuthStateChanged(auth, u => {
         const grid = document.getElementById("grid"); grid.innerHTML = "";
         links.forEach(n => {
             let div = document.createElement("div"); div.className = "box"; div.innerText = n;
-            
             div.onclick = () => {
-                // 1. Mở link
                 window.open("https://www.google.com/url?q=https://" + n, "_blank");
-                
-                // 2. Chặn nếu link này đang được tính điểm rồi
-                if(activeTimers[n]) return;
-
-                // 3. Ghi lại mốc thời gian click thực tế (Logic 3)
-                let startTime = Date.now();
-                div.style.opacity = "0.5"; // Hiệu ứng mờ để báo hiệu link đã được nhấn
-                
-                // 4. Tạo một timer riêng cho box này (Logic 2)
-                activeTimers[n] = setTimeout(() => {
-                    let timePassed = Date.now() - startTime;
-                    
-                    // Kiểm tra nếu thời gian thực trôi qua đủ 60s (du di 1s do trình duyệt sleep)
-                    if (timePassed >= 59000) {
-                        update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { 
-                            points: increment(0.5), 
-                            name: name 
-                        }).then(() => {
-                            div.style.opacity = "1";
-                            div.style.border = "2px solid #4facfe"; // Đổi viền nhẹ báo thành công
-                            delete activeTimers[n]; // Xóa khỏi danh sách đang chạy
-                        }).catch(e => {
-                            div.style.opacity = "1";
-                            delete activeTimers[n];
-                        });
-                    } else {
-                        // Nếu chưa đủ thời gian mà timer đã chạy (do can thiệp hệ thống) thì reset
-                        div.style.opacity = "1";
-                        delete activeTimers[n];
-                    }
-                }, 60000); // 60 giây
+                if(scoreTimer) clearTimeout(scoreTimer);
+                scoreTimer = setTimeout(() => {
+                    update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { points: increment(0.5), name: name });
+                    scoreTimer = null; 
+                }, 60000); 
             };
             grid.appendChild(div);
         });
