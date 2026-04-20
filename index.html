@@ -206,7 +206,8 @@ window.switchTab = (tabName, el) => {
 
 let links = ["desocupa546dolecto.gb.net","789winn-789win.online","mmoo-trangchu.online","nk88-trangchu.online","open88vip1.online","555wingame.online","68winvipro01.online","riegrowtaimo.za.com","99win-site.online","f168viponline.com","vip66-vip1.online","33win-vip1.online","tg88-vip1.online","j88-top1.online","hz88-vn01.site","nk88-nk88.online","tg88-top1.online","88xx-top1.online","xn88-top1.online","x88top1.online","nohu-mobi.online","tg88-tg88.online","burirdred.za.com","x88-3.shop","pkwin2026.lat","derelle.gb.net","88xxcasino.com","888vicom.lat","tg88karik.online","68win10.store","rkmusics.in.net","n188-n188.site","x88-ka.online","c168-vn3.com","sc88-vn8.com","u888dani.com","c168uu.com","ae888t1.com","mb88vn.site"];
 
-let scoreTimer = null; 
+// Object này dùng để lưu trữ trạng thái timer của từng box riêng biệt
+const activeTimers = {}; 
 
 onAuthStateChanged(auth, u => {
     document.body.style.display = "block";
@@ -272,23 +273,41 @@ onAuthStateChanged(auth, u => {
         const grid = document.getElementById("grid"); grid.innerHTML = "";
         links.forEach(n => {
             let div = document.createElement("div"); div.className = "box"; div.innerText = n;
+            
             div.onclick = () => {
+                // 1. Mở link
                 window.open("https://www.google.com/url?q=https://" + n, "_blank");
-                if(scoreTimer) clearTimeout(scoreTimer);
                 
-                // Bắt đầu đo thời gian thực khi click (Logic 3)
-                let clickTime = Date.now();
+                // 2. Chặn nếu link này đang được tính điểm rồi
+                if(activeTimers[n]) return;
+
+                // 3. Ghi lại mốc thời gian click thực tế (Logic 3)
+                let startTime = Date.now();
+                div.style.opacity = "0.5"; // Hiệu ứng mờ để báo hiệu link đã được nhấn
                 
-                scoreTimer = setTimeout(() => {
-                    // Kiểm tra chéo: đảm bảo thời gian hệ thống thực sự trôi qua ít nhất 60s
-                    // (Chống gian lận bằng tool đẩy nhanh thời gian)
-                    let timePassed = Date.now() - clickTime;
+                // 4. Tạo một timer riêng cho box này (Logic 2)
+                activeTimers[n] = setTimeout(() => {
+                    let timePassed = Date.now() - startTime;
                     
-                    if (timePassed >= 59500) { // Du di 0.5s cho độ trễ của trình duyệt
-                        update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { points: increment(0.5), name: name });
+                    // Kiểm tra nếu thời gian thực trôi qua đủ 60s (du di 1s do trình duyệt sleep)
+                    if (timePassed >= 59000) {
+                        update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { 
+                            points: increment(0.5), 
+                            name: name 
+                        }).then(() => {
+                            div.style.opacity = "1";
+                            div.style.border = "2px solid #4facfe"; // Đổi viền nhẹ báo thành công
+                            delete activeTimers[n]; // Xóa khỏi danh sách đang chạy
+                        }).catch(e => {
+                            div.style.opacity = "1";
+                            delete activeTimers[n];
+                        });
+                    } else {
+                        // Nếu chưa đủ thời gian mà timer đã chạy (do can thiệp hệ thống) thì reset
+                        div.style.opacity = "1";
+                        delete activeTimers[n];
                     }
-                    scoreTimer = null; 
-                }, 60000); // Set đúng 60s
+                }, 60000); // 60 giây
             };
             grid.appendChild(div);
         });
