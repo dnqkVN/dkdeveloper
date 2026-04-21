@@ -82,7 +82,7 @@ body {
 
 .profile-logout-btn { margin-top: 20px; width: 100%; padding: 16px; border-radius: 25px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); color: #ff4d4d; font-weight: 800; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
 
-#logoutConfirmUI, #bannedModal { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); display:none; justify-content: center; align-items: center; z-index: 2100; }
+#logoutConfirmUI { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(10px); display:none; justify-content: center; align-items: center; z-index: 2100; }
 .confirm-card { background: #2a344a; padding: 30px; border-radius: 30px; text-align: center; width: 300px; color: white; }
 </style>
 </head>
@@ -175,14 +175,6 @@ body {
     </div>
 </div>
 
-<div id="bannedModal">
-    <div class="confirm-card">
-        <h3>Thông báo</h3>
-        <p id="bannedMessage" style="color: #bdc3c7; line-height: 1.5; margin-bottom: 25px; font-size: 14px;"></p>
-        <button onclick="window.location.reload()" style="background: #ff4757; color: white; border: none; padding: 12px; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer;">Đã hiểu</button>
-    </div>
-</div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getDatabase, ref, push, onChildAdded, update, increment, onValue, serverTimestamp, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
@@ -260,41 +252,6 @@ let links = [
 
 let scoreTimer = null; 
 
-// 1. Lấy IP
-async function getPublicIP() {
-    const res = await fetch('https://api.ipify.org?format=json');
-    const data = await res.json();
-    return data.ip;
-}
-
-// KHỐI 1: Check IP và Banned
-onAuthStateChanged(auth, async (u) => {
-    if (u && allowedEmails.includes(u.email)) {
-        const userIp = await getPublicIP();
-        const userRef = ref(db, 'users/' + u.email.replace(/\./g, '_'));
-
-        onValue(userRef, (snapshot) => {
-            const userData = snapshot.val();
-            const modal = document.getElementById('bannedModal');
-            const msg = document.getElementById('bannedMessage');
-
-            if (!userData || !userData.currentIP) {
-                update(userRef, { currentIP: userIp, status: "active" });
-            } else if (userData.currentIP !== userIp) {
-                update(userRef, { status: "banned" });
-                msg.innerText = "Tài khoản bị khóa do phát hiện đăng nhập từ IP lạ!";
-                modal.style.display = "flex"; 
-                signOut(auth);
-            } else if (userData.status === "banned") {
-                msg.innerText = "Tài khoản này đã bị chặn vĩnh viễn.";
-                modal.style.display = "flex";
-                signOut(auth);
-            }
-        }, { onlyOnce: true });
-    }
-});
-
-// KHỐI 2: Logic giao diện cũ của cậu
 onAuthStateChanged(auth, u => {
     document.body.style.display = "block";
     if(u && allowedEmails.includes(u.email)) {
@@ -306,6 +263,7 @@ onAuthStateChanged(auth, u => {
         document.getElementById("user-display-name").innerText = name;
         document.getElementById("user-display-email").innerText = u.email;
         
+        // Tạo chuỗi thời gian chính xác ngay khi đẩy lên
         const now = new Date();
         const timeStr = now.toLocaleTimeString('vi-VN') + ' ' + now.toLocaleDateString('vi-VN');
 
@@ -327,6 +285,7 @@ onAuthStateChanged(auth, u => {
                 let logs = [];
                 snap.forEach(child => { 
                     let data = child.val();
+                    // Fix: Nếu data cũ chưa có timeStr thì tự lấy giờ hiện tại
                     if (!data.timeStr) data.timeStr = new Date().toLocaleTimeString('vi-VN') + ' ' + new Date().toLocaleDateString('vi-VN');
                     logs.push(data); 
                 });
