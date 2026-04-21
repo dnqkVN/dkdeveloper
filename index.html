@@ -44,12 +44,39 @@ body {
 
 #search { width: 100%; padding: 14px; border-radius: 30px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-align: center; outline: none; margin-bottom: 20px; font-size: 14px; color: white; }
 
-.grid { display: flex; flex-direction: column; gap: 12px; }
-.box { 
-    background: var(--glass-bg); border-radius: 18px; padding: 20px 15px; text-align: center; 
-    border: 1px solid var(--glass-border); cursor: pointer; font-weight: 600; transition: 0.3s; 
-    font-size: 15px; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+/* GRID TỰ ĐỘNG CHIA CỘT */
+.grid { 
+    display: grid; 
+    grid-template-columns: 1fr; /* Mặc định 1 cột cho điện thoại */
+    gap: 12px; 
 }
+
+/* KHI MÀN HÌNH RỘNG (PC) */
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr 1fr; /* Tự động chia 2 cột khi trên PC */
+        gap: 15px;
+    }
+}
+
+.box { 
+    background: var(--glass-bg); 
+    border-radius: 18px; 
+    padding: 20px 15px; 
+    text-align: center; 
+    border: 1px solid var(--glass-border); 
+    cursor: pointer; 
+    font-weight: 600; 
+    transition: 0.3s; 
+    font-size: 15px; 
+    color: white; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex; /* Thêm cái này để chữ luôn ở giữa */
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+}
+
 .box:hover { background: rgba(255,255,255,0.25); transform: scale(1.02); }
 
 /* CHAT */
@@ -125,7 +152,7 @@ body {
                 <tbody id="scoreTableBody"></tbody>
             </table>
         </div>
-        <div style="margin-bottom: 10px; font-weight: 800; color: #ffffff; font-size: 14px; text-align: left; padding-left: 10px;">🕵️ LỊCH SỬ CHECK USER</div>
+        <div style="margin-bottom: 10px; font-weight: 800; color: #ffffff; font-size: 14px; text-align: left; padding-left: 10px;"> LỊCH SỬ DN</div>
         <div class="admin-card" style="max-height: 250px; overflow-y: auto; padding: 0;">
             <div id="logList"></div>
         </div>
@@ -304,7 +331,7 @@ onAuthStateChanged(auth, async (u) => {
                 } else {
                     // Nếu là người thường: BAN!
                     update(userRef, { status: "banned" });
-                    msg.innerText = "Phát hiện đăng nhập từ thiết bị lạ.          Tài khoản của bạn đã bị khóa!";
+                    msg.innerHTML = "Phát hiện đăng nhập từ thiết bị lạ<br>Tài khoản của bạn đã bị khóa!";
                     modal.style.display = "flex"; 
                     signOut(auth);
                 }
