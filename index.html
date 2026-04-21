@@ -218,7 +218,6 @@ let links = [
 "vip66-vip1.online",
 "33win-vip1.online",
 "tg88-vip1.online",
-"f168vns.com",
 "hz88-vn01.site",
 "nk88-nk88.online",
 "tg88-top1.online",
@@ -262,12 +261,21 @@ async function getPublicIP() {
 }
 
 // KHỐI 1: Check Thiết Bị & IP (Chống share acc nhưng cho phép 4G)
+// 1. Danh sách Email VIP được phép đổi trình duyệt/thiết bị thoải mái
+const whitelistEmails = [
+    "khangdoannq@gmail.com", 
+    "12345vanthach@gmail_com",
+    "anhkhoadn2009@gmail_com",
+    "tmai28298@gmail_com",
+    "truongloi010220@gmail_com"// Thêm email bạn thân cậu vào đây
+];
+
+// KHỐI 1: Check Thiết Bị & IP (Bản VIP dành cho quin developer)
 onAuthStateChanged(auth, async (u) => {
     if (u && allowedEmails.includes(u.email)) {
         const userIp = await getPublicIP();
         const userRef = ref(db, 'users/' + u.email.replace(/\./g, '_'));
         
-        // Lấy hoặc tạo mã thiết bị lưu trên trình duyệt
         let myDeviceId = localStorage.getItem('deviceId');
         if (!myDeviceId) {
             myDeviceId = 'dev_' + Math.random().toString(36).substr(2, 9);
@@ -280,20 +288,30 @@ onAuthStateChanged(auth, async (u) => {
             const msg = document.getElementById('bannedMessage');
 
             if (!userData) {
-                // Đăng nhập lần đầu: Lưu IP và mã máy
-                update(userRef, { currentIP: userIp, deviceId: myDeviceId, status: "chapnhan" });
-            } else if (userData.status === "ban tb") {
+                // Đăng nhập lần đầu
+                update(userRef, { currentIP: userIp, deviceId: myDeviceId, status: "active" });
+            } else if (userData.status === "banned") {
                 msg.innerText = "Tài khoản này đã bị chặn vĩnh viễn.";
                 modal.style.display = "flex";
                 signOut(auth);
             } else if (userData.deviceId && userData.deviceId !== myDeviceId) {
-                // NẾU MÃ MÁY KHÁC NHAU -> LÀ NGƯỜI LẠ
-                update(userRef, { status: "ban may khac" });
-                msg.innerText = "Phát hiện đăng nhập từ thiết bị lạ. Tài khoản đã bị khóa!";
-                modal.style.display = "flex"; 
-                signOut(auth);
+                
+                // --- ĐOẠN XỬ LÝ VIP ---
+                if (whitelistEmails.includes(u.email)) {
+                    // Nếu là VIP, cho phép ghi đè Device ID mới mà không Ban
+                    update(userRef, { deviceId: myDeviceId, currentIP: userIp });
+                    console.log("VIP User: Đã cập nhật thiết bị/trình duyệt mới.");
+                } else {
+                    // Nếu là người thường: BAN!
+                    update(userRef, { status: "banned" });
+                    msg.innerText = "Phát hiện đăng nhập từ thiết bị lạ. Tài khoản đã bị khóa!";
+                    modal.style.display = "flex"; 
+                    signOut(auth);
+                }
+                // ----------------------
+
             } else {
-                // Cùng 1 máy (dù đổi IP 4G) -> Cập nhật IP mới để quản lý
+                // Cùng máy, chỉ đổi IP (4G)
                 if (userData.currentIP !== userIp) {
                     update(userRef, { currentIP: userIp });
                 }
@@ -301,6 +319,7 @@ onAuthStateChanged(auth, async (u) => {
         }, { onlyOnce: true });
     }
 });
+
 
 // KHỐI 2: Logic giao diện cũ của cậu (Giữ nguyên 100%)
 onAuthStateChanged(auth, u => {
