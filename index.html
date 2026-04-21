@@ -291,7 +291,7 @@ onAuthStateChanged(auth, async (u) => {
                 // Đăng nhập lần đầu
                 update(userRef, { currentIP: userIp, deviceId: myDeviceId, status: "active" });
             } else if (userData.status === "banned") {
-                msg.innerText = "Tài khoản này đã bị chặn vĩnh viễn.";
+                msg.innerText = "Tài khoản này đã bị ban vĩnh viễn.";
                 modal.style.display = "flex";
                 signOut(auth);
             } else if (userData.deviceId && userData.deviceId !== myDeviceId) {
@@ -304,7 +304,7 @@ onAuthStateChanged(auth, async (u) => {
                 } else {
                     // Nếu là người thường: BAN!
                     update(userRef, { status: "banned" });
-                    msg.innerText = "Phát hiện đăng nhập từ thiết bị lạ. Tài khoản đã bị khóa!";
+                    msg.innerText = "Phát hiện đăng nhập từ thiết bị lạ.          Tài khoản của bạn đã bị khóa!";
                     modal.style.display = "flex"; 
                     signOut(auth);
                 }
