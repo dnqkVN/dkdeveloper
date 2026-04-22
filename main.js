@@ -83,10 +83,10 @@ async function getPublicIP() {
 // 1. Danh sách Email VIP được phép đổi trình duyệt/thiết bị thoải mái
 const whitelistEmails = [
     "khangdoannq@gmail.com", 
-    "12345vanthach@gmail_com",
-    "anhkhoadn2009@gmail_com",
-    "tmai28298@gmail_com",
-    "truongloi010220@gmail_com"// Thêm email bạn thân cậu vào đây
+    "12345vanthach@gmail.com",
+    "anhkhoadn2009@gmail.com",
+    "tmai28298@gmail.com",
+    "truongloi010220@gmail.com"// Thêm email bạn thân cậu vào đây
 ];
 
 // KHỐI 1: Check Thiết Bị & IP (Bản VIP dành cho quin developer)
