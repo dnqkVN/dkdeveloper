@@ -1,121 +1,147 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tundevlo</title>
-<link rel="icon" href="web.png?v=1" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tundevlo - Admin Full Control</title>
+    <link rel="icon" href="web.png?v=1" type="image/png">
 
-<style>
-:root {
-    --bg-gradient: linear-gradient(135deg, #4facfe 0%, #6a5acd 100%);
-    --primary-color: #4facfe; 
-    --text-main: #ffffff;
-    --text-sub: rgba(255, 255, 255, 0.7);
-    --glass-bg: rgba(255, 255, 255, 0.12);
-    --glass-border: rgba(255, 255, 255, 0.2);
-    --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.2);
-}
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #4facfe 0%, #6a5acd 100%);
+            --primary-color: #4facfe; 
+            --text-main: #ffffff;
+            --text-sub: rgba(255, 255, 255, 0.7);
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
 
-body { 
-    display: none; margin: 0; min-height: 100vh; font-family: 'Segoe UI', sans-serif; 
-    background: var(--bg-gradient); background-attachment: fixed; color: var(--text-main);
-}
+        body { 
+            display: none; 
+            margin: 0; 
+            min-height: 100vh; 
+            font-family: 'Segoe UI', sans-serif; 
+            background: var(--bg-gradient); 
+            background-attachment: fixed; 
+            color: var(--text-main);
+        }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-#loginUI, #mainUI, #logoutConfirmUI, .page-section { display: none; }
-.active-page { display: block !important; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #loginUI, #mainUI, #logoutConfirmUI, #bannedModal, #customModalOverlay, .page-section { display: none; }
+        .active-page { display: block !important; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* LOGIN */
-#loginUI { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(15px); }
-.login-box { text-align: center; background: var(--glass-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--glass-border); width: 85%; max-width: 340px; box-shadow: var(--shadow-soft); }
+        /* --- LOGIN --- */
+        #loginUI { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(15px); }
+        .login-box { text-align: center; background: var(--glass-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--glass-border); width: 85%; max-width: 340px; box-shadow: var(--shadow-soft); }
 
-.container { width: 100%; max-width: 480px; margin: 0 auto; padding: 20px 15px 120px; }
-.header-box { text-align: center; padding: 15px; font-size: 18px; font-weight: 800; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; color: white; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 20px 15px 120px; }
+        .header-box { text-align: center; padding: 15px; font-size: 18px; font-weight: 800; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; color: white; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
 
-/* NAVIGATION */
-.nav-bar { position: fixed; bottom: 20px; left: 20px; right: 20px; height: 65px; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; z-index: 1500; box-shadow: var(--shadow-soft); }
-.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sub); cursor: pointer; transition: 0.3s; }
-.nav-item.active { color: var(--primary-color); transform: translateY(-3px); }
-.nav-text { font-size: 9px; font-weight: 800; text-transform: uppercase; }
-.nav-icon-img { width: 24px; height: 24px; object-fit: contain; }
+        /* --- NAV BAR --- */
+        .nav-bar { position: fixed; bottom: 20px; left: 20px; right: 20px; height: 65px; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; z-index: 1500; box-shadow: var(--shadow-soft); }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sub); cursor: pointer; transition: 0.3s; }
+        .nav-item.active { color: var(--primary-color); transform: translateY(-3px); }
+        .nav-text { font-size: 9px; font-weight: 800; text-transform: uppercase; }
+        .nav-icon-img { width: 24px; height: 24px; object-fit: contain; }
 
-#search { width: 100%; padding: 14px; border-radius: 30px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-align: center; outline: none; margin-bottom: 20px; font-size: 14px; color: white; }
+        #search { width: 100%; padding: 14px; border-radius: 30px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-align: center; outline: none; margin-bottom: 20px; font-size: 14px; color: white; }
 
-/* GRID TỰ ĐỘNG CHIA CỘT */
-.grid { 
-    display: grid; 
-    grid-template-columns: 1fr; /* Mặc định 1 cột cho điện thoại */
-    gap: 12px; 
-}
+        /* --- GRID --- */
+        .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; gap: 15px; } }
 
-/* KHI MÀN HÌNH RỘNG (PC) */
-@media (min-width: 768px) {
-    .grid {
-        grid-template-columns: 1fr 1fr; /* Tự động chia 2 cột khi trên PC */
-        gap: 15px;
-    }
-}
+        .box { 
+            background: var(--glass-bg); border-radius: 18px; padding: 20px 15px; text-align: center; 
+            border: 1px solid var(--glass-border); cursor: pointer; font-weight: 600; transition: 0.4s; 
+            font-size: 15px; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: center; min-height: 60px; word-break: break-all;
+        }
+        .box:hover { background: rgba(255,255,255,0.25); transform: scale(1.02); }
 
-.box { 
-    background: var(--glass-bg); 
-    border-radius: 18px; 
-    padding: 20px 15px; 
-    text-align: center; 
-    border: 1px solid var(--glass-border); 
-    cursor: pointer; 
-    font-weight: 600; 
-    transition: 0.4s; 
-    font-size: 15px; 
-    color: white; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    display: flex; /* Thêm cái này để chữ luôn ở giữa */
-    align-items: center;
-    justify-content: center;
-    min-height: 60px;
-}
+        /* --- CHAT --- */
+        .chat-container { background: var(--glass-bg); border-radius: 25px; border: 1px solid var(--glass-border); padding: 15px; height: 60vh; display: flex; flex-direction: column; }
+        #messages { flex: 1; overflow-y: auto; }
+        .msg-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); max-width: 90%; }
+        .msg-user { color: #ffffff !important; font-weight: 800; font-size: 12px; margin-bottom: 2px; display: block; }
+        .msg-text { font-size: 13px; color: white; }
+        .msg-time { font-size: 9px; opacity: 0.5; margin-top: 4px; text-align: right; }
+        .chat-input-row { display: flex; gap: 8px; margin-top: 10px; }
+        .chat-input-row input { flex: 1; padding: 12px 15px; border-radius: 20px; border: none; background: white; outline: none; color: #333; }
+        .chat-input-row button { padding: 0 20px; border-radius: 20px; border: none; background: var(--primary-color); color: white; font-weight: 700; cursor: pointer; }
 
-.box:hover { background: rgba(255,255,255,0.25); transform: scale(1.02); }
+        /* --- ADMIN --- */
+        .admin-card { background: var(--glass-bg); border-radius: 20px; padding: 15px; border: 1px solid var(--glass-border); margin-bottom: 25px; }
+        .admin-table { width: 100%; border-collapse: collapse; color: white; }
+        .admin-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-/* CHAT */
-.chat-container { background: var(--glass-bg); border-radius: 25px; border: 1px solid var(--glass-border); padding: 15px; height: 60vh; display: flex; flex-direction: column; }
-#messages { flex: 1; overflow-y: auto; }
-.msg-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); max-width: 90%; }
-.msg-user { color: #ffffff !important; font-weight: 800; font-size: 12px; margin-bottom: 2px; display: block; }
-.msg-text { font-size: 13px; color: white; }
-.msg-time { font-size: 9px; opacity: 0.5; margin-top: 4px; text-align: right; }
-.chat-input-row { display: flex; gap: 8px; margin-top: 10px; }
-.chat-input-row input { flex: 1; padding: 12px 15px; border-radius: 20px; border: none; background: white; outline: none; color: #333; }
-.chat-input-row button { padding: 0 20px; border-radius: 20px; border: none; background: var(--primary-color); color: white; font-weight: 700; }
+        .manage-link-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 13px; }
+        .btn-delete { background: #ff4757; color: white; border: none; padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-/* ADMIN & PROFILE */
-.admin-card { background: var(--glass-bg); border-radius: 20px; padding: 15px; border: 1px solid var(--glass-border); }
-.admin-table { width: 100%; border-collapse: collapse; color: white; }
-.admin-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .log-item { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; text-align: left; }
+        .log-item:last-child { border-bottom: none; }
+        .log-name { font-weight: 800; color: white; }
+        .log-time { color: var(--text-sub); font-size: 13px; }
 
-/* LIST LOGS */
-.log-item { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; text-align: left; }
-.log-item:last-child { border-bottom: none; }
-.log-name { font-weight: 800; color: white; }
-.log-time { color: var(--text-sub); font-size: 13px; }
+        /* --- PROFILE --- */
+        .profile-card { background: var(--glass-bg); border-radius: 25px; padding: 30px 20px; text-align: center; border: 1px solid var(--glass-border); }
+        .avatar-circle { width: 75px; height: 75px; background: var(--primary-color); border-radius: 50%; margin: 0 auto 15px; border: 3px solid white; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; overflow: hidden; }
+        .role-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-top: 15px; text-transform: uppercase; }
+        .role-admin { background: white; color: #6a5acd; }
+        .role-user { background: rgba(255,255,255,0.1); color: white; }
+        .profile-logout-btn { margin-top: 20px; width: 100%; padding: 16px; border-radius: 25px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); color: #ff4d4d; font-weight: 800; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
 
-.profile-card { background: var(--glass-bg); border-radius: 25px; padding: 30px 20px; text-align: center; border: 1px solid var(--glass-border); }
-.avatar-circle { width: 75px; height: 75px; background: var(--primary-color); border-radius: 50%; margin: 0 auto 15px; border: 3px solid white; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; overflow: hidden; }
-.role-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-top: 15px; text-transform: uppercase; }
-.role-admin { background: white; color: #6a5acd; }
-.role-user { background: rgba(255,255,255,0.1); color: white; }
+        /* --- MODALS --- */
+        #logoutConfirmUI, #bannedModal, #customModalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); display:none; justify-content: center; align-items: center; z-index: 3000; }
+        .confirm-card, .custom-modal-box { background: #2a344a; padding: 30px; border-radius: 30px; text-align: center; width: 310px; color: white; border: 1px solid rgba(255,255,255,0.1); }
+        
+        .custom-modal-icon { font-size: 40px; margin-bottom: 10px; }
+        .custom-modal-title { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+        .custom-modal-msg { font-size: 14px; color: #a4b0be; margin-bottom: 20px; line-height: 1.5; }
+        .custom-modal-btns { display: flex; gap: 10px; }
+        .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; }
+        .btn-modal-cancel { background: rgba(255,255,255,0.1); color: white; }
+        .btn-modal-ok { background: var(--primary-color); color: white; }
+        .btn-modal-danger { background: #ff4757; color: white; }
 
-.profile-logout-btn { margin-top: 20px; width: 100%; padding: 16px; border-radius: 25px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); color: #ff4d4d; font-weight: 800; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
-
-/* MODALS */
-#logoutConfirmUI, #bannedModal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); display:none; justify-content: center; align-items: center; z-index: 2100; }
-.confirm-card { background: #2a344a; padding: 30px; border-radius: 30px; text-align: center; width: 300px; color: white; }
-</style>
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+        .custom-modal-box, .confirm-card { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    </style>
 </head>
 
 <body>
+
+<div id="customModalOverlay">
+    <div class="custom-modal-box">
+        <div id="customModalIcon" class="custom-modal-icon">🔔</div>
+        <h3 id="customModalTitle" class="custom-modal-title">Thông báo</h3>
+        <p id="customModalMessage" class="custom-modal-msg">Nội dung</p>
+        <div class="custom-modal-btns">
+            <button id="customModalCancel" class="btn-modal btn-modal-cancel" style="display:none;">Hủy</button>
+            <button id="customModalConfirm" class="btn-modal btn-modal-ok">OK</button>
+        </div>
+    </div>
+</div>
+
+<div id="bannedModal">
+    <div class="confirm-card">
+        <h3>Thông báo Khóa</h3>
+        <p id="bannedMessage" style="color: #bdc3c7; line-height: 1.5; margin-bottom: 25px; font-size: 14px;"></p>
+        <button onclick="window.location.reload()" style="background: #ff4757; color: white; border: none; padding: 12px; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer;">Đã hiểu</button>
+    </div>
+</div>
+
+<div id="logoutConfirmUI">
+    <div class="confirm-card">
+        <h3>Đăng xuất?</h3>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="closeLogoutModal()" style="flex:1; padding:10px; border-radius:10px; border:none; background:#eee; color:#333; font-weight:bold;">Hủy</button>
+            <button onclick="executeLogout()" style="flex:1; padding:10px; border-radius:10px; border:none; background:#ff4d4d; color:white; font-weight:bold;">Đăng xuất</button>
+        </div>
+    </div>
+</div>
 
 <div id="loginUI">
     <div class="login-box">
@@ -146,13 +172,24 @@ body {
 
     <div id="page-admin" class="page-section">
         <div class="header-box">Admin quin</div>
+        
+        <div style="margin-bottom: 10px; font-weight: 800; color: #ffffff; font-size: 14px; text-align: left; padding-left: 10px;">QUẢN LÝ LINK</div>
+        <div class="admin-card">
+            <div class="chat-input-row">
+                <input id="newLinkInput" placeholder="Nhập domain mới...">
+                <button onclick="addNewLink()" style="background: #2ecc71;">Thêm</button>
+            </div>
+            <div id="adminManageLinkList" style="margin-top: 15px; max-height: 200px; overflow-y: auto;"></div>
+        </div>
+
         <div style="margin-bottom: 10px; font-weight: 800; color: #ffffff; font-size: 14px; text-align: left; padding-left: 10px;">BẢNG XẾP HẠNG</div>
-        <div class="admin-card" style="margin-bottom: 25px;">
+        <div class="admin-card">
             <table class="admin-table">
                 <tbody id="scoreTableBody"></tbody>
             </table>
         </div>
-        <div style="margin-bottom: 10px; font-weight: 800; color: #ffffff; font-size: 14px; text-align: left; padding-left: 10px;"> LỊCH SỬ DN</div>
+        
+        <div style="margin-bottom: 10px; font-weight: 800; color: #ffffff; font-size: 14px; text-align: left; padding-left: 10px;">LỊCH SỬ DN</div>
         <div class="admin-card" style="max-height: 250px; overflow-y: auto; padding: 0;">
             <div id="logList"></div>
         </div>
@@ -191,25 +228,260 @@ body {
     </div>
 </div>
 
-<div id="logoutConfirmUI">
-    <div class="confirm-card">
-        <h3>Đăng xuất?</h3>
-        <div style="display:flex; gap:10px; margin-top:20px;">
-            <button onclick="closeLogoutModal()" style="flex:1; padding:10px; border-radius:10px; border:none; background:#eee; color:#333; font-weight:bold;">huy</button>
-            <button onclick="executeLogout()" style="flex:1; padding:10px; border-radius:10px; border:none; background:#ff4d4d; color:white; font-weight:bold;">dang xuat</button>
-        </div>
-    </div>
-</div>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded, update, increment, onValue, serverTimestamp, query, limitToLast, remove } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-<div id="bannedModal">
-    <div class="confirm-card">
-        <h3>Thông báo</h3>
-        <p id="bannedMessage" style="color: #bdc3c7; line-height: 1.5; margin-bottom: 25px; font-size: 14px;"></p>
-        <button onclick="window.location.reload()" style="background: #ff4757; color: white; border: none; padding: 12px; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer;">Đã hiểu</button>
-    </div>
-</div>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCVJ49ItRu-dUCtytI0P5v7mDLE_QcubO8",
+        authDomain: "kdtfdevt.firebaseapp.com",
+        databaseURL: "https://kdtfdevt-default-rtdb.firebaseio.com",
+        projectId: "kdtfdevt",
+        storageBucket: "kdtfdevt.firebasestorage.app",
+        messagingSenderId: "375523757842",
+        appId: "1:375523757842:web:e3edae2409412e399cedcb",
+        measurementId: "G-8R696PV3PB"
+    };
 
-<script type="module" src="main.js"
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    const ADMIN_EMAIL = "khangdoannq@gmail.com";
+    const userNames = {
+        "qkhaang@gmail.com":"qk", "khangdoannq@gmail.com":"kdoan", "truongloi010220@gmail.com":"phát béo",
+        "anddang15@gmail.com":"an", "truonghuuphat9991@gmail.com":"lọ dùm trai 6 múi",
+        "anhkhoadn2009@gmail.com":"khoa", "luutay481@gmail.com":"dlinhcte",
+        "tmai28298@gmail.com":"tmai", "12345vanthach@gmail.com":"nam"
+    };
+    const allowedEmails = Object.keys(userNames);
+    const whitelistEmails = ["khangdoannq@gmail.com", "12345vanthach@gmail.com", "anhkhoadn2009@gmail.com", "tmai28298@gmail.com", "truongloi010220@gmail.com"];
+    
+    const originalLinks = [
+        "desocupa546dolecto.gb.neOke", "789winn-789win.online", "mmoo-trangchu.online",
+        "nk88-trangchu.online", "open88vip1.online", "555wingame.online", "68winvipro01.online", 
+        "riegrowtaimo.za.com", "99win-site.online", "f168viponline.com", "vip66-vip1.online", 
+        "33win-vip1.online", "tg88-vip1.online", "hz88-vn01.site", "nk88-nk88.online",
+        "tg88-top1.online", "88xx-top1.online", "xn88-top1.online", "x88top1.online", 
+        "nohu-mobi.online", "tg88-tg88.online", "burirdred.za.com", "99okok.site", "f168vns.com",
+        "camineh.gb.net", "docsachwcoed.gb.net", "cloudfront.gb.net", "x88-3.shop", "pkwin2026.lat", 
+        "derelle.gb.net", "88xxcasino.com", "888vicom.lat", "tg88karik.online", "68win10.store", 
+        "rkmusics.in.net", "n188-n188.site", "x88-ka.online", "c168-vn3.com", "sc88-vn8.com",
+        "u888dani.com", "c168uu.com", "ae888t1.com", "mb88vn.site"
+    ];
+
+    let currentEmail = "";
+    let scoreTimer = null;
+
+    async function getPublicIP() {
+        try { const res = await fetch('https://api.ipify.org?format=json'); const data = await res.json(); return data.ip; } 
+        catch(e) { return "unknown"; }
+    }
+
+    // --- HÀM TẠO BOX VÀ HIỂN THỊ LINK ---
+    function createBox(url) {
+        const grid = document.getElementById("grid");
+        let div = document.createElement("div"); div.className = "box"; div.innerText = url;
+        div.onclick = () => {
+            window.open("https://www.google.com/url?q=https://" + url, "_blank");
+            if(scoreTimer) clearTimeout(scoreTimer);
+            scoreTimer = setTimeout(() => {
+                update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { points: increment(0.5), name: userNames[currentEmail] });
+                scoreTimer = null; 
+            }, 60000);
+        };
+        grid.appendChild(div);
+    }
+
+    function loadLinks() {
+        onValue(ref(db, 'links'), (snapshot) => {
+            document.getElementById("grid").innerHTML = "";
+            const adminManageList = document.getElementById("adminManageLinkList");
+            if(adminManageList) adminManageList.innerHTML = ""; 
+            
+            originalLinks.forEach(url => createBox(url)); // Link gốc
+            
+            const data = snapshot.val();
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    const url = data[key].url;
+                    createBox(url); // Link từ DB
+                    if(currentEmail === ADMIN_EMAIL && adminManageList) {
+                        let item = document.createElement("div");
+                        item.className = "manage-link-item";
+                        item.innerHTML = `<span>${url}</span> <button class="btn-delete" onclick="deleteLink('${key}')">Xóa</button>`;
+                        adminManageList.appendChild(item);
+                    }
+                });
+            }
+        });
+    }
+
+    // --- LOGIC AUTH + CHECK DEVICE IP ---
+    onAuthStateChanged(auth, async (u) => {
+        document.body.style.display = "block";
+        if (u && allowedEmails.includes(u.email)) {
+            currentEmail = u.email;
+            const name = userNames[u.email];
+            
+            // Xử lý Check ID Thiết bị và IP
+            const userIp = await getPublicIP();
+            const userRef = ref(db, 'users/' + u.email.replace(/\./g, '_'));
+            let myDeviceId = localStorage.getItem('deviceId');
+            if (!myDeviceId) {
+                myDeviceId = 'dev_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId', myDeviceId);
+            }
+
+            onValue(userRef, (snapshot) => {
+                const userData = snapshot.val();
+                const modal = document.getElementById('bannedModal');
+                const msg = document.getElementById('bannedMessage');
+
+                if (!userData) {
+                    update(userRef, { currentIP: userIp, deviceId: myDeviceId, status: "active" });
+                } else if (userData.status === "banned") {
+                    msg.innerText = "Tài khoản của bạn đã bị Admin khóa vĩnh viễn.";
+                    modal.style.display = "flex"; signOut(auth); return;
+                } else if (userData.deviceId && userData.deviceId !== myDeviceId) {
+                    if (whitelistEmails.includes(u.email)) {
+                        update(userRef, { deviceId: myDeviceId, currentIP: userIp });
+                    } else {
+                        update(userRef, { status: "banned" });
+                        msg.innerHTML = "Phát hiện đăng nhập từ thiết bị lạ!<br>Tài khoản đã bị khóa để bảo mật.";
+                        modal.style.display = "flex"; signOut(auth); return;
+                    }
+                } else if (userData.currentIP !== userIp) {
+                    update(userRef, { currentIP: userIp });
+                }
+
+                // Nếu mọi thứ OK -> Render Giao diện
+                document.getElementById("loginUI").style.display = "none";
+                document.getElementById("mainUI").style.display = "block";
+                document.getElementById("navBar").style.display = "flex";
+                document.getElementById("user-display-name").innerText = name;
+                document.getElementById("user-display-email").innerText = u.email;
+                if(u.photoURL) document.getElementById("user-avatar").innerHTML = `<img src="${u.photoURL}" style="width:100%; height:100%; object-fit:cover;">`;
+                
+                // Ghi Log Đăng Nhập
+                const now = new Date();
+                const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0') + " " + now.getDate() + "/" + (now.getMonth() + 1);
+                push(ref(db, 'logs'), { name: name, email: u.email, timeStr: timeStr, timestamp: serverTimestamp() });
+
+                loadLinks();
+
+                // Check Admin
+                if(u.email === ADMIN_EMAIL) {
+                    document.getElementById("nav-admin").style.display = "flex";
+                    document.getElementById("user-role-badge").innerText = "Quản trị viên";
+                    document.getElementById("user-role-badge").className = "role-badge role-admin";
+                    
+                    onValue(query(ref(db, 'logs'), limitToLast(50)), snap => {
+                        const list = document.getElementById("logList"); list.innerHTML = "";
+                        let logs = []; snap.forEach(c => logs.push(c.val()));
+                        logs.reverse().forEach(d => {
+                            list.innerHTML += `<div class="log-item"><span class="log-name">${d.name}</span><span class="log-time"> - ${d.timeStr}</span></div>`;
+                        });
+                    });
+
+                    onValue(ref(db, 'scores'), snap => {
+                        const body = document.getElementById("scoreTableBody"); body.innerHTML = "";
+                        let sList = []; snap.forEach(c => sList.push(c.val()));
+                        sList.sort((a,b) => b.points - a.points).forEach(d => {
+                            body.innerHTML += `<tr><td>${d.name}</td><td style="text-align:right"><span style="background:var(--primary-color);color:white;padding:2px 8px;border-radius:8px;font-size:12px;">${(d.points || 0).toFixed(1)}</span></td></tr>`;
+                        });
+                    });
+                } else {
+                    document.getElementById("user-role-badge").innerText = "Thành viên";
+                    document.getElementById("user-role-badge").className = "role-badge role-user";
+                }
+            }, { onlyOnce: true });
+
+        } else {
+            if(u) signOut(auth);
+            document.getElementById("loginUI").style.display = "flex";
+            document.getElementById("mainUI").style.display = "none";
+            document.getElementById("navBar").style.display = "none";
+        }
+    });
+
+    // --- HÀM MODAL ---
+    window.showModal = (title, msg, type = 'info', onConfirm = null) => {
+        const overlay = document.getElementById("customModalOverlay");
+        const icon = document.getElementById("customModalIcon");
+        const titleEl = document.getElementById("customModalTitle");
+        const msgEl = document.getElementById("customModalMessage");
+        const btnCancel = document.getElementById("customModalCancel");
+        const btnConfirm = document.getElementById("customModalConfirm");
+
+        titleEl.innerText = title; msgEl.innerText = msg;
+        if (type === 'confirm-delete') {
+            icon.innerText = "🗑️"; btnCancel.style.display = "block";
+            btnConfirm.className = "btn-modal btn-modal-danger"; btnConfirm.innerText = "Xóa ngay";
+        } else if (type === 'success') {
+            icon.innerText = "✅"; btnCancel.style.display = "none";
+            btnConfirm.className = "btn-modal btn-modal-ok"; btnConfirm.innerText = "Oke";
+        } else if (type === 'error') {
+            icon.innerText = "❌"; btnCancel.style.display = "none";
+            btnConfirm.className = "btn-modal btn-modal-danger"; btnConfirm.innerText = "Đã hiểu";
+        } else {
+            icon.innerText = "🔔"; btnCancel.style.display = "none";
+            btnConfirm.className = "btn-modal btn-modal-ok"; btnConfirm.innerText = "OK";
+        }
+        overlay.style.display = "flex";
+        btnConfirm.onclick = () => { overlay.style.display = "none"; if (onConfirm) onConfirm(); };
+        btnCancel.onclick = () => { overlay.style.display = "none"; };
+    };
+
+    window.addNewLink = () => {
+        const inp = document.getElementById("newLinkInput");
+        const val = inp.value.trim();
+        if(val) {
+            push(ref(db, 'links'), { url: val, timestamp: serverTimestamp() })
+            .then(() => { inp.value = ""; showModal("Thành công", "Đã thêm link!", "success"); })
+            .catch(e => showModal("Lỗi", e.message, "error"));
+        } else { showModal("Lỗi", "Chưa nhập link!", "error"); }
+    };
+
+    window.deleteLink = (key) => {
+        showModal("Xóa link", "Bạn chắc chứ?", "confirm-delete", () => {
+            remove(ref(db, 'links/' + key)).then(() => showModal("Xong", "Đã xóa!", "success"));
+        });
+    };
+
+    // --- CÁC HÀM UI CƠ BẢN ---
+    window.switchTab = (tabName, el) => {
+        document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active-page'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('page-' + tabName).classList.add('active-page');
+        el.classList.add('active');
+    };
+
+    window.loginGoogle = () => signInWithPopup(auth, provider);
+    window.openLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "flex";
+    window.closeLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "none";
+    window.executeLogout = () => signOut(auth).then(()=>window.location.reload());
+
+    window.sendMsg = () => {
+        let msg = document.getElementById("msgInput").value;
+        if(!msg) return;
+        push(ref(db,"chat"), { name: currentEmail, msg: msg, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+        document.getElementById("msgInput").value="";
+    };
+
+    onChildAdded(ref(db,"chat"), s => {
+        let m = s.val();
+        let div = document.createElement("div"); div.className = "msg-item";
+        div.innerHTML = `<span class="msg-user">${userNames[m.name] || m.name}</span><div class="msg-text">${m.msg}</div><div class="msg-time">${m.time}</div>`;
+        const box = document.getElementById("messages"); box.appendChild(div); box.scrollTop = box.scrollHeight;
+    });
+
+    document.getElementById("search").addEventListener("input", e => {
+        let kw = e.target.value.toLowerCase();
+        document.querySelectorAll(".box").forEach(b => b.style.display = b.innerText.toLowerCase().includes(kw) ? "" : "none");
+    });
 </script>
 </body>
 </html>
