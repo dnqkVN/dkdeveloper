@@ -426,4 +426,22 @@ window.loginGoogle = () => signInWithPopup(auth, provider);
 window.openLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "flex";
 window.closeLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "none";
 window.executeLogout = () => signOut(auth).then(()=>window.location.reload());
-window.sen
+window.sendMsg = () => {
+    let msg = document.getElementById("msgInput").value;
+    if(!msg) return;
+    push(ref(db,"chat"), { name: currentEmail, msg: msg, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+    document.getElementById("msgInput").value="";
+};
+onChildAdded(ref(db,"chat"), s => {
+    let m = s.val();
+    let div = document.createElement("div"); div.className = "msg-item";
+    div.innerHTML = `<span class="msg-user">${userNames[m.name] || m.name}</span><div class="msg-text">${m.msg}</div><div class="msg-time">${m.time}</div>`;
+    const box = document.getElementById("messages"); box.appendChild(div); box.scrollTop = box.scrollHeight;
+});
+document.getElementById("search").addEventListener("input", e => {
+    let kw = e.target.value.toLowerCase();
+    document.querySelectorAll(".box").forEach(b => b.style.display = b.innerText.toLowerCase().includes(kw) ? "" : "none");
+});
+</script>
+</body>
+</html>
