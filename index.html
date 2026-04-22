@@ -214,15 +214,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/fireba
 import { getDatabase, ref, push, onChildAdded, update, increment, onValue, serverTimestamp, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCoGH-211UP_6o5eqoL4bq6DI4VbzXTKJ0",
-  authDomain: "check-user-1.firebaseapp.com",
-  databaseURL: "https://check-user-1-default-rtdb.firebaseio.com",
-  projectId: "check-user-1",
-  storageBucket: "check-user-1.firebasestorage.app",
-  messagingSenderId: "1009556670498",
-  appId: "1:1009556670498:web:4df83dfa4b2314c21d227b",
-  measurementId: "G-5EEYKNYP3D"
+const firebaseConfig = { 
+    apiKey: "AIzaSyCoGH-211UP_6o5eqoL4bq6DI4VbzXTKJ0", 
+    authDomain: "check-user-1.firebaseapp.com", 
+    projectId: "check-user-1",
+    databaseURL: "https://check-user-1-default-rtdb.firebaseio.com"
 };
 const app = initializeApp(firebaseConfig); const db = getDatabase(app); const auth = getAuth(app); const provider = new GoogleAuthProvider();
 
@@ -430,22 +426,4 @@ window.loginGoogle = () => signInWithPopup(auth, provider);
 window.openLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "flex";
 window.closeLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "none";
 window.executeLogout = () => signOut(auth).then(()=>window.location.reload());
-window.sendMsg = () => {
-    let msg = document.getElementById("msgInput").value;
-    if(!msg) return;
-    push(ref(db,"chat"), { name: currentEmail, msg: msg, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-    document.getElementById("msgInput").value="";
-};
-onChildAdded(ref(db,"chat"), s => {
-    let m = s.val();
-    let div = document.createElement("div"); div.className = "msg-item";
-    div.innerHTML = `<span class="msg-user">${userNames[m.name] || m.name}</span><div class="msg-text">${m.msg}</div><div class="msg-time">${m.time}</div>`;
-    const box = document.getElementById("messages"); box.appendChild(div); box.scrollTop = box.scrollHeight;
-});
-document.getElementById("search").addEventListener("input", e => {
-    let kw = e.target.value.toLowerCase();
-    document.querySelectorAll(".box").forEach(b => b.style.display = b.innerText.toLowerCase().includes(kw) ? "" : "none");
-});
-</script>
-</body>
-</html>
+window.sen
