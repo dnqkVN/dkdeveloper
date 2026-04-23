@@ -1,487 +1,421 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tundevlo - Admin Full Control</title>
-    <link rel="icon" href="web.png?v=1" type="image/png">
-
-    <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #4facfe 0%, #6a5acd 100%);
-            --primary-color: #4facfe; 
-            --text-main: #ffffff;
-            --text-sub: rgba(255, 255, 255, 0.7);
-            --glass-bg: rgba(255, 255, 255, 0.12);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.2);
-        }
-
-        body { 
-            display: none; 
-            margin: 0; 
-            min-height: 100vh; 
-            font-family: 'Segoe UI', sans-serif; 
-            background: var(--bg-gradient); 
-            background-attachment: fixed; 
-            color: var(--text-main);
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        #loginUI, #mainUI, #logoutConfirmUI, #bannedModal, #customModalOverlay, .page-section { display: none; }
-        .active-page { display: block !important; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- LOGIN --- */
-        #loginUI { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(15px); }
-        .login-box { text-align: center; background: var(--glass-bg); padding: 40px; border-radius: 30px; border: 1px solid var(--glass-border); width: 85%; max-width: 340px; box-shadow: var(--shadow-soft); }
-
-        .container { width: 100%; max-width: 480px; margin: 0 auto; padding: 20px 15px 120px; }
-        .header-box { text-align: center; padding: 15px; font-size: 18px; font-weight: 800; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; color: white; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
-
-        /* --- NAV BAR --- */
-        .nav-bar { position: fixed; bottom: 20px; left: 20px; right: 20px; height: 65px; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); display: flex; justify-content: space-around; align-items: center; border-radius: 25px; z-index: 1500; box-shadow: var(--shadow-soft); }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sub); cursor: pointer; transition: 0.3s; }
-        .nav-item.active { color: var(--primary-color); transform: translateY(-3px); }
-        .nav-text { font-size: 9px; font-weight: 800; text-transform: uppercase; }
-        .nav-icon-img { width: 24px; height: 24px; object-fit: contain; }
-
-        #search { width: 100%; padding: 14px; border-radius: 30px; border: 1px solid var(--glass-border); background: var(--glass-bg); text-align: center; outline: none; margin-bottom: 20px; font-size: 14px; color: white; }
-
-        /* --- GRID --- */
-        .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; gap: 15px; } }
-
-        .box { 
-            background: var(--glass-bg); border-radius: 18px; padding: 20px 15px; text-align: center; 
-            border: 1px solid var(--glass-border); cursor: pointer; font-weight: 600; transition: 0.4s; 
-            font-size: 15px; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            display: flex; align-items: center; justify-content: center; min-height: 60px; word-break: break-all;
-        }
-        .box:hover { background: rgba(255,255,255,0.25); transform: scale(1.02); }
-
-        /* --- CHAT --- */
-        .chat-container { background: var(--glass-bg); border-radius: 25px; border: 1px solid var(--glass-border); padding: 15px; height: 60vh; display: flex; flex-direction: column; }
-        #messages { flex: 1; overflow-y: auto; }
-        .msg-item { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); max-width: 90%; }
-        .msg-user { color: #ffffff !important; font-weight: 800; font-size: 12px; margin-bottom: 2px; display: block; }
-        .msg-text { font-size: 13px; color: white; }
-        .msg-time { font-size: 9px; opacity: 0.5; margin-top: 4px; text-align: right; }
-        .chat-input-row { display: flex; gap: 8px; margin-top: 10px; }
-        .chat-input-row input { flex: 1; padding: 12px 15px; border-radius: 20px; border: none; background: white; outline: none; color: #333; }
-        .chat-input-row button { padding: 0 20px; border-radius: 20px; border: none; background: var(--primary-color); color: white; font-weight: 700; cursor: pointer; }
-
-        /* --- ADMIN --- */
-        .admin-card { background: var(--glass-bg); border-radius: 20px; padding: 15px; border: 1px solid var(--glass-border); margin-bottom: 25px; }
-        .admin-table { width: 100%; border-collapse: collapse; color: white; }
-        .admin-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        .manage-link-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 13px; }
-        .btn-delete { background: #ff4757; color: white; border: none; padding: 5px 10px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
-
-        .log-item { padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 14px; text-align: left; }
-        .log-item:last-child { border-bottom: none; }
-        .log-name { font-weight: 800; color: white; }
-        .log-time { color: var(--text-sub); font-size: 13px; }
-
-        /* --- PROFILE --- */
-        .profile-card { background: var(--glass-bg); border-radius: 25px; padding: 30px 20px; text-align: center; border: 1px solid var(--glass-border); }
-        .avatar-circle { width: 75px; height: 75px; background: var(--primary-color); border-radius: 50%; margin: 0 auto 15px; border: 3px solid white; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 800; overflow: hidden; }
-        .role-badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-top: 15px; text-transform: uppercase; }
-        .role-admin { background: white; color: #6a5acd; }
-        .role-user { background: rgba(255,255,255,0.1); color: white; }
-        .profile-logout-btn { margin-top: 20px; width: 100%; padding: 16px; border-radius: 25px; background: rgba(0, 0, 0, 0.3); border: 1px solid var(--glass-border); color: #ff4d4d; font-weight: 800; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
-
-        /* --- MODALS --- */
-        #logoutConfirmUI, #bannedModal, #customModalOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); display:none; justify-content: center; align-items: center; z-index: 3000; }
-        .confirm-card, .custom-modal-box { background: #2a344a; padding: 30px; border-radius: 30px; text-align: center; width: 310px; color: white; border: 1px solid rgba(255,255,255,0.1); }
-        
-        .custom-modal-icon { font-size: 40px; margin-bottom: 10px; }
-        .custom-modal-title { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
-        .custom-modal-msg { font-size: 14px; color: #a4b0be; margin-bottom: 20px; line-height: 1.5; }
-        .custom-modal-btns { display: flex; gap: 10px; }
-        .btn-modal { flex: 1; padding: 12px; border-radius: 15px; border: none; font-weight: bold; cursor: pointer; }
-        .btn-modal-cancel { background: rgba(255,255,255,0.1); color: white; }
-        .btn-modal-ok { background: var(--primary-color); color: white; }
-        .btn-modal-danger { background: #ff4757; color: white; }
-
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
-        .custom-modal-box, .confirm-card { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tundevlo</title>
+<link rel="icon" href="web.png?v=1" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- ★ Main stylesheet ★ -->
+<link rel="stylesheet" href="main.css">
 </head>
-
 <body>
 
-<div id="customModalOverlay">
-    <div class="custom-modal-box">
-        <div id="customModalIcon" class="custom-modal-icon">🔔</div>
-        <h3 id="customModalTitle" class="custom-modal-title">Thông báo</h3>
-        <p id="customModalMessage" class="custom-modal-msg">Nội dung</p>
-        <div class="custom-modal-btns">
-            <button id="customModalCancel" class="btn-modal btn-modal-cancel" style="display:none;">Hủy</button>
-            <button id="customModalConfirm" class="btn-modal btn-modal-ok">OK</button>
-        </div>
-    </div>
-</div>
+<!-- Decorative floating orbs (styled in main.css) -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
 
-<div id="bannedModal">
-    <div class="confirm-card">
-        <h3>Thông báo Khóa</h3>
-        <p id="bannedMessage" style="color: #bdc3c7; line-height: 1.5; margin-bottom: 25px; font-size: 14px;"></p>
-        <button onclick="window.location.reload()" style="background: #ff4757; color: white; border: none; padding: 12px; border-radius: 15px; font-weight: bold; width: 100%; cursor: pointer;">Đã hiểu</button>
-    </div>
-</div>
-
-<div id="logoutConfirmUI">
-    <div class="confirm-card">
-        <h3>Đăng xuất?</h3>
-        <div style="display:flex; gap:10px; margin-top:20px;">
-            <button onclick="closeLogoutModal()" style="flex:1; padding:10px; border-radius:10px; border:none; background:#eee; color:#333; font-weight:bold;">Hủy</button>
-            <button onclick="executeLogout()" style="flex:1; padding:10px; border-radius:10px; border:none; background:#ff4d4d; color:white; font-weight:bold;">Đăng xuất</button>
-        </div>
-    </div>
-</div>
-
+<!-- ═══ LOGIN ═══ -->
 <div id="loginUI">
-    <div class="login-box">
-        <h2 style="color: white; margin:0;">devlo 🐧</h2>
-        <div class="login-google" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 25px; padding: 12px; border-radius: 15px; cursor: pointer; font-weight: 700; background: white; color: #333;" onclick="loginGoogle()">
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18"> Google
-        </div>
+  <div class="login-box">
+    <div class="login-logo">devlo 🐧</div>
+    <div class="login-tagline">Workspace của team</div>
+    <div class="login-google" onclick="loginGoogle()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="Google">
+      Tiếp tục với Google
     </div>
+  </div>
 </div>
 
+<!-- ═══ MAIN ═══ -->
 <div class="container" id="mainUI">
-    <div id="page-home" class="page-section active-page">
-        <div class="header-box">quin developer</div>
-        <input type="text" id="search" placeholder="🔍 Tìm nhanh..">
-        <div class="grid" id="grid"></div>
+
+  <!-- HOME -->
+  <div id="page-home" class="page-section active-page">
+    <div class="header-box">quin developer</div>
+    <input type="text" id="search" placeholder="🔍  Tìm nhanh link...">
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <!-- CHAT -->
+  <div id="page-chat" class="page-section">
+    <div class="header-box">nhắn tin</div>
+    <div class="chat-container">
+      <div id="messages"></div>
+      <div class="chat-input-row">
+        <input id="msgInput" placeholder="Nhắn gì đó...">
+        <button onclick="sendMsg()">Gửi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div id="page-admin" class="page-section">
+    <div class="header-box">admin panel</div>
+
+    <div class="section-label">Quản lý link</div>
+    <div class="admin-card">
+      <div class="add-link-row">
+        <input id="newDomainInput" placeholder="Nhập domain mới...">
+        <button onclick="addDomain()">+ Thêm</button>
+      </div>
+      <div id="adminManageLinkList"></div>
     </div>
 
-    <div id="page-chat" class="page-section">
-        <div class="header-box">ntin</div>
-        <div class="chat-container">
-            <div id="messages"></div>
-            <div class="chat-input-row">
-                <input id="msgInput" placeholder="Aa..">
-                <button onclick="sendMsg()">Gửi</button>
-            </div>
-        </div>
+    <div class="section-label">Bảng xếp hạng</div>
+    <div class="admin-card">
+      <table class="admin-table">
+        <tbody id="scoreTableBody"></tbody>
+      </table>
     </div>
 
-    <div id="page-admin" class="page-section">
-        <div class="header-box">Admin quin</div>
-        
-        <div style="margin-bottom: 10px; font-weight: 800; color: #ffffff; font-size: 14px; text-align: left; padding-left: 10px;">QUẢN LÝ LINK</div>
-        <div class="admin-card">
-            <div class="chat-input-row">
-                <input id="newLinkInput" placeholder="Nhập domain mới...">
-                <button onclick="addNewLink()" style="background: #2ecc71;">Thêm</button>
-            </div>
-            <div id="adminManageLinkList" style="margin-top: 15px; max-height: 200px; overflow-y: auto;"></div>
-        </div>
-
-        <div style="margin-bottom: 10px; font-weight: 800; color: #ffffff; font-size: 14px; text-align: left; padding-left: 10px;">BẢNG XẾP HẠNG</div>
-        <div class="admin-card">
-            <table class="admin-table">
-                <tbody id="scoreTableBody"></tbody>
-            </table>
-        </div>
-        
-        <div style="margin-bottom: 10px; font-weight: 800; color: #ffffff; font-size: 14px; text-align: left; padding-left: 10px;">LỊCH SỬ DN</div>
-        <div class="admin-card" style="max-height: 250px; overflow-y: auto; padding: 0;">
-            <div id="logList"></div>
-        </div>
+    <div class="section-label">Lịch sử đăng nhập</div>
+    <div class="admin-card" style="max-height:260px; overflow-y:auto; padding:0;">
+      <div id="logList"></div>
     </div>
+  </div>
 
-    <div id="page-profile" class="page-section">
-        <div class="header-box">Tài Khoản</div>
-        <div class="profile-card">
-            <div class="avatar-circle" id="user-avatar">?</div>
-            <h3 id="user-display-name" style="margin: 5px 0; color: white;">---</h3>
-            <p id="user-display-email" style="color: var(--text-sub); margin: 0; font-size: 13px;">---</p>
-            <div id="user-role-badge" class="role-badge">---</div>
-        </div>
-        <div class="profile-logout-btn" onclick="openLogoutModal()">
-            <img src="logout.png?v=1" width="20"> Đăng xuất
-        </div>
+  <!-- PROFILE -->
+  <div id="page-profile" class="page-section">
+    <div class="header-box">tài khoản</div>
+    <div class="profile-card">
+      <div class="avatar-circle" id="user-avatar">?</div>
+      <h3 id="user-display-name">---</h3>
+      <p id="user-display-email">---</p>
+      <div id="user-role-badge" class="role-badge">---</div>
     </div>
-</div>
+    <div class="profile-logout-btn" onclick="openLogoutModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16,17 21,12 16,7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Đăng xuất
+    </div>
+  </div>
 
+</div><!-- /container -->
+
+<!-- ═══ NAV BAR ═══ -->
 <div class="nav-bar" id="navBar">
-    <div class="nav-item active" onclick="switchTab('home', this)">
-        <img src="home.png?v=1" class="nav-icon-img">
-        <span class="nav-text">Home</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('chat', this)">
-        <img src="chat.png?v=1" class="nav-icon-img">
-        <span class="nav-text">chattg</span>
-    </div>
-    <div class="nav-item" id="nav-admin" onclick="switchTab('admin', this)" style="display:none;">
-        <img src="admin.png?v=1" class="nav-icon-img">
-        <span class="nav-text">Admin</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('profile', this)">
-        <img src="caidat.png?v=1" class="nav-icon-img">
-        <span class="nav-text">Tôi</span>
-    </div>
+  <div class="nav-item active" onclick="switchTab('home', this)">
+    <img src="home.png?v=1" class="nav-icon-img" alt="">
+    <span class="nav-text">Home</span>
+  </div>
+  <div class="nav-item" onclick="switchTab('chat', this)">
+    <img src="chat.png?v=1" class="nav-icon-img" alt="">
+    <span class="nav-text">Chat</span>
+  </div>
+  <div class="nav-item" id="nav-admin" onclick="switchTab('admin', this)" style="display:none;">
+    <img src="admin.png?v=1" class="nav-icon-img" alt="">
+    <span class="nav-text">Admin</span>
+  </div>
+  <div class="nav-item" onclick="switchTab('profile', this)">
+    <img src="caidat.png?v=1" class="nav-icon-img" alt="">
+    <span class="nav-text">Tôi</span>
+  </div>
 </div>
 
+<!-- ═══ LOGOUT MODAL ═══ -->
+<div id="logoutConfirmUI">
+  <div class="confirm-card">
+    <h3>Đăng xuất?</h3>
+    <p>Bạn chắc chắn muốn thoát khỏi tài khoản không?</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeLogoutModal()">Huỷ</button>
+      <button class="btn-danger"  onclick="executeLogout()">Đăng xuất</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BANNED MODAL ═══ -->
+<div id="bannedModal">
+  <div class="confirm-card">
+    <h3>⚠️ Thông báo</h3>
+    <p id="bannedMessage"></p>
+    <button class="btn-danger"
+            style="width:100%; margin-top:20px; padding:13px; border-radius:14px;"
+            onclick="window.location.reload()">Đã hiểu</button>
+  </div>
+</div>
+
+<!-- ═══ FIREBASE JS ═══ -->
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded, update, increment, onValue, serverTimestamp, query, limitToLast, remove } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded, update, increment,
+         onValue, serverTimestamp, query, limitToLast, remove }
+  from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup,
+         onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCVJ49ItRu-dUCtytI0P5v7mDLE_QcubO8",
-        authDomain: "kdtfdevt.firebaseapp.com",
-        databaseURL: "https://kdtfdevt-default-rtdb.firebaseio.com",
-        projectId: "kdtfdevt",
-        storageBucket: "kdtfdevt.firebasestorage.app",
-        messagingSenderId: "375523757842",
-        appId: "1:375523757842:web:e3edae2409412e399cedcb",
-        measurementId: "G-8R696PV3PB"
-    };
+/* ── Config ── */
+const firebaseConfig = {
+  apiKey:            "AIzaSyCVJ49ItRu-dUCtytI0P5v7mDLE_QcubO8",
+  authDomain:        "kdtfdevt.firebaseapp.com",
+  databaseURL:       "https://kdtfdevt-default-rtdb.firebaseio.com",
+  projectId:         "kdtfdevt",
+  storageBucket:     "kdtfdevt.firebasestorage.app",
+  messagingSenderId: "375523757842",
+  appId:             "1:375523757842:web:e3edae2409412e399cedcb",
+  measurementId:     "G-8R696PV3PB"
+};
+const app      = initializeApp(firebaseConfig);
+const db       = getDatabase(app);
+const auth     = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+/* ── Constants ── */
+const ADMIN_EMAIL = "khangdoannq@gmail.com";
+const userNames = {
+  "qkhaang@gmail.com":           "qk",
+  "khangdoannq@gmail.com":       "kdoan",
+  "truongloi010220@gmail.com":   "phát béo",
+  "anddang15@gmail.com":         "an",
+  "truonghuuphat9991@gmail.com": "lọ dùm trai 6 múi",
+  "anhkhoadn2009@gmail.com":     "khoa",
+  "tmai28298@gmail.com":         "tmai",
+  "12345vanthach@gmail.com":     "nam"
+};
+const allowedEmails   = Object.keys(userNames);
+const whitelistEmails = [
+  "khangdoannq@gmail.com","12345vanthach@gmail.com",
+  "anhkhoadn2009@gmail.com","tmai28298@gmail.com","truongloi010220@gmail.com"
+];
+const staticLinks = ["youtube"];
 
-    const ADMIN_EMAIL = "khangdoannq@gmail.com";
-    const userNames = {
-        "qkhaang@gmail.com":"qk", "khangdoannq@gmail.com":"kdoan", "truongloi010220@gmail.com":"phát béo",
-        "anddang15@gmail.com":"an", "truonghuuphat9991@gmail.com":"lọ dùm trai 6 múi",
-        "anhkhoadn2009@gmail.com":"khoa", "luutay481@gmail.com":"dlinhcte",
-        "tmai28298@gmail.com":"tmai", "12345vanthach@gmail.com":"nam"
-    };
-    const allowedEmails = Object.keys(userNames);
-    const whitelistEmails = ["khangdoannq@gmail.com", "12345vanthach@gmail.com", "anhkhoadn2009@gmail.com", "tmai28298@gmail.com", "truongloi010220@gmail.com"];
-    
-    const originalLinks = [
-        "desocupa546dolecto.gb.neOke", "789winn-789win.online", "mmoo-trangchu.online",
-        "nk88-trangchu.online", "open88vip1.online", "555wingame.online", "68winvipro01.online", 
-        "riegrowtaimo.za.com", "99win-site.online", "f168viponline.com", "vip66-vip1.online", 
-        "33win-vip1.online", "tg88-vip1.online", "hz88-vn01.site", "nk88-nk88.online",
-        "tg88-top1.online", "88xx-top1.online", "xn88-top1.online", "x88top1.online", 
-        "nohu-mobi.online", "tg88-tg88.online", "burirdred.za.com", "99okok.site", "f168vns.com",
-        "camineh.gb.net", "docsachwcoed.gb.net", "cloudfront.gb.net", "x88-3.shop", "pkwin2026.lat", 
-        "derelle.gb.net", "88xxcasino.com", "888vicom.lat", "tg88karik.online", "68win10.store", 
-        "rkmusics.in.net", "n188-n188.site", "x88-ka.online", "c168-vn3.com", "sc88-vn8.com",
-        "u888dani.com", "c168uu.com", "ae888t1.com", "mb88vn.site"
-    ];
+let currentEmail = "";
+let scoreTimer   = null;
 
-    let currentEmail = "";
-    let scoreTimer = null;
+/* ── Helpers ── */
+async function getPublicIP() {
+  try { return (await (await fetch('https://api.ipify.org?format=json')).json()).ip; }
+  catch { return "unknown"; }
+}
 
-    async function getPublicIP() {
-        try { const res = await fetch('https://api.ipify.org?format=json'); const data = await res.json(); return data.ip; } 
-        catch(e) { return "unknown"; }
-    }
+function addRipple(el, e) {
+  const r     = document.createElement('span');
+  r.className = 'ripple';
+  const rect  = el.getBoundingClientRect();
+  const size  = Math.max(rect.width, rect.height);
+  r.style.cssText = `width:${size}px;height:${size}px;`
+    + `left:${e.clientX - rect.left - size/2}px;`
+    + `top:${e.clientY  - rect.top  - size/2}px`;
+  el.appendChild(r);
+  setTimeout(() => r.remove(), 580);
+}
 
-    // --- HÀM TẠO BOX VÀ HIỂN THỊ LINK ---
-    function createBox(url) {
-        const grid = document.getElementById("grid");
-        let div = document.createElement("div"); div.className = "box"; div.innerText = url;
-        div.onclick = () => {
-            window.open("https://www.google.com/url?q=https://" + url, "_blank");
-            if(scoreTimer) clearTimeout(scoreTimer);
-            scoreTimer = setTimeout(() => {
-                update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), { points: increment(0.5), name: userNames[currentEmail] });
-                scoreTimer = null; 
-            }, 60000);
-        };
-        grid.appendChild(div);
-    }
+/* ── Tab switch ── */
+window.switchTab = (name, el) => {
+  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active-page'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active-page');
+  el.classList.add('active');
+};
 
-    function loadLinks() {
-        onValue(ref(db, 'links'), (snapshot) => {
-            document.getElementById("grid").innerHTML = "";
-            const adminManageList = document.getElementById("adminManageLinkList");
-            if(adminManageList) adminManageList.innerHTML = ""; 
-            
-            originalLinks.forEach(url => createBox(url)); // Link gốc
-            
-            const data = snapshot.val();
-            if (data) {
-                Object.keys(data).forEach(key => {
-                    const url = data[key].url;
-                    createBox(url); // Link từ DB
-                    if(currentEmail === ADMIN_EMAIL && adminManageList) {
-                        let item = document.createElement("div");
-                        item.className = "manage-link-item";
-                        item.innerHTML = `<span>${url}</span> <button class="btn-delete" onclick="deleteLink('${key}')">Xóa</button>`;
-                        adminManageList.appendChild(item);
-                    }
-                });
-            }
-        });
-    }
+/* ── Auth actions ── */
+window.loginGoogle      = () => signInWithPopup(auth, provider);
+window.openLogoutModal  = () => (document.getElementById("logoutConfirmUI").style.display = "flex");
+window.closeLogoutModal = () => (document.getElementById("logoutConfirmUI").style.display = "none");
+window.executeLogout    = () => signOut(auth).then(() => window.location.reload());
 
-    // --- LOGIC AUTH + CHECK DEVICE IP ---
-    onAuthStateChanged(auth, async (u) => {
-        document.body.style.display = "block";
-        if (u && allowedEmails.includes(u.email)) {
-            currentEmail = u.email;
-            const name = userNames[u.email];
-            
-            // Xử lý Check ID Thiết bị và IP
-            const userIp = await getPublicIP();
-            const userRef = ref(db, 'users/' + u.email.replace(/\./g, '_'));
-            let myDeviceId = localStorage.getItem('deviceId');
-            if (!myDeviceId) {
-                myDeviceId = 'dev_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('deviceId', myDeviceId);
-            }
+/* ── Create link box ── */
+function createBox(url) {
+  const grid = document.getElementById("grid");
+  if (!grid) return;
+  const div       = document.createElement("div");
+  div.className   = "box";
+  div.innerHTML   = `<span>${url}</span>`;
+  div.onclick = (e) => {
+    addRipple(div, e);
+    window.open("https://www.google.com/url?q=https://" + url, "_blank");
+    if (scoreTimer) clearTimeout(scoreTimer);
+    scoreTimer = setTimeout(() => {
+      update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), {
+        points: increment(0.5),
+        name:   userNames[currentEmail]
+      });
+      scoreTimer = null;
+    }, 60000);
+  };
+  grid.appendChild(div);
+}
 
-            onValue(userRef, (snapshot) => {
-                const userData = snapshot.val();
-                const modal = document.getElementById('bannedModal');
-                const msg = document.getElementById('bannedMessage');
+/* ── Load links ── */
+function loadLinks() {
+  onValue(ref(db, 'links'), (snapshot) => {
+    const grid = document.getElementById("grid");
+    if (grid) grid.innerHTML = "";
+    const adminList = document.getElementById("adminManageLinkList");
+    if (adminList) adminList.innerHTML = "";
 
-                if (!userData) {
-                    update(userRef, { currentIP: userIp, deviceId: myDeviceId, status: "active" });
-                } else if (userData.status === "banned") {
-                    msg.innerText = "Tài khoản của bạn đã bị Admin khóa vĩnh viễn.";
-                    modal.style.display = "flex"; signOut(auth); return;
-                } else if (userData.deviceId && userData.deviceId !== myDeviceId) {
-                    if (whitelistEmails.includes(u.email)) {
-                        update(userRef, { deviceId: myDeviceId, currentIP: userIp });
-                    } else {
-                        update(userRef, { status: "banned" });
-                        msg.innerHTML = "Phát hiện đăng nhập từ thiết bị lạ!<br>Tài khoản đã bị khóa để bảo mật.";
-                        modal.style.display = "flex"; signOut(auth); return;
-                    }
-                } else if (userData.currentIP !== userIp) {
-                    update(userRef, { currentIP: userIp });
-                }
+    staticLinks.forEach(url => createBox(url));
 
-                // Nếu mọi thứ OK -> Render Giao diện
-                document.getElementById("loginUI").style.display = "none";
-                document.getElementById("mainUI").style.display = "block";
-                document.getElementById("navBar").style.display = "flex";
-                document.getElementById("user-display-name").innerText = name;
-                document.getElementById("user-display-email").innerText = u.email;
-                if(u.photoURL) document.getElementById("user-avatar").innerHTML = `<img src="${u.photoURL}" style="width:100%; height:100%; object-fit:cover;">`;
-                
-                // Ghi Log Đăng Nhập
-                const now = new Date();
-                const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0') + " " + now.getDate() + "/" + (now.getMonth() + 1);
-                push(ref(db, 'logs'), { name: name, email: u.email, timeStr: timeStr, timestamp: serverTimestamp() });
-
-                loadLinks();
-
-                // Check Admin
-                if(u.email === ADMIN_EMAIL) {
-                    document.getElementById("nav-admin").style.display = "flex";
-                    document.getElementById("user-role-badge").innerText = "Quản trị viên";
-                    document.getElementById("user-role-badge").className = "role-badge role-admin";
-                    
-                    onValue(query(ref(db, 'logs'), limitToLast(50)), snap => {
-                        const list = document.getElementById("logList"); list.innerHTML = "";
-                        let logs = []; snap.forEach(c => logs.push(c.val()));
-                        logs.reverse().forEach(d => {
-                            list.innerHTML += `<div class="log-item"><span class="log-name">${d.name}</span><span class="log-time"> - ${d.timeStr}</span></div>`;
-                        });
-                    });
-
-                    onValue(ref(db, 'scores'), snap => {
-                        const body = document.getElementById("scoreTableBody"); body.innerHTML = "";
-                        let sList = []; snap.forEach(c => sList.push(c.val()));
-                        sList.sort((a,b) => b.points - a.points).forEach(d => {
-                            body.innerHTML += `<tr><td>${d.name}</td><td style="text-align:right"><span style="background:var(--primary-color);color:white;padding:2px 8px;border-radius:8px;font-size:12px;">${(d.points || 0).toFixed(1)}</span></td></tr>`;
-                        });
-                    });
-                } else {
-                    document.getElementById("user-role-badge").innerText = "Thành viên";
-                    document.getElementById("user-role-badge").className = "role-badge role-user";
-                }
-            }, { onlyOnce: true });
-
-        } else {
-            if(u) signOut(auth);
-            document.getElementById("loginUI").style.display = "flex";
-            document.getElementById("mainUI").style.display = "none";
-            document.getElementById("navBar").style.display = "none";
+    const data = snapshot.val();
+    if (data) {
+      Object.keys(data).forEach(key => {
+        const url = data[key].url;
+        createBox(url);
+        if (currentEmail === ADMIN_EMAIL && adminList) {
+          const item     = document.createElement("div");
+          item.className = "link-manage-item";
+          item.innerHTML = `<span>${url}</span>`
+            + `<button class="delete-btn" onclick="deleteLink('${key}')">Xoá</button>`;
+          adminList.appendChild(item);
         }
-    });
+      });
+    }
+  });
+}
 
-    // --- HÀM MODAL ---
-    window.showModal = (title, msg, type = 'info', onConfirm = null) => {
-        const overlay = document.getElementById("customModalOverlay");
-        const icon = document.getElementById("customModalIcon");
-        const titleEl = document.getElementById("customModalTitle");
-        const msgEl = document.getElementById("customModalMessage");
-        const btnCancel = document.getElementById("customModalCancel");
-        const btnConfirm = document.getElementById("customModalConfirm");
-
-        titleEl.innerText = title; msgEl.innerText = msg;
-        if (type === 'confirm-delete') {
-            icon.innerText = "🗑️"; btnCancel.style.display = "block";
-            btnConfirm.className = "btn-modal btn-modal-danger"; btnConfirm.innerText = "Xóa ngay";
-        } else if (type === 'success') {
-            icon.innerText = "✅"; btnCancel.style.display = "none";
-            btnConfirm.className = "btn-modal btn-modal-ok"; btnConfirm.innerText = "Oke";
-        } else if (type === 'error') {
-            icon.innerText = "❌"; btnCancel.style.display = "none";
-            btnConfirm.className = "btn-modal btn-modal-danger"; btnConfirm.innerText = "Đã hiểu";
+/* ── Auth: device / ban check ── */
+onAuthStateChanged(auth, async (u) => {
+  if (u && allowedEmails.includes(u.email)) {
+    const userIp  = await getPublicIP();
+    const userRef = ref(db, 'users/' + u.email.replace(/\./g, '_'));
+    let devId     = localStorage.getItem('deviceId');
+    if (!devId) {
+      devId = 'dev_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('deviceId', devId);
+    }
+    onValue(userRef, (snap) => {
+      const d     = snap.val();
+      const modal = document.getElementById('bannedModal');
+      const msg   = document.getElementById('bannedMessage');
+      if (!d) {
+        update(userRef, { currentIP: userIp, deviceId: devId, status: "active" });
+      } else if (d.status === "banned") {
+        msg.innerText = "Tài khoản này đã bị ban vĩnh viễn.";
+        modal.style.display = "flex"; signOut(auth);
+      } else if (d.deviceId && d.deviceId !== devId) {
+        if (whitelistEmails.includes(u.email)) {
+          update(userRef, { deviceId: devId, currentIP: userIp });
         } else {
-            icon.innerText = "🔔"; btnCancel.style.display = "none";
-            btnConfirm.className = "btn-modal btn-modal-ok"; btnConfirm.innerText = "OK";
+          update(userRef, { status: "banned" });
+          msg.innerHTML = "Phát hiện đăng nhập từ thiết bị lạ.<br>Tài khoản của bạn đã bị khoá!";
+          modal.style.display = "flex"; signOut(auth);
         }
-        overlay.style.display = "flex";
-        btnConfirm.onclick = () => { overlay.style.display = "none"; if (onConfirm) onConfirm(); };
-        btnCancel.onclick = () => { overlay.style.display = "none"; };
-    };
+      } else if (d.currentIP !== userIp) {
+        update(userRef, { currentIP: userIp });
+      }
+    }, { onlyOnce: true });
+  }
+});
 
-    window.addNewLink = () => {
-        const inp = document.getElementById("newLinkInput");
-        const val = inp.value.trim();
-        if(val) {
-            push(ref(db, 'links'), { url: val, timestamp: serverTimestamp() })
-            .then(() => { inp.value = ""; showModal("Thành công", "Đã thêm link!", "success"); })
-            .catch(e => showModal("Lỗi", e.message, "error"));
-        } else { showModal("Lỗi", "Chưa nhập link!", "error"); }
-    };
+/* ── Auth: UI ── */
+onAuthStateChanged(auth, u => {
+  document.body.style.display = "block";
+  if (u && allowedEmails.includes(u.email)) {
+    currentEmail = u.email;
+    const name   = userNames[u.email];
 
-    window.deleteLink = (key) => {
-        showModal("Xóa link", "Bạn chắc chứ?", "confirm-delete", () => {
-            remove(ref(db, 'links/' + key)).then(() => showModal("Xong", "Đã xóa!", "success"));
+    document.getElementById("loginUI").style.display    = "none";
+    document.getElementById("mainUI").style.display     = "block";
+    document.getElementById("navBar").style.display     = "flex";
+    document.getElementById("user-display-name").innerText  = name;
+    document.getElementById("user-display-email").innerText = u.email;
+
+    const now     = new Date();
+    const timeStr = now.toLocaleTimeString('vi-VN') + ' ' + now.toLocaleDateString('vi-VN');
+    push(ref(db, 'logs'), { name, timestamp: serverTimestamp(), timeStr });
+
+    loadLinks();
+
+    if (u.email === ADMIN_EMAIL) {
+      document.getElementById("nav-admin").style.display   = "flex";
+      document.getElementById("user-role-badge").innerText  = "Quản trị viên";
+      document.getElementById("user-role-badge").className  = "role-badge role-admin";
+
+      onValue(query(ref(db, 'logs'), limitToLast(50)), snap => {
+        const el = document.getElementById("logList"); el.innerHTML = "";
+        const logs = [];
+        snap.forEach(c => logs.push(c.val()));
+        logs.reverse().forEach(d => {
+          el.innerHTML += `<div class="log-item">`
+            + `<div class="log-dot"></div>`
+            + `<span class="log-name">${d.name}</span>`
+            + `<span class="log-time">${d.timeStr || ''}</span></div>`;
         });
-    };
+      });
 
-    // --- CÁC HÀM UI CƠ BẢN ---
-    window.switchTab = (tabName, el) => {
-        document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active-page'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById('page-' + tabName).classList.add('active-page');
-        el.classList.add('active');
-    };
+      onValue(ref(db, 'scores'), snap => {
+        const body = document.getElementById("scoreTableBody"); body.innerHTML = "";
+        const list = [];
+        snap.forEach(c => list.push(c.val()));
+        list.sort((a,b) => b.points - a.points).forEach((d,i) => {
+          const medals = ['🥇','🥈','🥉'];
+          body.innerHTML += `<tr>`
+            + `<td>${medals[i] || (i+1+'.')} ${d.name}</td>`
+            + `<td style="text-align:right"><span class="score-badge">${d.points.toFixed(1)}</span></td>`
+            + `</tr>`;
+        });
+      });
+    } else {
+      document.getElementById("user-role-badge").innerText  = "Thành viên";
+      document.getElementById("user-role-badge").className  = "role-badge role-user";
+    }
 
-    window.loginGoogle = () => signInWithPopup(auth, provider);
-    window.openLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "flex";
-    window.closeLogoutModal = () => document.getElementById("logoutConfirmUI").style.display = "none";
-    window.executeLogout = () => signOut(auth).then(()=>window.location.reload());
+    if (u.photoURL) {
+      document.getElementById("user-avatar").innerHTML
+        = `<img src="${u.photoURL}" style="width:100%;height:100%;object-fit:cover;" alt="">`;
+    }
+  } else {
+    if (u) signOut(auth);
+    document.getElementById("loginUI").style.display = "flex";
+    document.getElementById("mainUI").style.display  = "none";
+    document.getElementById("navBar").style.display  = "none";
+  }
+});
 
-    window.sendMsg = () => {
-        let msg = document.getElementById("msgInput").value;
-        if(!msg) return;
-        push(ref(db,"chat"), { name: currentEmail, msg: msg, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-        document.getElementById("msgInput").value="";
-    };
+/* ── Chat ── */
+window.sendMsg = () => {
+  const msg = document.getElementById("msgInput").value.trim();
+  if (!msg) return;
+  push(ref(db, "chat"), {
+    name: currentEmail, msg,
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  });
+  document.getElementById("msgInput").value = "";
+};
 
-    onChildAdded(ref(db,"chat"), s => {
-        let m = s.val();
-        let div = document.createElement("div"); div.className = "msg-item";
-        div.innerHTML = `<span class="msg-user">${userNames[m.name] || m.name}</span><div class="msg-text">${m.msg}</div><div class="msg-time">${m.time}</div>`;
-        const box = document.getElementById("messages"); box.appendChild(div); box.scrollTop = box.scrollHeight;
-    });
+document.getElementById("msgInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") window.sendMsg();
+});
 
-    document.getElementById("search").addEventListener("input", e => {
-        let kw = e.target.value.toLowerCase();
-        document.querySelectorAll(".box").forEach(b => b.style.display = b.innerText.toLowerCase().includes(kw) ? "" : "none");
-    });
+onChildAdded(ref(db, "chat"), s => {
+  const m   = s.val();
+  const div = document.createElement("div");
+  div.className = "msg-item";
+  div.innerHTML = `<span class="msg-user">${userNames[m.name] || m.name}</span>`
+    + `<div class="msg-text">${m.msg}</div>`
+    + `<div class="msg-time">${m.time}</div>`;
+  const box = document.getElementById("messages");
+  box.appendChild(div); box.scrollTop = box.scrollHeight;
+});
+
+/* ── Search ── */
+document.getElementById("search").addEventListener("input", e => {
+  const kw = e.target.value.toLowerCase();
+  document.querySelectorAll(".box").forEach(b => {
+    b.style.display = b.innerText.toLowerCase().includes(kw) ? "" : "none";
+  });
+});
+
+/* ── Admin ── */
+window.addDomain = () => {
+  const input = document.getElementById("newDomainInput");
+  const val   = input.value.trim();
+  if (!val) return;
+  push(ref(db, 'links'), { url: val }).then(() => { input.value = ""; });
+};
+
+window.deleteLink = (id) => {
+  if (confirm("Xoá link này không?")) remove(ref(db, 'links/' + id));
+};
 </script>
 </body>
 </html>
