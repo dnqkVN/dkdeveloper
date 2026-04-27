@@ -1,421 +1,136 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tundevlo</title>
-<link rel="icon" href="web.png?v=1" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- ★ Main stylesheet ★ -->
-<link rel="stylesheet" href="main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông báo chuyển hướng Web mới</title>
+    <style>
+        :root {
+            --primary-color: #00d2ff;
+            --secondary-color: #3a7bd5;
+            --bg-dark: #0f172a;
+            --text-light: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Hiệu ứng nền mờ ảo */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--secondary-color);
+            filter: blur(150px);
+            border-radius: 50%;
+            z-index: -1;
+            top: 10%;
+            left: 10%;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: var(--text-light);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #00d2ff, #91eaff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .btn-new-web {
+            display: inline-block;
+            text-decoration: none;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            font-weight: bold;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-new-web:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 210, 255, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .btn-new-web:active {
+            transform: translateY(1px);
+        }
+
+        /* Hiệu ứng nhấp nháy cho link bên dưới */
+        .old-web-note {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .url-display {
+            display: block;
+            margin-top: 10px;
+            color: var(--primary-color);
+            font-family: monospace;
+        }
+
+    </style>
 </head>
 <body>
 
-<!-- Decorative floating orbs (styled in main.css) -->
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
-<div class="orb orb3"></div>
+    <div class="container">
+        <h1>Website đã đổi</h1>
+        <p> nhấp vào duwois kìa : )</p>
+        
+        <a href="https://kdtfdevt.web.app/" class="btn-new-web">
+            Truy Cập Web Mới
+        </a>
 
-<!-- ═══ LOGIN ═══ -->
-<div id="loginUI">
-  <div class="login-box">
-    <div class="login-logo">devlo 🐧</div>
-    <div class="login-tagline">Workspace của team</div>
-    <div class="login-google" onclick="loginGoogle()">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" alt="Google">
-      Tiếp tục với Google
-    </div>
-  </div>
-</div>
-
-<!-- ═══ MAIN ═══ -->
-<div class="container" id="mainUI">
-
-  <!-- HOME -->
-  <div id="page-home" class="page-section active-page">
-    <div class="header-box">quin developer</div>
-    <input type="text" id="search" placeholder="🔍  Tìm nhanh link...">
-    <div class="grid" id="grid"></div>
-  </div>
-
-  <!-- CHAT -->
-  <div id="page-chat" class="page-section">
-    <div class="header-box">nhắn tin</div>
-    <div class="chat-container">
-      <div id="messages"></div>
-      <div class="chat-input-row">
-        <input id="msgInput" placeholder="Nhắn gì đó...">
-        <button onclick="sendMsg()">Gửi</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADMIN -->
-  <div id="page-admin" class="page-section">
-    <div class="header-box">admin panel</div>
-
-    <div class="section-label">Quản lý link</div>
-    <div class="admin-card">
-      <div class="add-link-row">
-        <input id="newDomainInput" placeholder="Nhập domain mới...">
-        <button onclick="addDomain()">+ Thêm</button>
-      </div>
-      <div id="adminManageLinkList"></div>
+        <div class="old-web-note">
+            Web mới đây
+            <span class="url-display">kdtfdevt.web.app</span>
+        </div>
     </div>
 
-    <div class="section-label">Bảng xếp hạng</div>
-    <div class="admin-card">
-      <table class="admin-table">
-        <tbody id="scoreTableBody"></tbody>
-      </table>
-    </div>
-
-    <div class="section-label">Lịch sử đăng nhập</div>
-    <div class="admin-card" style="max-height:260px; overflow-y:auto; padding:0;">
-      <div id="logList"></div>
-    </div>
-  </div>
-
-  <!-- PROFILE -->
-  <div id="page-profile" class="page-section">
-    <div class="header-box">tài khoản</div>
-    <div class="profile-card">
-      <div class="avatar-circle" id="user-avatar">?</div>
-      <h3 id="user-display-name">---</h3>
-      <p id="user-display-email">---</p>
-      <div id="user-role-badge" class="role-badge">---</div>
-    </div>
-    <div class="profile-logout-btn" onclick="openLogoutModal()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-        <polyline points="16,17 21,12 16,7"/>
-        <line x1="21" y1="12" x2="9" y2="12"/>
-      </svg>
-      Đăng xuất
-    </div>
-  </div>
-
-</div><!-- /container -->
-
-<!-- ═══ NAV BAR ═══ -->
-<div class="nav-bar" id="navBar">
-  <div class="nav-item active" onclick="switchTab('home', this)">
-    <img src="home.png?v=1" class="nav-icon-img" alt="">
-    <span class="nav-text">Home</span>
-  </div>
-  <div class="nav-item" onclick="switchTab('chat', this)">
-    <img src="chat.png?v=1" class="nav-icon-img" alt="">
-    <span class="nav-text">Chat</span>
-  </div>
-  <div class="nav-item" id="nav-admin" onclick="switchTab('admin', this)" style="display:none;">
-    <img src="admin.png?v=1" class="nav-icon-img" alt="">
-    <span class="nav-text">Admin</span>
-  </div>
-  <div class="nav-item" onclick="switchTab('profile', this)">
-    <img src="caidat.png?v=1" class="nav-icon-img" alt="">
-    <span class="nav-text">Tôi</span>
-  </div>
-</div>
-
-<!-- ═══ LOGOUT MODAL ═══ -->
-<div id="logoutConfirmUI">
-  <div class="confirm-card">
-    <h3>Đăng xuất?</h3>
-    <p>Bạn chắc chắn muốn thoát khỏi tài khoản không?</p>
-    <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeLogoutModal()">Huỷ</button>
-      <button class="btn-danger"  onclick="executeLogout()">Đăng xuất</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ BANNED MODAL ═══ -->
-<div id="bannedModal">
-  <div class="confirm-card">
-    <h3>⚠️ Thông báo</h3>
-    <p id="bannedMessage"></p>
-    <button class="btn-danger"
-            style="width:100%; margin-top:20px; padding:13px; border-radius:14px;"
-            onclick="window.location.reload()">Đã hiểu</button>
-  </div>
-</div>
-
-<!-- ═══ FIREBASE JS ═══ -->
-<script type="module">
-import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded, update, increment,
-         onValue, serverTimestamp, query, limitToLast, remove }
-  from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup,
-         onAuthStateChanged, signOut }
-  from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
-
-/* ── Config ── */
-const firebaseConfig = {
-  apiKey:            "AIzaSyCVJ49ItRu-dUCtytI0P5v7mDLE_QcubO8",
-  authDomain:        "kdtfdevt.firebaseapp.com",
-  databaseURL:       "https://kdtfdevt-default-rtdb.firebaseio.com",
-  projectId:         "kdtfdevt",
-  storageBucket:     "kdtfdevt.firebasestorage.app",
-  messagingSenderId: "375523757842",
-  appId:             "1:375523757842:web:e3edae2409412e399cedcb",
-  measurementId:     "G-8R696PV3PB"
-};
-const app      = initializeApp(firebaseConfig);
-const db       = getDatabase(app);
-const auth     = getAuth(app);
-const provider = new GoogleAuthProvider();
-
-/* ── Constants ── */
-const ADMIN_EMAIL = "khangdoannq@gmail.com";
-const userNames = {
-  "qkhaang@gmail.com":           "qk",
-  "khangdoannq@gmail.com":       "kdoan",
-  "truongloi010220@gmail.com":   "phát béo",
-  "anddang15@gmail.com":         "an",
-  "truonghuuphat9991@gmail.com": "lọ dùm trai 6 múi",
-  "anhkhoadn2009@gmail.com":     "khoa",
-  "tmai28298@gmail.com":         "tmai",
-  "12345vanthach@gmail.com":     "nam"
-};
-const allowedEmails   = Object.keys(userNames);
-const whitelistEmails = [
-  "khangdoannq@gmail.com","12345vanthach@gmail.com",
-  "anhkhoadn2009@gmail.com","tmai28298@gmail.com","truongloi010220@gmail.com"
-];
-const staticLinks = ["youtube"];
-
-let currentEmail = "";
-let scoreTimer   = null;
-
-/* ── Helpers ── */
-async function getPublicIP() {
-  try { return (await (await fetch('https://api.ipify.org?format=json')).json()).ip; }
-  catch { return "unknown"; }
-}
-
-function addRipple(el, e) {
-  const r     = document.createElement('span');
-  r.className = 'ripple';
-  const rect  = el.getBoundingClientRect();
-  const size  = Math.max(rect.width, rect.height);
-  r.style.cssText = `width:${size}px;height:${size}px;`
-    + `left:${e.clientX - rect.left - size/2}px;`
-    + `top:${e.clientY  - rect.top  - size/2}px`;
-  el.appendChild(r);
-  setTimeout(() => r.remove(), 580);
-}
-
-/* ── Tab switch ── */
-window.switchTab = (name, el) => {
-  document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active-page'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active-page');
-  el.classList.add('active');
-};
-
-/* ── Auth actions ── */
-window.loginGoogle      = () => signInWithPopup(auth, provider);
-window.openLogoutModal  = () => (document.getElementById("logoutConfirmUI").style.display = "flex");
-window.closeLogoutModal = () => (document.getElementById("logoutConfirmUI").style.display = "none");
-window.executeLogout    = () => signOut(auth).then(() => window.location.reload());
-
-/* ── Create link box ── */
-function createBox(url) {
-  const grid = document.getElementById("grid");
-  if (!grid) return;
-  const div       = document.createElement("div");
-  div.className   = "box";
-  div.innerHTML   = `<span>${url}</span>`;
-  div.onclick = (e) => {
-    addRipple(div, e);
-    window.open("https://www.google.com/url?q=https://" + url, "_blank");
-    if (scoreTimer) clearTimeout(scoreTimer);
-    scoreTimer = setTimeout(() => {
-      update(ref(db, 'scores/' + currentEmail.replace(/\./g, '_')), {
-        points: increment(0.5),
-        name:   userNames[currentEmail]
-      });
-      scoreTimer = null;
-    }, 60000);
-  };
-  grid.appendChild(div);
-}
-
-/* ── Load links ── */
-function loadLinks() {
-  onValue(ref(db, 'links'), (snapshot) => {
-    const grid = document.getElementById("grid");
-    if (grid) grid.innerHTML = "";
-    const adminList = document.getElementById("adminManageLinkList");
-    if (adminList) adminList.innerHTML = "";
-
-    staticLinks.forEach(url => createBox(url));
-
-    const data = snapshot.val();
-    if (data) {
-      Object.keys(data).forEach(key => {
-        const url = data[key].url;
-        createBox(url);
-        if (currentEmail === ADMIN_EMAIL && adminList) {
-          const item     = document.createElement("div");
-          item.className = "link-manage-item";
-          item.innerHTML = `<span>${url}</span>`
-            + `<button class="delete-btn" onclick="deleteLink('${key}')">Xoá</button>`;
-          adminList.appendChild(item);
-        }
-      });
-    }
-  });
-}
-
-/* ── Auth: device / ban check ── */
-onAuthStateChanged(auth, async (u) => {
-  if (u && allowedEmails.includes(u.email)) {
-    const userIp  = await getPublicIP();
-    const userRef = ref(db, 'users/' + u.email.replace(/\./g, '_'));
-    let devId     = localStorage.getItem('deviceId');
-    if (!devId) {
-      devId = 'dev_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('deviceId', devId);
-    }
-    onValue(userRef, (snap) => {
-      const d     = snap.val();
-      const modal = document.getElementById('bannedModal');
-      const msg   = document.getElementById('bannedMessage');
-      if (!d) {
-        update(userRef, { currentIP: userIp, deviceId: devId, status: "active" });
-      } else if (d.status === "banned") {
-        msg.innerText = "Tài khoản này đã bị ban vĩnh viễn.";
-        modal.style.display = "flex"; signOut(auth);
-      } else if (d.deviceId && d.deviceId !== devId) {
-        if (whitelistEmails.includes(u.email)) {
-          update(userRef, { deviceId: devId, currentIP: userIp });
-        } else {
-          update(userRef, { status: "banned" });
-          msg.innerHTML = "Phát hiện đăng nhập từ thiết bị lạ.<br>Tài khoản của bạn đã bị khoá!";
-          modal.style.display = "flex"; signOut(auth);
-        }
-      } else if (d.currentIP !== userIp) {
-        update(userRef, { currentIP: userIp });
-      }
-    }, { onlyOnce: true });
-  }
-});
-
-/* ── Auth: UI ── */
-onAuthStateChanged(auth, u => {
-  document.body.style.display = "block";
-  if (u && allowedEmails.includes(u.email)) {
-    currentEmail = u.email;
-    const name   = userNames[u.email];
-
-    document.getElementById("loginUI").style.display    = "none";
-    document.getElementById("mainUI").style.display     = "block";
-    document.getElementById("navBar").style.display     = "flex";
-    document.getElementById("user-display-name").innerText  = name;
-    document.getElementById("user-display-email").innerText = u.email;
-
-    const now     = new Date();
-    const timeStr = now.toLocaleTimeString('vi-VN') + ' ' + now.toLocaleDateString('vi-VN');
-    push(ref(db, 'logs'), { name, timestamp: serverTimestamp(), timeStr });
-
-    loadLinks();
-
-    if (u.email === ADMIN_EMAIL) {
-      document.getElementById("nav-admin").style.display   = "flex";
-      document.getElementById("user-role-badge").innerText  = "Quản trị viên";
-      document.getElementById("user-role-badge").className  = "role-badge role-admin";
-
-      onValue(query(ref(db, 'logs'), limitToLast(50)), snap => {
-        const el = document.getElementById("logList"); el.innerHTML = "";
-        const logs = [];
-        snap.forEach(c => logs.push(c.val()));
-        logs.reverse().forEach(d => {
-          el.innerHTML += `<div class="log-item">`
-            + `<div class="log-dot"></div>`
-            + `<span class="log-name">${d.name}</span>`
-            + `<span class="log-time">${d.timeStr || ''}</span></div>`;
-        });
-      });
-
-      onValue(ref(db, 'scores'), snap => {
-        const body = document.getElementById("scoreTableBody"); body.innerHTML = "";
-        const list = [];
-        snap.forEach(c => list.push(c.val()));
-        list.sort((a,b) => b.points - a.points).forEach((d,i) => {
-          const medals = ['🥇','🥈','🥉'];
-          body.innerHTML += `<tr>`
-            + `<td>${medals[i] || (i+1+'.')} ${d.name}</td>`
-            + `<td style="text-align:right"><span class="score-badge">${d.points.toFixed(1)}</span></td>`
-            + `</tr>`;
-        });
-      });
-    } else {
-      document.getElementById("user-role-badge").innerText  = "Thành viên";
-      document.getElementById("user-role-badge").className  = "role-badge role-user";
-    }
-
-    if (u.photoURL) {
-      document.getElementById("user-avatar").innerHTML
-        = `<img src="${u.photoURL}" style="width:100%;height:100%;object-fit:cover;" alt="">`;
-    }
-  } else {
-    if (u) signOut(auth);
-    document.getElementById("loginUI").style.display = "flex";
-    document.getElementById("mainUI").style.display  = "none";
-    document.getElementById("navBar").style.display  = "none";
-  }
-});
-
-/* ── Chat ── */
-window.sendMsg = () => {
-  const msg = document.getElementById("msgInput").value.trim();
-  if (!msg) return;
-  push(ref(db, "chat"), {
-    name: currentEmail, msg,
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  });
-  document.getElementById("msgInput").value = "";
-};
-
-document.getElementById("msgInput").addEventListener("keydown", e => {
-  if (e.key === "Enter") window.sendMsg();
-});
-
-onChildAdded(ref(db, "chat"), s => {
-  const m   = s.val();
-  const div = document.createElement("div");
-  div.className = "msg-item";
-  div.innerHTML = `<span class="msg-user">${userNames[m.name] || m.name}</span>`
-    + `<div class="msg-text">${m.msg}</div>`
-    + `<div class="msg-time">${m.time}</div>`;
-  const box = document.getElementById("messages");
-  box.appendChild(div); box.scrollTop = box.scrollHeight;
-});
-
-/* ── Search ── */
-document.getElementById("search").addEventListener("input", e => {
-  const kw = e.target.value.toLowerCase();
-  document.querySelectorAll(".box").forEach(b => {
-    b.style.display = b.innerText.toLowerCase().includes(kw) ? "" : "none";
-  });
-});
-
-/* ── Admin ── */
-window.addDomain = () => {
-  const input = document.getElementById("newDomainInput");
-  const val   = input.value.trim();
-  if (!val) return;
-  push(ref(db, 'links'), { url: val }).then(() => { input.value = ""; });
-};
-
-window.deleteLink = (id) => {
-  if (confirm("Xoá link này không?")) remove(ref(db, 'links/' + id));
-};
-</script>
 </body>
 </html>
