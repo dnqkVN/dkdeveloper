@@ -17,7 +17,6 @@ body{
     background:#1e293b;
     padding:15px;
     border-radius:12px;
-    margin-top:15px;
 }
 
 input{
@@ -31,9 +30,9 @@ input{
 }
 
 button{
-    margin-top:10px;
-    padding:12px;
     width:100%;
+    padding:12px;
+    margin-top:10px;
     border:none;
     border-radius:8px;
     background:#38bdf8;
@@ -45,42 +44,56 @@ pre{
     background:#020617;
     padding:15px;
     border-radius:10px;
-    overflow:auto;
     margin-top:15px;
+    overflow:auto;
 }
 </style>
 </head>
 <body>
 
-<h1>Redirect Admin</h1>
-
 <div class="box">
+
+<h2>Redirect Admin</h2>
 
 <input id="key" placeholder="VD: 97-2">
 
 <input id="domain" placeholder="VD: open882.net">
 
-<button onclick="saveData()">Lưu</button>
+<button onclick="saveData()">Lưu Link</button>
 
 <pre id="view"></pre>
 
 </div>
 
-<script>
+<script type="module">
 
-let redirectMap =
-    JSON.parse(localStorage.getItem("redirectMap")) || {};
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-function render(){
-
-    document.getElementById("view").textContent =
-        JSON.stringify(redirectMap,null,4);
-
+import {
+getDatabase,
+ref,
+set,
+onValue
 }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-render();
+const firebaseConfig = {
+  apiKey: "AIzaSyCoGH-211UP_6o5eqoL4bq6DI4VbzXTKJ0",
+  authDomain: "check-user-1.firebaseapp.com",
+  databaseURL: "https://check-user-1-default-rtdb.firebaseio.com",
+  projectId: "check-user-1",
+  storageBucket: "check-user-1.firebasestorage.app",
+  messagingSenderId: "1009556670498",
+  appId: "1:1009556670498:web:4df83dfa4b2314c21d227b",
+  measurementId: "G-5EEYKNYP3D"
+};
 
-function saveData(){
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+window.saveData = function(){
 
     const key =
         document.getElementById("key").value.trim();
@@ -96,16 +109,22 @@ function saveData(){
 
     }
 
-    redirectMap[key] = domain;
-
-    localStorage.setItem(
-        "redirectMap",
-        JSON.stringify(redirectMap)
+    set(
+        ref(db,"redirects/" + key),
+        domain
     );
 
-    render();
+    alert("Đã lưu");
 
 }
+
+onValue(ref(db,"redirects"), (snapshot)=>{
+
+    document.getElementById("view")
+    .textContent =
+        JSON.stringify(snapshot.val(),null,4);
+
+});
 
 </script>
 
