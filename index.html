@@ -1,136 +1,120 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông báo chuyển hướng Web mới</title>
-    <style>
-        :root {
-            --primary-color: #00d2ff;
-            --secondary-color: #3a7bd5;
-            --bg-dark: #0f172a;
-            --text-light: #f8fafc;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redirect Manager</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<style>
+body{
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+    padding:20px;
+}
 
-        body {
-            background-color: var(--bg-dark);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+h1{
+    color:#38bdf8;
+}
 
-        /* Hiệu ứng nền mờ ảo */
-        body::before {
-            content: "";
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: var(--secondary-color);
-            filter: blur(150px);
-            border-radius: 50%;
-            z-index: -1;
-            top: 10%;
-            left: 10%;
-        }
+.box{
+    background:#1e293b;
+    padding:15px;
+    border-radius:12px;
+    margin-top:15px;
+}
 
-        .container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            padding: 3rem;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            max-width: 500px;
-            width: 90%;
-            animation: fadeIn 0.8s ease-out;
-        }
+input{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+    background:#334155;
+    color:white;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+button{
+    margin-top:10px;
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    background:#38bdf8;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+}
 
-        h1 {
-            color: var(--text-light);
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #00d2ff, #91eaff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        p {
-            color: #94a3b8;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-        }
-
-        .btn-new-web {
-            display: inline-block;
-            text-decoration: none;
-            padding: 15px 40px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            font-weight: bold;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
-            font-size: 1.1rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-new-web:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 210, 255, 0.5);
-            filter: brightness(1.1);
-        }
-
-        .btn-new-web:active {
-            transform: translateY(1px);
-        }
-
-        /* Hiệu ứng nhấp nháy cho link bên dưới */
-        .old-web-note {
-            margin-top: 2rem;
-            font-size: 0.85rem;
-            color: #64748b;
-        }
-
-        .url-display {
-            display: block;
-            margin-top: 10px;
-            color: var(--primary-color);
-            font-family: monospace;
-        }
-
-    </style>
+pre{
+    background:#020617;
+    padding:15px;
+    border-radius:10px;
+    overflow:auto;
+    margin-top:15px;
+}
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Website đã đổi</h1>
-        <p> nhấp vào duwois kìa : )</p>
-        
-        <a href="https://kdtfdevt.web.app/" class="btn-new-web">
-            Truy Cập Web Mới
-        </a>
+<h1>Redirect Manager</h1>
 
-        <div class="old-web-note">
-            Web mới đây
-            <span class="url-display">kdtfdevt.web.app</span>
-        </div>
-    </div>
+<div class="box">
+    <input type="text" id="key" placeholder="VD: 1-2">
+    <input type="text" id="domain" placeholder="VD: example.com">
+
+    <button onclick="addData()">Thêm</button>
+    <button onclick="downloadJson()">Tải data.json</button>
+
+    <pre id="output"></pre>
+</div>
+
+<script>
+let redirectMap = {
+    "1-2":"ok8386-mobi.com",
+    "2-2":"kalali.africa.com"
+};
+
+function render(){
+    document.getElementById("output").textContent =
+        JSON.stringify(redirectMap,null,4);
+}
+
+render();
+
+function addData(){
+
+    const key = document.getElementById("key").value.trim();
+    const domain = document.getElementById("domain").value.trim();
+
+    if(!key || !domain){
+        alert("Nhập đầy đủ");
+        return;
+    }
+
+    redirectMap[key] = domain;
+
+    render();
+
+    document.getElementById("key").value = "";
+    document.getElementById("domain").value = "";
+}
+
+function downloadJson(){
+
+    const blob = new Blob(
+        [JSON.stringify(redirectMap,null,4)],
+        {type:"application/json"}
+    );
+
+    const a = document.createElement("a");
+
+    a.href = URL.createObjectURL(blob);
+
+    a.download = "data.json";
+
+    a.click();
+}
+</script>
 
 </body>
 </html>
