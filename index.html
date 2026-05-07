@@ -3,18 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Redirect Manager</title>
+<title>Redirect Admin</title>
 
 <style>
 body{
-    font-family: Arial;
     background:#0f172a;
     color:white;
+    font-family:Arial;
     padding:20px;
-}
-
-h1{
-    color:#38bdf8;
 }
 
 .box{
@@ -26,7 +22,7 @@ h1{
 
 input{
     width:100%;
-    padding:10px;
+    padding:12px;
     margin-top:10px;
     border:none;
     border-radius:8px;
@@ -36,13 +32,13 @@ input{
 
 button{
     margin-top:10px;
-    padding:10px 15px;
+    padding:12px;
+    width:100%;
     border:none;
     border-radius:8px;
     background:#38bdf8;
     color:black;
     font-weight:bold;
-    cursor:pointer;
 }
 
 pre{
@@ -56,63 +52,61 @@ pre{
 </head>
 <body>
 
-<h1>Redirect Manager</h1>
+<h1>Redirect Admin</h1>
 
 <div class="box">
-    <input type="text" id="key" placeholder="VD: 1-2">
-    <input type="text" id="domain" placeholder="VD: example.com">
 
-    <button onclick="addData()">Thêm</button>
-    <button onclick="downloadJson()">Tải data.json</button>
+<input id="key" placeholder="VD: 97-2">
 
-    <pre id="output"></pre>
+<input id="domain" placeholder="VD: open882.net">
+
+<button onclick="saveData()">Lưu</button>
+
+<pre id="view"></pre>
+
 </div>
 
 <script>
-let redirectMap = {
-    "1-2":"ok8386-mobi.com",
-};
+
+let redirectMap =
+    JSON.parse(localStorage.getItem("redirectMap")) || {};
 
 function render(){
-    document.getElementById("output").textContent =
+
+    document.getElementById("view").textContent =
         JSON.stringify(redirectMap,null,4);
+
 }
 
 render();
 
-function addData(){
+function saveData(){
 
-    const key = document.getElementById("key").value.trim();
-    const domain = document.getElementById("domain").value.trim();
+    const key =
+        document.getElementById("key").value.trim();
+
+    const domain =
+        document.getElementById("domain").value.trim();
 
     if(!key || !domain){
-        alert("Nhập đầy đủ");
+
+        alert("Nhập thiếu");
+
         return;
+
     }
 
     redirectMap[key] = domain;
 
-    render();
-
-    document.getElementById("key").value = "";
-    document.getElementById("domain").value = "";
-}
-
-function downloadJson(){
-
-    const blob = new Blob(
-        [JSON.stringify(redirectMap,null,4)],
-        {type:"application/json"}
+    localStorage.setItem(
+        "redirectMap",
+        JSON.stringify(redirectMap)
     );
 
-    const a = document.createElement("a");
+    render();
 
-    a.href = URL.createObjectURL(blob);
-
-    a.download = "data.json";
-
-    a.click();
 }
+
 </script>
 
 </body>
