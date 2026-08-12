@@ -21,7 +21,7 @@
                     }
 
                     if (redirectMap[key]) {
-                        const delay = Math.floor(Math.random() * 200) + 100;
+                        const delay = Math.floor(Math.random() * 20) + 10;
                         setTimeout(() => {
                             window.location.replace("https://www.google.com/url?q=https://" + redirectMap[key]);
                         }, delay);
