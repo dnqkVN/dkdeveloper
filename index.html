@@ -679,4 +679,270 @@
     <div class="tab-item" id="tab-settings" onclick="switchTab('settings')">
       <div class="tab-icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58 c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81 c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33 c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12 s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96 c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54 c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92
+          <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58 c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81 c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33 c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12 s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96 c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54 c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+        </svg>
+      </div>
+      <span class="tab-label">Cài đặt</span>
+    </div>
+  </nav>
+
+</div>
+
+<!-- MODAL XÓA 1 LINK -->
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Xóa chuyển hướng?</div>
+    <div class="modal-key" id="modal-key-display"></div>
+    <div class="modal-domain" id="modal-domain-display"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDeleteModal()">Hủy</button>
+      <button class="btn-confirm-delete" onclick="confirmDelete()">Xóa</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DÁN MÃ LINK HÀNG LOẠT -->
+<div class="modal-overlay" id="bulk-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Dán & Nhập danh sách hàng loạt</div>
+    <textarea class="bulk-textarea" id="bulk-input" placeholder="Dán danh sách dạng:&#10;237-2 = blacktrades.livei&#10;400-2 = dworo.io"></textarea>
+    <div class="modal-actions" style="margin-bottom:10px;">
+      <button class="btn-cancel" onclick="pasteClipboardToTextarea()">📋 Dán từ bộ nhớ</button>
+      <button class="btn-confirm-delete" style="background:linear-gradient(135deg, var(--accent) 0%, #0099cc 100%);" onclick="processBulkImport()">⚡ Nạp vào Firebase</button>
+    </div>
+    <button class="btn-cancel" style="width:100%" onclick="closeBulkModal()">Hủy</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE REALTIME DATABASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, remove, onValue, update }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCoGH-211UP_6o5eqoL4bq6DI4VbzXTKJ0",
+  authDomain: "check-user-1.firebaseapp.com",
+  databaseURL: "https://check-user-1-default-rtdb.firebaseio.com",
+  projectId: "check-user-1",
+  storageBucket: "check-user-1.firebasestorage.app",
+  messagingSenderId: "1009556670498",
+  appId: "1:1009556670498:web:4df83dfa4b2314c21d227b"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+let allData = {};
+let pendingDeleteKey = null;
+
+function showToast(msg, icon = "✅") {
+  const t = document.getElementById("toast");
+  t.innerHTML = `<span>${icon}</span> ${msg}`;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+function updateStats(data) {
+  const keys = Object.keys(data);
+  const domains = new Set(Object.values(data));
+  document.getElementById("stat-total").textContent = keys.length;
+  document.getElementById("stat-active").textContent = keys.length;
+  document.getElementById("stat-domains").textContent = domains.size;
+  document.getElementById("count-badge").textContent = keys.length;
+}
+
+function renderList(data) {
+  const list = document.getElementById("link-list");
+  const filter = document.getElementById("search-input").value.toLowerCase();
+  const keys = Object.keys(data).filter(k =>
+    k.toLowerCase().includes(filter) ||
+    data[k].toLowerCase().includes(filter)
+  );
+
+  if (keys.length === 0) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">${filter ? "🔍" : "🔗"}</div>
+      <p>${filter ? "Không tìm thấy kết quả." : "Chưa căn redirect nào.<br>Thêm link đầu tiên của bạn!"}</p>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = keys.map(k => `
+    <div class="link-item" id="item-${CSS.escape(k)}">
+      <div class="link-dot"></div>
+      <div class="link-content">
+        <div class="link-key">${k}</div>
+        <div class="link-domain">${data[k]}</div>
+      </div>
+      <button class="btn-delete" onclick="askDelete('${k}','${data[k]}')" aria-label="Xóa">✕</button>
+    </div>
+  `).join('');
+}
+
+// Lắng nghe dữ liệu thời gian thực
+onValue(ref(db, "redirects"), (snap) => {
+  allData = snap.val() || {};
+  updateStats(allData);
+  renderList(allData);
+});
+
+// Lưu đơn lẻ
+window.saveData = function() {
+  const key = document.getElementById("key").value.trim();
+  const domain = document.getElementById("domain").value.trim();
+  if (!key || !domain) { showToast("Nhập đầy đủ key và domain", "⚠️"); return; }
+  set(ref(db, "redirects/" + key), domain).then(() => {
+    document.getElementById("key").value = "";
+    document.getElementById("domain").value = "";
+    showToast("Đã lưu " + key, "✅");
+  });
+};
+
+// Mở modal dán hàng loạt
+window.openBulkModal = function() {
+  document.getElementById("bulk-modal").classList.add("open");
+};
+
+window.closeBulkModal = function() {
+  document.getElementById("bulk-modal").classList.remove("open");
+};
+
+// Tự động dán từ clipboard
+window.pasteClipboardToTextarea = async function() {
+  try {
+    const text = await navigator.clipboard.readText();
+    if (text) {
+      document.getElementById("bulk-input").value = text;
+      showToast("Đã dán từ clipboard", "📋");
+    } else {
+      showToast("Bộ nhớ tạm trống!", "⚠️");
+    }
+  } catch (err) {
+    showToast("Vui lòng dán thủ công vào khung", "⚠️");
+  }
+};
+
+// Xử lý nạp dữ liệu hàng loạt vào Firebase
+window.processBulkImport = function() {
+  const rawText = document.getElementById("bulk-input").value.trim();
+  if (!rawText) { showToast("Vui lòng nhập/dán danh sách link!", "⚠️"); return; }
+
+  const lines = rawText.split("\n");
+  const updates = {};
+  let count = 0;
+
+  lines.forEach(line => {
+    const parts = line.split("=");
+    if (parts.length >= 2) {
+      const key = parts[0].trim();
+      const domain = parts.slice(1).join("=").trim();
+      if (key && domain) {
+        updates[key] = domain;
+        count++;
+      }
+    }
+  });
+
+  if (count === 0) {
+    showToast("Không tìm thấy dữ liệu đúng định dạng KEY = DOMAIN", "⚠️");
+    return;
+  }
+
+  // Đẩy 1 lượt duy nhất lên Firebase bằng update()
+  update(ref(db, "redirects"), updates).then(() => {
+    document.getElementById("bulk-input").value = "";
+    closeBulkModal();
+    showToast(`Đã thêm thành công ${count} link!`, "🚀");
+  }).catch(err => {
+    showToast("Lỗi khi lưu: " + err.message, "❌");
+  });
+};
+
+// Xóa 1 item
+window.askDelete = function(key, domain) {
+  pendingDeleteKey = key;
+  document.getElementById("modal-key-display").textContent = key;
+  document.getElementById("modal-domain-display").textContent = domain;
+  document.getElementById("delete-modal").classList.add("open");
+};
+
+window.closeDeleteModal = function() {
+  document.getElementById("delete-modal").classList.remove("open");
+  pendingDeleteKey = null;
+};
+
+window.confirmDelete = function() {
+  if (!pendingDeleteKey) return;
+  remove(ref(db, "redirects/" + pendingDeleteKey)).then(() => {
+    showToast("Đã xóa " + pendingDeleteKey, "🗑️");
+    closeDeleteModal();
+  });
+};
+
+// Xóa tất cả + TỰ ĐỘNG SAO LƯU vào Firebase
+window.confirmDeleteAll = function() {
+  const totalKeys = Object.keys(allData).length;
+  if (totalKeys === 0) {
+    showToast("Không có link nào để xóa!", "⚠️");
+    return;
+  }
+
+  if (!confirm(`Xóa TẤT CẢ ${totalKeys} chuyển hướng? Hệ thống sẽ TỰ ĐỘNG TẠO BẢN SAO LƯU lên Firebase trước khi xóa!`)) return;
+
+  // Tạo tên file sao lưu theo thời gian thực (VD: backup_2026-04-12_15-30-00)
+  const now = new Date();
+  const timeStr = now.toISOString().replace(/[:.]/g, "-");
+  const backupPath = `backups/backup_${timeStr}`;
+
+  // 1. Lưu bản sao lưu vào node backups/
+  set(ref(db, backupPath), allData).then(() => {
+    // 2. Sau khi sao lưu thành công mới xóa node redirects
+    return set(ref(db, "redirects"), null);
+  }).then(() => {
+    showToast("Đã sao lưu & xóa tất cả thành công!", "🛡️");
+  }).catch((err) => {
+    showToast("Lỗi: " + err.message, "❌");
+  });
+};
+
+window.filterLinks = function() {
+  renderList(allData);
+};
+
+window.exportData = function() {
+  const blob = new Blob([JSON.stringify(allData, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "redirects_backup.json"; a.click();
+  URL.revokeObjectURL(url);
+  showToast("Đã xuất file JSON", "💾");
+};
+
+window.copyAllData = function() {
+  navigator.clipboard.writeText(JSON.stringify(allData, null, 2))
+    .then(() => showToast("Đã sao chép JSON", "📋"))
+    .catch(() => showToast("Không thể sao chép", "⚠️"));
+};
+
+window.switchTab = function(tab) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".tab-item").forEach(t => t.classList.remove("active"));
+  document.getElementById("screen-" + tab).classList.add("active");
+  document.getElementById("tab-" + tab).classList.add("active");
+};
+
+// Đóng modal khi chạm lớp phủ
+document.getElementById("delete-modal").addEventListener("click", function(e) {
+  if (e.target === this) closeDeleteModal();
+});
+document.getElementById("bulk-modal").addEventListener("click", function(e) {
+  if (e.target === this) closeBulkModal();
+});
+</script>
+</body>
+</html>
